@@ -107,16 +107,16 @@ update_status ModuleSceneMenuOne::Update()
 	App->renderer->Blit(graphicsOptions, 0, SCREEN_HEIGHT - copyRightSaga.h * 2, &copyRightSaga, 0.0f);
 
 
-	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) && App->fade->isFading() == false)
-	{
+	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) && App->fade->isFading() == false) {
 		if (pointerPosition == OPTION_ONE) pointerPosition = OPTION_TWO;
 		else pointerPosition = OPTION_ONE;
 	}
 
-	if (state == STATE_ONE  && App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false && pointerPosition == OPTION_ONE)
-	{
+	if (state == STATE_ONE  && App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false && pointerPosition == OPTION_ONE) {
 		state = STATE_TWO;
-		
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false && pointerPosition == OPTION_ONE) {
+		App->fade->FadeToBlack((Module*)App->scene_menu_world, this);
 	}
 
 

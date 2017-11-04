@@ -53,6 +53,9 @@
     <ClCompile Include="ModuleSceneMenuOne.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleSceneWorld.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -98,6 +101,9 @@
       <Filter>Game Modules</Filter>
     </ClInclude>
     <ClInclude Include="ModuleSceneMenuOne.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneWorld.h">
       <Filter>Game Modules</Filter>
     </ClInclude>
   </ItemGroup>

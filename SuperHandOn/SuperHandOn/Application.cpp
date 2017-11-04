@@ -10,6 +10,7 @@
 
 #include "ModuleSceneIntro.h"
 #include "ModuleSceneMenuOne.h"
+#include "ModuleSceneWorld.h"
 #include "ModulePlayer.h"
 
 using namespace std;
@@ -27,6 +28,7 @@ Application::Application()
 	// Game Modules
 	modules.push_back(scene_intro = new ModuleSceneIntro(false));
 	modules.push_back(scene_menu_one = new ModuleSceneMenuOne(false));
+	modules.push_back(scene_menu_world = new ModuleSceneWorld(false));
 	modules.push_back(player = new ModulePlayer(false));
 
 	// Modules to draw on top of game logic
@@ -56,6 +58,7 @@ bool Application::Init()
 
 	// Start the first scene --
 	fade->FadeToBlack(scene_intro, nullptr, 3.0f);
+	//fade->FadeToBlack(scene_menu_world, nullptr, 3.0f);
 
 	return ret;
 }

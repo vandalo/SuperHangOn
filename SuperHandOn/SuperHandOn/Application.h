@@ -18,6 +18,7 @@ class ModuleParticles;
 class ModulePlayer;
 class ModuleSceneIntro;
 class ModuleSceneMenuOne;
+class ModuleSceneWorld;
 
 class Application
 {
@@ -44,6 +45,7 @@ public:
 	ModulePlayer* player;
 	ModuleSceneIntro* scene_intro;
 	ModuleSceneMenuOne* scene_menu_one;
+	ModuleSceneWorld* scene_menu_world;
 
 private:
 

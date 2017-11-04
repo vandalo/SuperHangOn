@@ -49,5 +49,7 @@ typedef unsigned int uint;
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Hang-on"
+#define INTERMITENT_FAST 15
+#define INTERMITENT_SLOW 30
 
 #endif //__GLOBALS_H__
