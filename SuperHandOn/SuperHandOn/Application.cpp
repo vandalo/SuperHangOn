@@ -11,6 +11,7 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleSceneMenuOne.h"
 #include "ModuleSceneWorld.h"
+#include "ModuleSceneMusic.h"
 #include "ModulePlayer.h"
 
 using namespace std;
@@ -29,12 +30,14 @@ Application::Application()
 	modules.push_back(scene_intro = new ModuleSceneIntro(false));
 	modules.push_back(scene_menu_one = new ModuleSceneMenuOne(false));
 	modules.push_back(scene_menu_world = new ModuleSceneWorld(false));
+	modules.push_back(scene_menu_music = new ModuleSceneMusic(false));
 	modules.push_back(player = new ModulePlayer(false));
 
 	// Modules to draw on top of game logic
 	//modules.push_back(collision = new ModuleCollision());
 	//modules.push_back(particles = new ModuleParticles());
 	modules.push_back(fade = new ModuleFadeToBlack());
+
 }
 
 Application::~Application()

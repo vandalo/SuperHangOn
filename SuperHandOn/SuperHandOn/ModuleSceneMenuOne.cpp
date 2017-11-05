@@ -90,8 +90,8 @@ bool ModuleSceneMenuOne::CleanUp()
 // Update: draw background
 update_status ModuleSceneMenuOne::Update()
 {
-	App->renderer->Blit(graphicsHangOnTitle, 0, logo.GetCurrentFrame().h / 2, &(logo.GetCurrentFrame()), 0.0f);
-	App->renderer->Blit(graphicsSegaLogo, 0, SCREEN_HEIGHT - segaLogo.GetCurrentFrame().h * 3, &(segaLogo.GetCurrentFrame()), 0.0f);
+	App->renderer->Blit(graphicsHangOnTitle, 0, logo.GetCurrentFrame().h / 2 - 30, &(logo.GetCurrentFrame()), 0.0f);
+	App->renderer->Blit(graphicsSegaLogo, 0, SCREEN_HEIGHT - segaLogo.GetCurrentFrame().h * 2, &(segaLogo.GetCurrentFrame()), 0.0f);
 
 	if(state == STATE_ONE)
 		App->renderer->Blit(graphicsOptions, 0, SCREEN_HEIGHT / 2 + backgroundOptions.h, &backgroundOptions, 0.0f);
@@ -102,9 +102,9 @@ update_status ModuleSceneMenuOne::Update()
 	if (pointerPosition == OPTION_TWO) incrementY = backgroundOptions.h / 2 + 8;
 	int decrementX = 0;
 	if (state == STATE_TWO) decrementX = 50;
-	App->renderer->Blit(graphicsOptions, SCREEN_HEIGHT / 2 - 100 - decrementX, SCREEN_HEIGHT / 2 + backgroundOptions.h + incrementY, &(pointer.GetCurrentFrame()), 0.0f);
+	App->renderer->Blit(graphicsOptions, SCREEN_HEIGHT / 2 - 30 - decrementX, SCREEN_HEIGHT / 2 + backgroundOptions.h + incrementY, &(pointer.GetCurrentFrame()), 0.0f);
 
-	App->renderer->Blit(graphicsOptions, 0, SCREEN_HEIGHT - copyRightSaga.h * 2, &copyRightSaga, 0.0f);
+	App->renderer->Blit(graphicsOptions, 0, SCREEN_HEIGHT - copyRightSaga.h , &copyRightSaga, 0.0f);
 
 
 	if ((App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN) && App->fade->isFading() == false) {

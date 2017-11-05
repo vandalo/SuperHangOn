@@ -19,6 +19,7 @@ class ModulePlayer;
 class ModuleSceneIntro;
 class ModuleSceneMenuOne;
 class ModuleSceneWorld;
+class ModuleSceneMusic;
 
 class Application
 {
@@ -46,6 +47,19 @@ public:
 	ModuleSceneIntro* scene_intro;
 	ModuleSceneMenuOne* scene_menu_one;
 	ModuleSceneWorld* scene_menu_world;
+	ModuleSceneMusic* scene_menu_music;
+
+	// Musics
+	unsigned int selectYourClass;
+	unsigned int outrideaCrisis;
+	unsigned int sprinter;
+	unsigned int winningRun;
+	unsigned int hardRoad;
+	unsigned int finished;
+	unsigned int enterYourName;
+	unsigned int winnerShopBGM;
+
+	unsigned int musicPlaying;
 
 private:
 

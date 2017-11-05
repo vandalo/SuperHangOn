@@ -125,6 +125,7 @@
     <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
     <ClCompile Include="ModuleSceneMenuOne.cpp" />
+    <ClCompile Include="ModuleSceneMusic.cpp" />
     <ClCompile Include="ModuleSceneWorld.cpp" />
     <ClCompile Include="ModuleTextures.cpp" />
     <ClCompile Include="ModuleWindow.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleRender.h" />
     <ClInclude Include="ModuleSceneMenuOne.h" />
+    <ClInclude Include="ModuleSceneMusic.h" />
     <ClInclude Include="ModuleTextures.h" />
     <ClInclude Include="ModuleWindow.h" />
     <ClInclude Include="ModuleSceneWorld.h" />

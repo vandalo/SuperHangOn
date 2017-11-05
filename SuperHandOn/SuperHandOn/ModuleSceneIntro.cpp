@@ -32,6 +32,13 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+	//Load Musics for all game
+	App->outrideaCrisis = App->audio->LoadFx("music/2OutrideaCrisis.ogg");
+	App->sprinter = App->audio->LoadFx("music/3Sprinter.ogg");
+	App->winningRun = App->audio->LoadFx("music/4WinningRun.ogg");
+	App->hardRoad = App->audio->LoadFx("music/5HardRoad.ogg");
+	App->selectYourClass = App->audio->LoadFx("music/1SelectYourClass.ogg");
+
 	return true;
 }
 

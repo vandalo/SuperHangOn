@@ -17,7 +17,7 @@ ModuleSceneWorld::ModuleSceneWorld(bool active) : Module(active)
 	background.x = 0;
 	background.y = 0;
 	background.w = 640;
-	background.h = 640;
+	background.h = 480;
 
 	//Continets
 	backgroundAfrica = { 584, 2, 110, 116 };
@@ -55,9 +55,10 @@ bool ModuleSceneWorld::Start()
 	LOG("Loading space intro");
 
 	graphics = App->textures->Load("sprites/miscellaneous.png");
-
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+	App->audio->PlayFx(App->selectYourClass, true);
+	App->musicPlaying = App->selectYourClass;
 	return true;
 }
 
@@ -75,9 +76,10 @@ bool ModuleSceneWorld::CleanUp()
 // Update: draw background
 update_status ModuleSceneWorld::Update()
 {
-	App->renderer->DrawQuad(background, 160, 192, 224, 244, false);
 	timer_fast++;
 	timer_slow++;
+
+	App->renderer->DrawQuad(background, (Uint8)160, (Uint8)192, (Uint8)224, (Uint8)255, false);
 	//Continents
 	if(continentSelected == AMERICA && timer_fast < INTERMITENT_FAST || continentSelected != AMERICA)
 		App->renderer->Blit(graphics, americanX, americanY, &backgroundAmerica, 0.0f);
@@ -88,7 +90,6 @@ update_status ModuleSceneWorld::Update()
 	if (continentSelected == AFRICA && timer_fast < INTERMITENT_FAST || continentSelected != AFRICA)
 		App->renderer->Blit(graphics, africaX, africaY, &backgroundAfrica, 0.0f);
 
-	
 	//textContinents
 	App->renderer->Blit(graphics, americanX + 40, americanY + 60, &textAmerica, 0.0f);
 	App->renderer->Blit(graphics, asiaX + 50, asiaY + 35, &textAsia, 0.0f);
@@ -96,8 +97,8 @@ update_status ModuleSceneWorld::Update()
 	App->renderer->Blit(graphics, africaX, africaY + 30, &textAfrica, 0.0f);
 
 	if(timer_slow < INTERMITENT_SLOW)
-		App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textPushStart.w / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 5, &textPushStart, 0.0f);
-	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textSelectClass.w / 2, SCREEN_HEIGHT / 5, &textSelectClass, 0.0f);
+		App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textPushStart.w / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 6, &textPushStart, 0.0f);
+	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textSelectClass.w / 2, SCREEN_HEIGHT / 6, &textSelectClass, 0.0f);
 
 	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || logo.Finished()))
 	{
@@ -113,7 +114,12 @@ update_status ModuleSceneWorld::Update()
 		else continentSelected--;
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false) {
+		App->fade->FadeToBlack((Module*)App->scene_menu_music, this);
+	}
+
 	if (timer_fast > INTERMITENT_FAST * 2) timer_fast = 0;
 	if (timer_slow > INTERMITENT_SLOW * 2) timer_slow = 0;
+
 	return UPDATE_CONTINUE;
 }

@@ -28,6 +28,7 @@ public:
 
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
+	bool PauseFx(unsigned int fx);
 
 private:
 

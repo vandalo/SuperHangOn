@@ -45,7 +45,7 @@ typedef unsigned int uint;
 // Configuration -----------
 #define SCREEN_SIZE 1
 #define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 640
+#define SCREEN_HEIGHT 480
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Hang-on"

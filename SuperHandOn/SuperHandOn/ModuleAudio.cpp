@@ -145,7 +145,21 @@ bool ModuleAudio::PlayFx(unsigned int id, int repeat)
 
 	if (id < fx.size())
 	{
-		Mix_PlayChannel(-1, fx[id], repeat);
+		//Mix_PlayChannel(-1, fx[id], repeat);
+		Mix_PlayChannel(id, fx[id], repeat);
+		ret = true;
+	}
+
+	return ret;
+}
+
+bool ModuleAudio::PauseFx(unsigned int id)
+{
+	bool ret = false;
+
+	if (id < fx.size())
+	{
+		Mix_Pause(id);
 		ret = true;
 	}
 
