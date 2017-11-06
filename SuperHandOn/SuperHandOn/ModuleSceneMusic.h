@@ -33,6 +33,8 @@ public:
 	SDL_Rect backgroundMusicSelected;
 	unsigned int timer_fast, timer_slow;
 
+private:
+	unsigned int time_out;
 };
 
 #endif // __ModuleSceneMusic_H__

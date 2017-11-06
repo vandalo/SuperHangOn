@@ -40,6 +40,7 @@ bool ModuleSceneIntro::Start()
 	App->hardRoad = App->audio->LoadFx("music/5HardRoad.ogg");
 	App->selectYourClass = App->audio->LoadFx("music/1SelectYourClass.ogg");
 
+	//Load all fonts
 	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 
 	return true;

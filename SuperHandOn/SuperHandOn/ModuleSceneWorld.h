@@ -44,6 +44,9 @@ public:
 	int americanX, americanY, asiaX, asiaY, europeX, europeY, africaX, africaY;
 	Animation logo;
 	uint fx = 0;
+
+private:
+	unsigned int time_out;
 };
 
 #endif // __ModuleSceneWorld_H__

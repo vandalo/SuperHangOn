@@ -126,7 +126,7 @@ bool ModuleRender::Print(unsigned int idFont, const char * text, int x, int y, f
 	SDL_Rect position;
 	Font font = App->font->fonts[idFont];
 
-	position.x = x - (font.width / 2);
+	position.x = x - (strlen(text) * font.width / 2) - font.width;
 	position.y = y - (font.heigth / 2);
 	for (int i = 0; text[i] != '\0'; i++) {
 		int value = font.fontMap.find(text[i])->second;

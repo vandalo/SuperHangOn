@@ -7,12 +7,14 @@
 #include "ModuleRender.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneMusic.h"
+#include <string>
 
 ModuleSceneMusic::ModuleSceneMusic(bool active) : Module(active)
 {
 	timer_fast = 0;
 	timer_slow = 0;
 	musicSelected = 0;
+	time_out = 12;
 
 	background = { 0, 0, 640, 480};
 	backgroundMusic = { 4, 54, 564, 217 };
@@ -63,6 +65,10 @@ update_status ModuleSceneMusic::Update()
 		App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - backgroundMusic.w / 2, SCREEN_HEIGHT / 2 - backgroundMusic.h / 2 + backgroundMusicSelected.h * musicSelected, &backgroundMusicSelected, 0.0f);
 	}
 	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textSelectMusic.w / 2, SCREEN_HEIGHT / 6, &textSelectMusic, 0.0f);
+
+	App->renderer->Print(App->menusFont, to_string(time_out).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 4 + 10);
+
+	if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;
 
 	if (timer_fast > INTERMITENT_FAST * 2) timer_fast = 0;
 	if (timer_slow > INTERMITENT_SLOW * 2) timer_slow = 0;

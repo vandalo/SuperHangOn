@@ -7,12 +7,14 @@
 #include "ModuleRender.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneWorld.h"
+#include <string>
 
 ModuleSceneWorld::ModuleSceneWorld(bool active) : Module(active)
 {
 	continentSelected = AFRICA;
 	timer_fast = 0;
 	timer_slow = 0;
+	time_out = 12;
 	//background color
 	background.x = 0;
 	background.y = 0;
@@ -100,6 +102,8 @@ update_status ModuleSceneWorld::Update()
 		App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textPushStart.w / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 6, &textPushStart, 0.0f);
 	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textSelectClass.w / 2, SCREEN_HEIGHT / 6, &textSelectClass, 0.0f);
 
+	App->renderer->Print(App->menusFont, to_string(time_out).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 4);
+
 	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || logo.Finished()))
 	{
 	}
@@ -114,9 +118,11 @@ update_status ModuleSceneWorld::Update()
 		else continentSelected--;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false) {
+	if (time_out == 1 || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
 		App->fade->FadeToBlack((Module*)App->scene_menu_music, this);
 	}
+
+	if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;
 
 	if (timer_fast > INTERMITENT_FAST * 2) timer_fast = 0;
 	if (timer_slow > INTERMITENT_SLOW * 2) timer_slow = 0;
