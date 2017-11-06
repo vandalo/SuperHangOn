@@ -15,6 +15,8 @@ ModuleSceneWorld::ModuleSceneWorld(bool active) : Module(active)
 	timer_fast = 0;
 	timer_slow = 0;
 	time_out = 12;
+	swaped = false;
+
 	//background color
 	background.x = 0;
 	background.y = 0;
@@ -118,8 +120,9 @@ update_status ModuleSceneWorld::Update()
 		else continentSelected--;
 	}
 
-	if (time_out == 1 || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
+	if ((time_out == 0 && swaped == false) || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
 		App->fade->FadeToBlack((Module*)App->scene_menu_music, this);
+		swaped = true;
 	}
 
 	if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;

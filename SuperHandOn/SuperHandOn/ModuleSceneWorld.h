@@ -47,6 +47,7 @@ public:
 
 private:
 	unsigned int time_out;
+	bool swaped;
 };
 
 #endif // __ModuleSceneWorld_H__
