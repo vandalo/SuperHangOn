@@ -59,6 +59,9 @@
     <ClCompile Include="ModuleSceneMusic.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleFont.cpp">
+      <Filter>Core Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -111,6 +114,9 @@
     </ClInclude>
     <ClInclude Include="ModuleSceneMusic.h">
       <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFont.h">
+      <Filter>Core Modules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

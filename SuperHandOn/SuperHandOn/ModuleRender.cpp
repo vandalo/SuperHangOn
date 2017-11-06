@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+#include "ModuleFont.h"
 #include "SDL/include/SDL.h"
 
 ModuleRender::ModuleRender()
@@ -114,6 +115,35 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 		ret = false;
 	}
 
+	return ret;
+}
+
+bool ModuleRender::Print(unsigned int idFont, const char * text, int x, int y, float speed)
+{
+	bool ret = true;
+
+	SDL_Rect leter;
+	SDL_Rect position;
+	Font font = App->font->fonts[idFont];
+
+	position.x = x - (font.width / 2);
+	position.y = y - (font.heigth / 2);
+	for (int i = 0; text[i] != '\0'; i++) {
+		int value = font.fontMap.find(text[i])->second;
+		leter.h = font.heigth;
+		leter.w = font.width;
+		leter.x = value;
+		leter.y = 0;
+		position.w = leter.w;
+		position.h = leter.h;
+		position.x += font.width;
+		//SDL_BlitSurface(font.surface, &leter, App->window->screen_surface, &position);
+		if (SDL_RenderCopy(renderer, font.surface, &leter, &position) != 0)
+		{
+			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
+			ret = false;
+		}
+	}
 	return ret;
 }
 

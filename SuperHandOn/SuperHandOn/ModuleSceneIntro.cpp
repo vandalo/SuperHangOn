@@ -3,6 +3,7 @@
 #include "Animation.h"
 #include "ModuleTextures.h"
 #include "ModuleAudio.h"
+#include "ModuleFont.h"
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleFadeToBlack.h"
@@ -38,6 +39,8 @@ bool ModuleSceneIntro::Start()
 	App->winningRun = App->audio->LoadFx("music/4WinningRun.ogg");
 	App->hardRoad = App->audio->LoadFx("music/5HardRoad.ogg");
 	App->selectYourClass = App->audio->LoadFx("music/1SelectYourClass.ogg");
+
+	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 
 	return true;
 }

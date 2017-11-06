@@ -13,6 +13,7 @@ class ModuleAudio;
 class ModuleFadeToBlack;
 class ModuleCollision;
 class ModuleParticles;
+class ModuleFont;
 
 // Game modules ---
 class ModulePlayer;
@@ -20,6 +21,7 @@ class ModuleSceneIntro;
 class ModuleSceneMenuOne;
 class ModuleSceneWorld;
 class ModuleSceneMusic;
+
 
 class Application
 {
@@ -39,6 +41,7 @@ public:
 	ModuleInput* input;
 	ModuleAudio* audio;
 	ModuleFadeToBlack* fade;
+	ModuleFont* font;
 	ModuleCollision* collision;
 	ModuleParticles* particles;
 
@@ -58,6 +61,9 @@ public:
 	unsigned int finished;
 	unsigned int enterYourName;
 	unsigned int winnerShopBGM;
+
+	// Fonts
+	unsigned int menusFont;
 
 	unsigned int musicPlaying;
 

@@ -119,6 +119,6 @@ update_status ModuleSceneMenuOne::Update()
 		App->fade->FadeToBlack((Module*)App->scene_menu_world, this);
 	}
 
-
+	App->renderer->Print(App->menusFont, "123", 30, 30);
 	return UPDATE_CONTINUE;
 }

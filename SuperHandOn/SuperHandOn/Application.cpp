@@ -5,6 +5,7 @@
 #include "ModuleInput.h"
 #include "ModuleAudio.h"
 #include "ModuleFadeToBlack.h"
+#include "ModuleFont.h"
 //#include "ModuleCollision.h"
 //#include "ModuleParticles.h"
 
@@ -25,6 +26,7 @@ Application::Application()
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(textures = new ModuleTextures());
 	modules.push_back(audio = new ModuleAudio());
+	modules.push_back(font = new ModuleFont());
 
 	// Game Modules
 	modules.push_back(scene_intro = new ModuleSceneIntro(false));
