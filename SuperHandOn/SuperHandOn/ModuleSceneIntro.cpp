@@ -58,7 +58,7 @@ bool ModuleSceneIntro::CleanUp()
 }
 
 // Update: draw background
-update_status ModuleSceneIntro::Update()
+update_status ModuleSceneIntro::Update(float deltaTime)
 {
 	current_animation = &logo;
 	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT*SCREEN_SIZE / 2 - current_animation->GetCurrentFrame().h/2, &(current_animation->GetCurrentFrame()));

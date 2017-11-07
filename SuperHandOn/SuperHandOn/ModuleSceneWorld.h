@@ -19,12 +19,12 @@ public:
 	~ModuleSceneWorld();
 
 	bool Start();
-	update_status Update();
+	update_status Update(float deltaTime);
 	bool CleanUp();
 
 public:
 	unsigned int continentSelected;
-	unsigned int timer_fast, timer_slow;
+	float timer_fast, timer_slow;
 	SDL_Texture* graphics = nullptr;
 	Animation* current_animation = nullptr;
 	SDL_Rect background;
@@ -46,7 +46,7 @@ public:
 	uint fx = 0;
 
 private:
-	unsigned int time_out;
+	float time_out;
 	bool swaped;
 };
 

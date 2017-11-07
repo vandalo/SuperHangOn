@@ -46,10 +46,11 @@ typedef unsigned int uint;
 #define SCREEN_SIZE 1
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+#define FPS 30
 #define FULLSCREEN false
 #define VSYNC true
 #define TITLE "Super Hang-on"
-#define INTERMITENT_FAST 15
-#define INTERMITENT_SLOW 30
+#define INTERMITENT_FAST 0.3
+#define INTERMITENT_SLOW 0.5
 
 #endif //__GLOBALS_H__

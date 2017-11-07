@@ -67,8 +67,6 @@ ModuleSceneMenuOne::~ModuleSceneMenuOne()
 // Load assets
 bool ModuleSceneMenuOne::Start()
 {
-	LOG("Loading space intro");
-
 	graphicsHangOnTitle = App->textures->Load("sprites/superHangOnLogo.bmp");
 	graphicsSegaLogo = App->textures->Load("sprites/segaLogoMenuOne.bmp");
 	graphicsOptions = App->textures->Load("sprites/menuOneOptions.bmp");
@@ -88,7 +86,7 @@ bool ModuleSceneMenuOne::CleanUp()
 }
 
 // Update: draw background
-update_status ModuleSceneMenuOne::Update()
+update_status ModuleSceneMenuOne::Update(float deltaTime)
 {
 	App->renderer->Blit(graphicsHangOnTitle, 0, logo.GetCurrentFrame().h / 2 - 30, &(logo.GetCurrentFrame()), 0.0f);
 	App->renderer->Blit(graphicsSegaLogo, 0, SCREEN_HEIGHT - segaLogo.GetCurrentFrame().h * 2, &(segaLogo.GetCurrentFrame()), 0.0f);

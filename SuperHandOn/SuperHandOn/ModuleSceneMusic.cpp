@@ -52,10 +52,10 @@ bool ModuleSceneMusic::CleanUp()
 }
 
 // Update: draw background
-update_status ModuleSceneMusic::Update()
+update_status ModuleSceneMusic::Update(float deltaTime)
 {
-	timer_fast++;
-	timer_slow++;
+	timer_fast += deltaTime;
+	timer_slow += deltaTime;
 
 	App->renderer->DrawQuad(background, (Uint8)224, (Uint8)160, (Uint8)0, (Uint8)255, false);
 	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - backgroundMusic.w / 2, SCREEN_HEIGHT / 2 - backgroundMusic.h / 2, &backgroundMusic, 0.0f);
@@ -66,9 +66,9 @@ update_status ModuleSceneMusic::Update()
 	}
 	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textSelectMusic.w / 2, SCREEN_HEIGHT / 6, &textSelectMusic, 0.0f);
 
-	App->renderer->Print(App->menusFont, to_string(time_out).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 4 + 10);
+	App->renderer->Print(App->menusFont, to_string((int)time_out).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 4 + 10);
 
-	if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;
+	time_out -= deltaTime;
 
 	if (timer_fast > INTERMITENT_FAST * 2) timer_fast = 0;
 	if (timer_slow > INTERMITENT_SLOW * 2) timer_slow = 0;

@@ -19,7 +19,7 @@ public:
 	~ModuleSceneMusic();
 
 	bool Start();
-	update_status Update();
+	update_status Update(float deltaTime);
 	bool CleanUp();
 
 public:
@@ -31,10 +31,10 @@ public:
 	SDL_Rect textPushStart;
 	SDL_Rect textSelectMusic;
 	SDL_Rect backgroundMusicSelected;
-	unsigned int timer_fast, timer_slow;
+	float timer_fast, timer_slow;
 
 private:
-	unsigned int time_out;
+	float time_out;
 };
 
 #endif // __ModuleSceneMusic_H__

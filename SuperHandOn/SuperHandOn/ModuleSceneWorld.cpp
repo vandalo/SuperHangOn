@@ -78,10 +78,10 @@ bool ModuleSceneWorld::CleanUp()
 }
 
 // Update: draw background
-update_status ModuleSceneWorld::Update()
+update_status ModuleSceneWorld::Update(float deltaTime)
 {
-	timer_fast++;
-	timer_slow++;
+	timer_fast += deltaTime;
+	timer_slow += deltaTime;
 
 	App->renderer->DrawQuad(background, (Uint8)160, (Uint8)192, (Uint8)224, (Uint8)255, false);
 	//Continents
@@ -104,7 +104,7 @@ update_status ModuleSceneWorld::Update()
 		App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textPushStart.w / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 6, &textPushStart, 0.0f);
 	App->renderer->Blit(graphics, SCREEN_WIDTH / 2 - textSelectClass.w / 2, SCREEN_HEIGHT / 6, &textSelectClass, 0.0f);
 
-	App->renderer->Print(App->menusFont, to_string(time_out).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 4);
+	App->renderer->Print(App->menusFont, to_string((int)time_out).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT - SCREEN_HEIGHT / 4);
 
 	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || logo.Finished()))
 	{
@@ -120,12 +120,12 @@ update_status ModuleSceneWorld::Update()
 		else continentSelected--;
 	}
 
-	if ((time_out == 0 && swaped == false) || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
+	if ((time_out < 1 && swaped == false) || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
 		App->fade->FadeToBlack((Module*)App->scene_menu_music, this);
 		swaped = true;
 	}
-
-	if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;
+	time_out -= deltaTime;
+	//if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;
 
 	if (timer_fast > INTERMITENT_FAST * 2) timer_fast = 0;
 	if (timer_slow > INTERMITENT_SLOW * 2) timer_slow = 0;

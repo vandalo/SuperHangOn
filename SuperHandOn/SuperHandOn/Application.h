@@ -4,6 +4,7 @@
 #include<list>
 #include "Globals.h"
 #include "Module.h"
+#include <time.h>
 
 class ModuleRender;
 class ModuleWindow;
@@ -68,7 +69,8 @@ public:
 	unsigned int musicPlaying;
 
 private:
-
+	clock_t timer = 0;
+	float deltaTime = 0;
 	std::list<Module*> modules;
 };
 
