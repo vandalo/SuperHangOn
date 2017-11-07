@@ -13,6 +13,7 @@
 #include "ModuleSceneMenuOne.h"
 #include "ModuleSceneWorld.h"
 #include "ModuleSceneMusic.h"
+#include "ModuleSceneMapAfrica.h"
 #include "ModulePlayer.h"
 
 using namespace std;
@@ -33,6 +34,7 @@ Application::Application()
 	modules.push_back(scene_menu_one = new ModuleSceneMenuOne(false));
 	modules.push_back(scene_menu_world = new ModuleSceneWorld(false));
 	modules.push_back(scene_menu_music = new ModuleSceneMusic(false));
+	modules.push_back(scene_menu_africa = new ModuleSceneMapAfrica(false));
 	modules.push_back(player = new ModulePlayer(false));
 
 	// Modules to draw on top of game logic

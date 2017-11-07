@@ -130,6 +130,7 @@
     <ClCompile Include="ModulePlayer.cpp" />
     <ClCompile Include="ModuleSceneIntro.cpp" />
     <ClCompile Include="ModuleRender.cpp" />
+    <ClCompile Include="ModuleSceneMapAfrica.cpp" />
     <ClCompile Include="ModuleSceneMenuOne.cpp" />
     <ClCompile Include="ModuleSceneMusic.cpp" />
     <ClCompile Include="ModuleSceneWorld.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="ModulePlayer.h" />
     <ClInclude Include="ModuleSceneIntro.h" />
     <ClInclude Include="ModuleRender.h" />
+    <ClInclude Include="ModuleSceneMapAfrica.h" />
     <ClInclude Include="ModuleSceneMenuOne.h" />
     <ClInclude Include="ModuleSceneMusic.h" />
     <ClInclude Include="ModuleTextures.h" />

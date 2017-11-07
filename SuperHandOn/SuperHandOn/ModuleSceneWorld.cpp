@@ -61,8 +61,7 @@ bool ModuleSceneWorld::Start()
 	graphics = App->textures->Load("sprites/miscellaneous.png");
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
-	App->audio->PlayFx(App->selectYourClass, true);
-	App->musicPlaying = App->selectYourClass;
+	App->audio->PlayMusic("music/1SelectYourClass.ogg", 0.f);
 	return true;
 }
 
@@ -121,11 +120,11 @@ update_status ModuleSceneWorld::Update(float deltaTime)
 	}
 
 	if ((time_out < 1 && swaped == false) || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
+		App->audio->MusicFadeOut(0.f);
 		App->fade->FadeToBlack((Module*)App->scene_menu_music, this);
 		swaped = true;
 	}
 	time_out -= deltaTime;
-	//if (timer_slow == INTERMITENT_SLOW && time_out > 0) time_out--;
 
 	if (timer_fast > INTERMITENT_FAST * 2) timer_fast = 0;
 	if (timer_slow > INTERMITENT_SLOW * 2) timer_slow = 0;

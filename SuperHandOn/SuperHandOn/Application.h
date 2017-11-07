@@ -16,13 +16,14 @@ class ModuleCollision;
 class ModuleParticles;
 class ModuleFont;
 
+
 // Game modules ---
 class ModulePlayer;
 class ModuleSceneIntro;
 class ModuleSceneMenuOne;
 class ModuleSceneWorld;
 class ModuleSceneMusic;
-
+class ModuleSceneMapAfrica;
 
 class Application
 {
@@ -52,21 +53,10 @@ public:
 	ModuleSceneMenuOne* scene_menu_one;
 	ModuleSceneWorld* scene_menu_world;
 	ModuleSceneMusic* scene_menu_music;
-
-	// Musics
-	unsigned int selectYourClass;
-	unsigned int outrideaCrisis;
-	unsigned int sprinter;
-	unsigned int winningRun;
-	unsigned int hardRoad;
-	unsigned int finished;
-	unsigned int enterYourName;
-	unsigned int winnerShopBGM;
+	ModuleSceneMapAfrica* scene_menu_africa;
 
 	// Fonts
 	unsigned int menusFont;
-
-	unsigned int musicPlaying;
 
 private:
 	clock_t timer = 0;

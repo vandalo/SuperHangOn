@@ -165,3 +165,17 @@ bool ModuleAudio::PauseFx(unsigned int id)
 
 	return ret;
 }
+
+void ModuleAudio::MusicFadeOut(float fade_time) {
+	if (music != nullptr)
+	{
+		if (fade_time > 0.0f)
+		{
+			Mix_FadeOutMusic((int)(fade_time * 1000.0f));
+		}
+		else
+		{
+			Mix_HaltMusic();
+		}
+	}
+}

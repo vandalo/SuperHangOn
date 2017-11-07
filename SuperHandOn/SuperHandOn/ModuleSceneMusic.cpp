@@ -15,6 +15,7 @@ ModuleSceneMusic::ModuleSceneMusic(bool active) : Module(active)
 	timer_slow = 0;
 	musicSelected = 0;
 	time_out = 12;
+	swaped = false;
 
 	background = { 0, 0, 640, 480};
 	backgroundMusic = { 4, 54, 564, 217 };
@@ -34,10 +35,8 @@ bool ModuleSceneMusic::Start()
 	graphics = App->textures->Load("sprites/musicMenu.png");
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
+	App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
 
-	App->audio->PauseFx(App->musicPlaying);
-	App->audio->PlayFx(App->outrideaCrisis, true);
-	App->musicPlaying = App->outrideaCrisis;
 	return true;
 }
 
@@ -51,7 +50,6 @@ bool ModuleSceneMusic::CleanUp()
 	return true;
 }
 
-// Update: draw background
 update_status ModuleSceneMusic::Update(float deltaTime)
 {
 	timer_fast += deltaTime;
@@ -87,28 +85,28 @@ update_status ModuleSceneMusic::Update(float deltaTime)
 	}
 
 	if (changedMusic) {
-		App->audio->PauseFx(App->musicPlaying);
 		switch (musicSelected)
 		{
 		case OUTRIDE_A_CRISIS:
-			App->audio->PlayFx(App->outrideaCrisis, true);
-			App->musicPlaying = App->outrideaCrisis;
+			App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
 			break;
 		case SPRINTER:
-			App->audio->PlayFx(App->sprinter, true);
-			App->musicPlaying = App->sprinter;
+			App->audio->PlayMusic("music/3Sprinter.ogg", 0.f);
 			break;
 		case WINNING_RUN:
-			App->audio->PlayFx(App->winningRun, true);
-			App->musicPlaying = App->winningRun;
+			App->audio->PlayMusic("music/4WinningRun.ogg", 0.f);
 			break;
 		case HARD_ROAD:
-			App->audio->PlayFx(App->hardRoad, true);
-			App->musicPlaying = App->hardRoad;
+			App->audio->PlayMusic("music/5HardRoad.ogg", 0.f);
 			break;
 		default:
 			break;
 		}
+	}
+	if ((time_out < 1 && swaped == false) || (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN && App->fade->isFading() == false)) {
+		App->audio->MusicFadeOut();
+		App->fade->FadeToBlack((Module*)App->scene_menu_africa, this);
+		swaped = true;
 	}
 
 	return UPDATE_CONTINUE;

@@ -7,40 +7,35 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModuleFadeToBlack.h"
-#include "ModuleSceneIntro.h"
+#include "ModuleSceneMapAfrica.h"
 
-ModuleSceneIntro::ModuleSceneIntro(bool active) : Module(active)
+ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : Module(active)
 {
 	//width 640, height 65, numSprites 48 //rows of 3
 	int j = 0;
 	for (int i = 0; i < 48; i++) {
 		if (i % 3 == 0) j++;
-		logo.frames.push_back({ (i%3) * 640,j*65,640,65 });
+		logo.frames.push_back({ (i % 3) * 640,j * 65,640,65 });
 	}
 	logo.loop = false;
 	logo.speed = 0.2f;
 }
 
-ModuleSceneIntro::~ModuleSceneIntro()
+ModuleSceneMapAfrica::~ModuleSceneMapAfrica()
 {}
 
 // Load assets
-bool ModuleSceneIntro::Start()
+bool ModuleSceneMapAfrica::Start()
 {
 	LOG("Loading space intro");
 
 	graphics = App->textures->Load("sprites/segaLogo.bmp");
 
-	App->renderer->camera.x = App->renderer->camera.y = 0;
-
-	//Load all fonts
-	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
-
 	return true;
 }
 
 // UnLoad assets
-bool ModuleSceneIntro::CleanUp()
+bool ModuleSceneMapAfrica::CleanUp()
 {
 	LOG("Unloading space scene");
 
@@ -51,14 +46,14 @@ bool ModuleSceneIntro::CleanUp()
 }
 
 // Update: draw background
-update_status ModuleSceneIntro::Update(float deltaTime)
+update_status ModuleSceneMapAfrica::Update(float deltaTime)
 {
 	current_animation = &logo;
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT*SCREEN_SIZE / 2 - current_animation->GetCurrentFrame().h/2, &(current_animation->GetCurrentFrame()));
+	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT*SCREEN_SIZE / 2 - current_animation->GetCurrentFrame().h / 2, &(current_animation->GetCurrentFrame()));
 
 	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || logo.Finished()))
 	{
-		App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
+		//App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
 	}
 
 	return UPDATE_CONTINUE;

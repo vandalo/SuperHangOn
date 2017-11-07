@@ -34,6 +34,7 @@ public:
 	float timer_fast, timer_slow;
 
 private:
+	bool swaped = false;
 	float time_out;
 };
 

@@ -43,7 +43,6 @@ public:
 
 	int americanX, americanY, asiaX, asiaY, europeX, europeY, africaX, africaY;
 	Animation logo;
-	uint fx = 0;
 
 private:
 	float time_out;
