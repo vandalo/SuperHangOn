@@ -18,8 +18,8 @@ public:
 public:
 
 	SDL_Texture* graphics = nullptr;
-	Animation* current_animation = nullptr;
-	Animation logo;
+	SDL_Rect backgroundDesert;
+	SDL_Rect backgroundFrontDesert;
 	uint fx = 0;
 };
 

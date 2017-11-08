@@ -8,17 +8,12 @@
 #include "ModuleRender.h"
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneMapAfrica.h"
+#include "ModulePlayer.h"
 
 ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : Module(active)
 {
-	//width 640, height 65, numSprites 48 //rows of 3
-	int j = 0;
-	for (int i = 0; i < 48; i++) {
-		if (i % 3 == 0) j++;
-		logo.frames.push_back({ (i % 3) * 640,j * 65,640,65 });
-	}
-	logo.loop = false;
-	logo.speed = 0.2f;
+	backgroundDesert = { 16, 60, 640, 480 };
+	backgroundFrontDesert = { 669, 96, 623, 30 };
 }
 
 ModuleSceneMapAfrica::~ModuleSceneMapAfrica()
@@ -29,8 +24,8 @@ bool ModuleSceneMapAfrica::Start()
 {
 	LOG("Loading space intro");
 
-	graphics = App->textures->Load("sprites/segaLogo.bmp");
-
+	graphics = App->textures->Load("sprites/backgrounds.png");
+	App->player->Enable();
 	return true;
 }
 
@@ -40,7 +35,7 @@ bool ModuleSceneMapAfrica::CleanUp()
 	LOG("Unloading space scene");
 
 	App->textures->Unload(graphics);
-	current_animation = nullptr;
+
 
 	return true;
 }
@@ -48,12 +43,14 @@ bool ModuleSceneMapAfrica::CleanUp()
 // Update: draw background
 update_status ModuleSceneMapAfrica::Update(float deltaTime)
 {
-	current_animation = &logo;
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT*SCREEN_SIZE / 2 - current_animation->GetCurrentFrame().h / 2, &(current_animation->GetCurrentFrame()));
+	App->renderer->Blit(graphics, 0, 0, &backgroundDesert, 0.0f);
+	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
+	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
+	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
 
-	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || logo.Finished()))
+	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN))
 	{
-		//App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
+		
 	}
 
 	return UPDATE_CONTINUE;

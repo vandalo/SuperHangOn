@@ -8,24 +8,26 @@
 #include "ModuleFadeToBlack.h"
 #include "ModulePlayer.h"
 
-// Reference at https://www.youtube.com/watch?v=OEhmUuehGOA
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
 	// idle animation (just the ship)
-	idle.frames.push_back({ 66, 1, 32, 14 });
+	straight.frames.push_back({ 181, 559, 66, 146 });
+	straight.frames.push_back({ 257, 559, 66, 146 });
+	straight.loop = true;
+	straight.speed = 0.04f;
 
 	// move upwards
-	up.frames.push_back({ 100, 1, 32, 14 });
-	up.frames.push_back({ 132, 0, 32, 14 });
-	up.loop = false;
-	up.speed = 0.1f;
+	//up.frames.push_back({ 100, 1, 32, 14 });
+	//up.frames.push_back({ 132, 0, 32, 14 });
+	//up.loop = false;
+	//up.speed = 0.1f;
 
 	// Move down
-	down.frames.push_back({ 33, 1, 32, 14 });
-	down.frames.push_back({ 0, 1, 32, 14 });
-	down.loop = false;
-	down.speed = 0.1f;
+	//down.frames.push_back({ 33, 1, 32, 14 });
+	//down.frames.push_back({ 0, 1, 32, 14 });
+	//down.loop = false;
+	//down.speed = 0.1f;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -36,11 +38,11 @@ bool ModulePlayer::Start()
 {
 	LOG("Loading player");
 
-	graphics = App->textures->Load("rtype/ship.png");
+	graphics = App->textures->Load("sprites/miscellaneous.png");
 
 	destroyed = false;
-	position.x = 150;
-	position.y = 120;
+	position.x = SCREEN_WIDTH / 2;
+	position.y = SCREEN_HEIGHT - 20;
 
 	return true;
 }
@@ -58,7 +60,7 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float deltaTime)
 {
-	int speed = 1;
+	/*int speed = 1;
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
@@ -98,16 +100,10 @@ update_status ModulePlayer::Update(float deltaTime)
 	if (App->input->GetKey(SDL_SCANCODE_S) == KEY_IDLE
 		&& App->input->GetKey(SDL_SCANCODE_W) == KEY_IDLE)
 		current_animation = &idle;
-
-	// Draw everything --------------------------------------
+		*/
+	current_animation = &straight;
 	if (destroyed == false)
-		App->renderer->Blit(graphics, position.x, position.y, &(current_animation->GetCurrentFrame()));
+		App->renderer->Blit(graphics, position.x - current_animation->GetCurrentFrame().w / 2, position.y - current_animation->GetCurrentFrame().h, &(current_animation->GetCurrentFrame()));
 
 	return UPDATE_CONTINUE;
 }
-
-// TODO 13: Make so is the laser collides, it is removed and create an explosion particle at its position
-
-// TODO 14: Make so if the player collides, it is removed and create few explosions at its positions
-// then fade away back to the first screen (use the "destroyed" bool already created 
-// You will need to create, update and destroy the collider with the player

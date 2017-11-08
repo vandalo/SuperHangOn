@@ -137,7 +137,6 @@ bool ModuleRender::Print(unsigned int idFont, const char * text, int x, int y, f
 		position.w = leter.w;
 		position.h = leter.h;
 		position.x += font.width;
-		//SDL_BlitSurface(font.surface, &leter, App->window->screen_surface, &position);
 		if (SDL_RenderCopy(renderer, font.surface, &leter, &position) != 0)
 		{
 			LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
