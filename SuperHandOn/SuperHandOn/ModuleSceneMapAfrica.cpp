@@ -14,6 +14,7 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : Module(active)
 {
 	backgroundDesert = { 16, 60, 640, 480 };
 	backgroundFrontDesert = { 669, 96, 623, 30 };
+
 }
 
 ModuleSceneMapAfrica::~ModuleSceneMapAfrica()
@@ -26,6 +27,7 @@ bool ModuleSceneMapAfrica::Start()
 
 	graphics = App->textures->Load("sprites/backgrounds.png");
 	App->player->Enable();
+
 	return true;
 }
 
@@ -40,9 +42,11 @@ bool ModuleSceneMapAfrica::CleanUp()
 	return true;
 }
 
+
 // Update: draw background
 update_status ModuleSceneMapAfrica::Update(float deltaTime)
 {
+
 	App->renderer->Blit(graphics, 0, 0, &backgroundDesert, 0.0f);
 	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
 	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
@@ -52,6 +56,6 @@ update_status ModuleSceneMapAfrica::Update(float deltaTime)
 	{
 		
 	}
-
+	
 	return UPDATE_CONTINUE;
 }

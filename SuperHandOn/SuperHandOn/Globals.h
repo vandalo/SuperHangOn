@@ -53,4 +53,10 @@ typedef unsigned int uint;
 #define INTERMITENT_FAST 0.3
 #define INTERMITENT_SLOW 0.5
 
+
+#define WIDTH 640;
+#define HEIGHT 480;
+#define ROADW 2000;
+#define SEGL 200; //segmentLenght
+#define CAMD 0.84; //camera depth
 #endif //__GLOBALS_H__

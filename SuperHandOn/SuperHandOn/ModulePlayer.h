@@ -7,6 +7,16 @@
 
 struct SDL_Texture;
 
+enum BikeState {
+	LEFT_THREE,
+	LEFT_TWO,
+	LEFT_ONE,
+	STRAIGHT,
+	RIGHT_ONE,
+	RIGHT_TWO,
+	RIGHT_THREE
+};
+
 class ModulePlayer : public Module
 {
 public:
@@ -22,10 +32,20 @@ public:
 	SDL_Texture* graphics = nullptr;
 	Animation* current_animation = nullptr;
 	Animation straight;
-	Animation up;
-	Animation down;
+	Animation turnRightOne;
+	Animation turnRightTwo;
+	Animation turnRightThree;
+	Animation turnLeftOne;
+	Animation turnLeftTwo;
+	Animation turnLeftThree;
+	//Animation down;
 	iPoint position;
 	bool destroyed = false;
+
+private:
+	unsigned int state;
+	float timer_movment;
+	float time_to_swap = 0.5;
 };
 
 #endif
