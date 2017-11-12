@@ -9,53 +9,36 @@
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneMapAfrica.h"
 #include "ModulePlayer.h"
+#include "Line.h"
 
-ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : Module(active)
+ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(active)
 {
-	backgroundDesert = { 16, 60, 640, 480 };
-	backgroundFrontDesert = { 669, 96, 623, 30 };
+	background = { 17, 61, 640, 275 };
+	backgroundParalax = { 668,98,625,28 };
 
+	grass1 = Color(224, 240, 160, 255);
+	grass2 = Color(192, 192, 128, 255);
+	rumble1 = Color(128, 128, 128, 255);
+	rumble2 = Color(225, 225, 225, 255);
+	color_road = Color(192, 192, 160, 255);
+	color_line = Color(255, 255, 255, 255);
+
+	for (int i = 0; i < 1600; i++)
+	{
+		Line line;
+		line.z = (float)i * line.segL;
+
+		if (i > 300 && i < 700) line.curve = 0.5;
+
+		if (i > 750) line.y = (float)(sin(i / 30.0) * 1500);
+
+		lines.push_back(line);
+	}
+
+	N = lines.size();
+	pos = 0;
+	playerX = 0;
 }
 
 ModuleSceneMapAfrica::~ModuleSceneMapAfrica()
 {}
-
-// Load assets
-bool ModuleSceneMapAfrica::Start()
-{
-	LOG("Loading space intro");
-
-	graphics = App->textures->Load("sprites/backgrounds.png");
-	App->player->Enable();
-
-	return true;
-}
-
-// UnLoad assets
-bool ModuleSceneMapAfrica::CleanUp()
-{
-	LOG("Unloading space scene");
-
-	App->textures->Unload(graphics);
-
-
-	return true;
-}
-
-
-// Update: draw background
-update_status ModuleSceneMapAfrica::Update(float deltaTime)
-{
-
-	App->renderer->Blit(graphics, 0, 0, &backgroundDesert, 0.0f);
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
-	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
-	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundFrontDesert, .05f);
-
-	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN))
-	{
-		
-	}
-	
-	return UPDATE_CONTINUE;
-}

@@ -20,9 +20,10 @@ public:
 	update_status PostUpdate(float deltaTime);
 	bool CleanUp();
 
-	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f);
+	bool Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed = 1.0f, bool moveX = false, bool moveY = false);
 	bool Print(unsigned int idFont, const char* text, int x, int y, float speed = 1.0f);
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
+	bool DrawPoly(Color c, short x1, short y1, short w1, short x2, short y2, short w);
 
 public:
 	SDL_Renderer* renderer = nullptr;

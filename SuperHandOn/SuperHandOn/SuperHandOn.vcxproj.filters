@@ -65,6 +65,9 @@
     <ClCompile Include="ModuleSceneMapAfrica.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleSceneTrack.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -123,6 +126,12 @@
     </ClInclude>
     <ClInclude Include="ModuleSceneMapAfrica.h">
       <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneTrack.h">
+      <Filter>Game Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -6,6 +6,10 @@
 #include "ModuleFont.h"
 #include "SDL/include/SDL.h"
 
+#include "SDL_gfx/include/sdl2_gfxprimitives.h"
+
+#pragma comment( lib, "SDL_gfx/libx86/SDL2_gfx.lib" )
+
 ModuleRender::ModuleRender()
 {
 	camera.x = camera.y = 0;
@@ -89,12 +93,14 @@ bool ModuleRender::CleanUp()
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed)
+bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, bool moveX, bool moveY)
 {
 	bool ret = true;
 	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * SCREEN_SIZE;
-	rect.y = (int)(camera.y * speed) + y * SCREEN_SIZE;
+	if (moveX) rect.x = (int)(camera.x * speed) + x * SCREEN_SIZE;
+	else  rect.x = (int)(camera.x * 0) + x * SCREEN_SIZE;
+	if (moveY) rect.y = (int)(camera.y * speed) + y * SCREEN_SIZE;
+	else rect.y = (int)(camera.y * 0) + y * SCREEN_SIZE;
 
 	if (section != NULL)
 	{
@@ -169,4 +175,16 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 	}
 
 	return ret;
+}
+
+bool ModuleRender::DrawPoly(Color c, short x1, short y1, short w1, short x2, short y2, short w2)
+{
+	short s[4] = { x1 - w1, x2 - w2, x2 + w2, x1 + w1 };
+	short t[4] = { y1, y2, y2, y1 };
+
+	filledPolygonRGBA(renderer,
+		s, t,
+		4,
+		c.r, c.g, c.b, c.a);
+	return true;
 }

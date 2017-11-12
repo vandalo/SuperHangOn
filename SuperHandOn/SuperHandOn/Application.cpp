@@ -91,7 +91,7 @@ update_status Application::Update()
 
 		deltaTime = 0;
 	}
-		
+	LOG("Time passed = %f", (float)(clock() - now));
 	return ret;
 }
 
