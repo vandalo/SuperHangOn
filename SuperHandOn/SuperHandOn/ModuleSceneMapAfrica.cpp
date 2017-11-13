@@ -15,6 +15,8 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 {
 	background = { 17, 61, 640, 275 };
 	backgroundParalax = { 668,98,625,28 };
+	backgroundTrackName = { 266, 467,98,18 };
+
 
 	grass1 = Color(224, 240, 160, 255);
 	grass2 = Color(192, 192, 128, 255);
@@ -23,12 +25,13 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 	color_road = Color(192, 192, 160, 255);
 	color_line = Color(255, 255, 255, 255);
 
+
 	for (int i = 0; i < 1600; i++)
 	{
 		Line line;
 		line.z = (float)i * line.segL;
 
-		if (i > 300 && i < 700) line.curve = 0.5;
+		if (i > 300 && i < 700) line.curve = 4;
 
 		if (i > 750) line.y = (float)(sin(i / 30.0) * 1500);
 

@@ -15,6 +15,7 @@
 #include "ModuleSceneMusic.h"
 #include "ModuleSceneMapAfrica.h"
 #include "ModulePlayer.h"
+#include "ModuleEnemy.h"
 
 using namespace std;
 
@@ -36,6 +37,7 @@ Application::Application()
 	modules.push_back(scene_menu_music = new ModuleSceneMusic(false));
 	modules.push_back(scene_menu_africa = new ModuleSceneMapAfrica(false));
 	modules.push_back(player = new ModulePlayer(false));
+	modules.push_back(enemy = new ModuleEnemy(false));
 
 	// Modules to draw on top of game logic
 	//modules.push_back(collision = new ModuleCollision());

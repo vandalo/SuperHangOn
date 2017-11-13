@@ -124,22 +124,30 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 	return ret;
 }
 
-bool ModuleRender::Print(unsigned int idFont, const char * text, int x, int y, float speed)
+bool ModuleRender::Print(unsigned int idFont, const char * text, int x, int y, float speed, bool center)
 {
 	bool ret = true;
 
 	SDL_Rect leter;
 	SDL_Rect position;
 	Font font = App->font->fonts[idFont];
-
-	position.x = x - (strlen(text) * font.width / 2) - font.width;
-	position.y = y - (font.heigth / 2);
+	if (center) {
+		position.y = y - (font.heigth / 2);
+		position.x = x - (strlen(text) * font.width / 2) - font.width;
+	}
+		
+	else {
+		position.x = x;
+		position.y = y;
+	}
+		
+	
 	for (int i = 0; text[i] != '\0'; i++) {
 		int value = font.fontMap.find(text[i])->second;
 		leter.h = font.heigth;
 		leter.w = font.width;
 		leter.x = value;
-		leter.y = 0;
+		leter.y = font.y;
 		position.w = leter.w;
 		position.h = leter.h;
 		position.x += font.width;

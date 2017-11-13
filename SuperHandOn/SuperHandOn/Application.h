@@ -24,6 +24,7 @@ class ModuleSceneMenuOne;
 class ModuleSceneWorld;
 class ModuleSceneMusic;
 class ModuleSceneMapAfrica;
+class ModuleEnemy;
 
 class Application
 {
@@ -55,8 +56,14 @@ public:
 	ModuleSceneMusic* scene_menu_music;
 	ModuleSceneMapAfrica* scene_menu_africa;
 
+	ModuleEnemy* enemy;
+
 	// Fonts
 	unsigned int menusFont;
+	unsigned int numericFontYellow;
+	unsigned int numericFontWhite;
+	unsigned int numericFontRed;
+	unsigned int numericFontGreen;
 
 private:
 	clock_t timer = 0;

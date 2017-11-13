@@ -68,6 +68,9 @@
     <ClCompile Include="ModuleSceneTrack.cpp">
       <Filter>Game Modules</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleEnemy.cpp">
+      <Filter>Game Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Globals.h">
@@ -132,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="Line.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleEnemy.h">
+      <Filter>Game Modules</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

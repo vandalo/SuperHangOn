@@ -9,11 +9,36 @@
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTrack.h"
 #include "ModulePlayer.h"
+#include "ModuleEnemy.h"
 #include "Line.h"
+#include <string>
 
 ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 {
 	startSign = { 7, 2, 627, 207};
+
+	sempahor.frames.push_back({ 12, 265, 62, 142 });
+	sempahor.frames.push_back({ 84, 265, 62, 142 });
+	sempahor.frames.push_back({ 157, 265, 62, 142 });
+	sempahor.frames.push_back({ 225, 265, 62, 142 });
+	sempahor.loop = false;
+	sempahor.speed = 0.01f;
+
+	maxPuntuation = 6514651;
+	stage = 1;
+	time = 60;
+	score = 0;
+	speed = 200;
+
+	backgroundTop = {33, 437, 62, 25};
+	backgroundTime = { 97, 437, 76, 26 };
+	backgroundScore = { 175, 437, 98, 26 };
+	backgroundStage = { 275, 421, 83, 18 };
+	backgroundStageProces = { 33, 467, 226, 18 };
+	backgroundCourse = { 409, 421, 98, 18 };
+	backgroundSpeed = { 275, 441, 82, 18 };
+	backgroundKm = { 367, 441, 34, 18 };
+
 }
 
 ModuleSceneTrack::~ModuleSceneTrack()
@@ -26,8 +51,19 @@ bool ModuleSceneTrack::Start()
 
 	graphics = App->textures->Load("sprites/backgrounds.png");
 	decoration = App->textures->Load("sprites/decoration.png");
-	App->player->Enable();
+	gui = App->textures->Load("sprites/miscellaneous.png");
 
+	//Gui fonts
+	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18);
+	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 18);
+	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 36);
+	App->numericFontGreen = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 54);
+
+	//ON DEBUG MODE
+	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
+
+	App->player->Enable();
+	//App->enemy->Enable();
 	return true;
 }
 
@@ -76,6 +112,28 @@ void ModuleSceneTrack::PrintTrack()
 	}
 }
 
+void ModuleSceneTrack::PrintGui() {
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20), &backgroundTop, 0.f);
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - backgroundTime.w / 2, (SCREEN_HEIGHT / 20), &backgroundTime, 0.f);
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 10) * 6, (SCREEN_HEIGHT / 20), &backgroundScore, 0.f);
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 2 + 8, &backgroundCourse, 0.f);
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 3, &backgroundStage, 0.f);
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 20), (SCREEN_HEIGHT / 20) * 4, &backgroundStageProces, 0.f);
+	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 6.5), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundSpeed, 0.f);
+	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 8.5) + 16, (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundKm, 0.f);
+	App->renderer->Blit(gui, (SCREEN_WIDTH / 10) * 2.7, (SCREEN_HEIGHT / 20) * 2 + 8, &backgroundTrackName, 0.f, false);
+
+	//Text
+	App->renderer->Print(App->numericFontRed, to_string((int)maxPuntuation).c_str(), (SCREEN_WIDTH / 10) + backgroundTop.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
+	App->renderer->Print(App->numericFontGreen, to_string((int)score).c_str(), (SCREEN_WIDTH / 10) * 6 + backgroundScore.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
+	if(speed < 280)
+		App->renderer->Print(App->numericFontWhite, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
+	else
+		App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
+	App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 20 * 3, 0.f);
+	App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (SCREEN_WIDTH / 10) * 2.4, (SCREEN_HEIGHT / 20) * 3, 0.f, false);
+}
+
 
 // Update: draw background
 update_status ModuleSceneTrack::Update(float deltaTime)
@@ -83,6 +141,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		pos += 200;
+		score += 200;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
@@ -105,14 +164,21 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
 
 	//DrawDecoration
-	App->renderer->Blit(decoration, 5, SCREEN_HEIGHT / 2  - 60, &startSign, 0.f);
-
+	//App->renderer->Blit(decoration, 5, SCREEN_HEIGHT / 2  - 60, &startSign, 0.f);
+	//App->renderer->Blit(decoration,  35, SCREEN_HEIGHT / 2 + 10, &sempahor.GetCurrentFrame(), 0.f);
 
 	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN))
 	{
 
 	}
 
+	time -= deltaTime;
+	if (time < 0) time = 0;
+	//Print GUI
+
+	PrintGui();
+
+	
 
 	return UPDATE_CONTINUE;
 }

@@ -12,13 +12,14 @@ ModuleFont::ModuleFont()
 ModuleFont::~ModuleFont()
 {}
 
-unsigned int ModuleFont::LoadMedia(const char* filePath, const char* formatFont, unsigned int fontWidth, unsigned int fontHeigth)
+unsigned int ModuleFont::LoadMedia(const char* filePath, const char* formatFont, unsigned int fontWidth, unsigned int fontHeigth, unsigned int initY)
 {
 	//Loading success flag
 	bool success = true;
 	Font font;
 	//Load splash image
 	font.surface = App->textures->Load(filePath);
+	font.y = initY;
 	if (font.surface == NULL)
 	{
 		printf("Unable to load image %s! SDL Error: %s\n", filePath, SDL_GetError());
