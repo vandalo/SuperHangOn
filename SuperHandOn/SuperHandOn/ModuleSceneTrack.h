@@ -37,6 +37,9 @@ public:
 	SDL_Rect backgroundSpeed;
 	SDL_Rect backgroundKm;
 	SDL_Rect backgroundTrackName;
+	SDL_Rect deadTree;
+
+	SDL_Rect obejct;
 
 	SDL_Rect road;
 	SDL_Rect limit;
@@ -54,7 +57,6 @@ public:
 	int N = 0;
 	int pos;
 	int playerX;
-
 private:
 	void PrintTrack();
 	void PrintGui();

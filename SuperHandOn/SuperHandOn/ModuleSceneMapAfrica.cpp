@@ -31,9 +31,13 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 		Line line;
 		line.z = (float)i * line.segL;
 
-		if (i > 300 && i < 700) line.curve = 4;
+		//if (i > 300 && i < 700) line.curve = 4;
 
-		if (i > 750) line.y = (float)(sin(i / 30.0) * 1500);
+		//if (i > 0) line.y = (float)(sin(i / 30.0) * 1500);
+		int dist = rand() % 3;
+		int sign = rand() % 2 + 1;
+		if (sign == 1) dist *= (-1);
+		if (i % 20 == 0) line.spriteX = dist;
 
 		lines.push_back(line);
 	}
