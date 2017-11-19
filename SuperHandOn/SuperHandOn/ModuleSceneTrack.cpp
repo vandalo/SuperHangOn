@@ -39,6 +39,9 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	backgroundSpeed = { 275, 441, 82, 18 };
 	backgroundKm = { 367, 441, 34, 18 };
 
+	//Decoration
+	deadTree = { 649, 0, 138, 209 };
+
 }
 
 ModuleSceneTrack::~ModuleSceneTrack()
@@ -77,14 +80,14 @@ bool ModuleSceneTrack::CleanUp()
 
 void ModuleSceneTrack::PrintTrack()
 {
-
-	while (pos >= N * 200) pos -= N * 200;
-	while (pos < 0) pos += N * 200;
+	while (pos >= N * 200) pos -= N * SEGL;
+	while (pos < 0) pos += N * SEGL;
 
 	float x = 0, dx = 0;
-	int startPos = pos / 200;
-	int camH = (int)(1500 + lines[startPos].y);
-	int maxy = 480;
+	int startPos = pos / SEGL;
+	int camH = (int)(1500 + lines[startPos].y
+		);
+	int maxy = HEIGHT;
 
 	for (int n = startPos; n < startPos + 300; n++) {
 		Line &l = lines[n%N];
@@ -92,6 +95,7 @@ void ModuleSceneTrack::PrintTrack()
 		x += dx;
 		dx += l.curve;
 
+		l.clip = maxy;
 		if (l.Y >= maxy) continue;
 		maxy = (int)(l.Y);
 
@@ -99,16 +103,25 @@ void ModuleSceneTrack::PrintTrack()
 		Color rumble = (n / 3) % 2 ? rumble1 : rumble2;
 		Color line = (n / 10) % 2 ? color_line : color_road;
 
-		Line p;
-		if (n == 0)
-			p = lines[lines.size() - 1 % N]; //previous line
-		else
-			p = lines[(n - 1) % N]; //previous line
+		Line p = lines[(n - 1) % N]; //previous line
 
 		App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(rumble, (short)p.X, (short)p.Y, (short)(p.W*1.2), (short)l.X, (short)l.Y, (short)(l.W*1.2));
 		App->renderer->DrawPoly(color_road, (short)p.X, (short)p.Y, (short)p.W, (short)l.X, (short)l.Y, (short)l.W);
 		App->renderer->DrawPoly(line, (short)p.X, (short)p.Y, (short)(p.W*0.05), (short)l.X, (short)l.Y, (short)(l.W*0.05));
+	}
+
+	//Draw background
+	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
+	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+
+
+	//Draw Objects
+	for (int n = startPos + 300; n > startPos; n--) {
+		if (lines[n%N].spriteX != -1)
+			lines[n%N].DrawObject(deadTree, decoration);
 	}
 }
 
@@ -121,7 +134,7 @@ void ModuleSceneTrack::PrintGui() {
 	App->renderer->Blit(gui, (SCREEN_WIDTH / 20), (SCREEN_HEIGHT / 20) * 4, &backgroundStageProces, 0.f);
 	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 6.5), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundSpeed, 0.f);
 	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 8.5) + 16, (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundKm, 0.f);
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 10) * 2.7, (SCREEN_HEIGHT / 20) * 2 + 8, &backgroundTrackName, 0.f, false);
+	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 2.7), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundTrackName, 0.f, false);
 
 	//Text
 	App->renderer->Print(App->numericFontRed, to_string((int)maxPuntuation).c_str(), (SCREEN_WIDTH / 10) + backgroundTop.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
@@ -131,7 +144,7 @@ void ModuleSceneTrack::PrintGui() {
 	else
 		App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
 	App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 20 * 3, 0.f);
-	App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (SCREEN_WIDTH / 10) * 2.4, (SCREEN_HEIGHT / 20) * 3, 0.f, false);
+	App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (int)((SCREEN_WIDTH / 10) * 2.4), (int)((SCREEN_HEIGHT / 20) * 3), 0.f, false);
 }
 
 
@@ -155,13 +168,6 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	}
 
 	PrintTrack();
-
-
-	//Draw background
-	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
-	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
-	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
 
 	//DrawDecoration
 	//App->renderer->Blit(decoration, 5, SCREEN_HEIGHT / 2  - 60, &startSign, 0.f);

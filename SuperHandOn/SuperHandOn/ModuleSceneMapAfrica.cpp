@@ -33,7 +33,10 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 
 		if (i > 300 && i < 700) line.curve = 4;
 
-		if (i > 750) line.y = (float)(sin(i / 30.0) * 1500);
+		if (i > 0) line.y = (float)(sin(i / 30.0) * 1500);
+
+		if (i % 20 == 0) line.spriteX = -2.5;
+		if (i % 15 == 0) line.spriteX = 2.5;
 
 		lines.push_back(line);
 	}
