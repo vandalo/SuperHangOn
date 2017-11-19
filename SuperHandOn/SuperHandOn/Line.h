@@ -21,9 +21,9 @@ public:
 	int roadW = ROADW;
 	int segL = SEGL; //segmentLenght
 	float camD = (float)CAMD; //camera depth
-
+	
 	Line() {
-		curve = x = y = z = 0; X = 0; Y = SCREEN_HEIGHT; W = 0;
+		curve = x = y = z = 0; X = 0; Y = 0; W = 0;
 		spriteX = -1; clip = 0; scale = 0;
 	}
 
@@ -32,7 +32,7 @@ public:
 	{
 		scale = camD / (z - camZ);
 		X = (float)((1 + scale*(x - camX)) * width / 2);
-		Y = (float)((1 - scale*(y - camY)) * height *0.55);
+		Y = (float)((1 - scale*(y - camY)) * height * 0.55);
 		W = (float)(scale * roadW * width / 2);
 	}
 

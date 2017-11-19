@@ -38,7 +38,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	backgroundCourse = { 409, 421, 98, 18 };
 	backgroundSpeed = { 275, 441, 82, 18 };
 	backgroundKm = { 367, 441, 34, 18 };
-
+	pos = 300000;
 	//Decoration
 	deadTree = { 649, 0, 138, 209 };
 
@@ -85,9 +85,14 @@ void ModuleSceneTrack::PrintTrack()
 
 	float x = 0, dx = 0;
 	int startPos = pos / SEGL;
-	int camH = (int)(1500 + lines[startPos].y
-		);
+	int camH = (int)(1500 + lines[startPos].y);
 	int maxy = HEIGHT;
+
+	//Draw background
+	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
+	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
 
 	for (int n = startPos; n < startPos + 300; n++) {
 		Line &l = lines[n%N];
@@ -105,17 +110,14 @@ void ModuleSceneTrack::PrintTrack()
 
 		Line p = lines[(n - 1) % N]; //previous line
 
+		//App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(rumble, (short)p.X, (short)p.Y, (short)(p.W*1.2), (short)l.X, (short)l.Y, (short)(l.W*1.2));
 		App->renderer->DrawPoly(color_road, (short)p.X, (short)p.Y, (short)p.W, (short)l.X, (short)l.Y, (short)l.W);
 		App->renderer->DrawPoly(line, (short)p.X, (short)p.Y, (short)(p.W*0.05), (short)l.X, (short)l.Y, (short)(l.W*0.05));
 	}
 
-	//Draw background
-	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
-	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
-	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+
 
 
 	//Draw Objects
@@ -151,24 +153,41 @@ void ModuleSceneTrack::PrintGui() {
 // Update: draw background
 update_status ModuleSceneTrack::Update(float deltaTime)
 {
+	//Automove On debugmode
+	pos += 400;
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
-		pos += 200;
+		pos += 400;
 		score += 200;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 	{
-		playerX += 20;
+		playerX += 70;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 	{
-		playerX -= 20;
+		playerX -= 70;
 	}
 
+	//Move player to compensate the force of the curve
+	/*int startPos = pos / SEGL;
+	float currentCurve = lines[startPos%N].curve;
+	if (currentCurve > 3.5) playerX -= 60;
+	else if (currentCurve > 2) playerX -= 45;
+	else if (currentCurve > 1) playerX -= 25;
+	else if (currentCurve > 0) playerX -= 15;
+	else if (currentCurve < 0) {
+		if (currentCurve > -1) playerX += 15;
+		else if (currentCurve > 2) playerX += 25;
+		else if (currentCurve > 3.5) playerX += 45;
+		else playerX += 60;
+	}*/
+	
+	
 	PrintTrack();
-
+	
 	//DrawDecoration
 	//App->renderer->Blit(decoration, 5, SCREEN_HEIGHT / 2  - 60, &startSign, 0.f);
 	//App->renderer->Blit(decoration,  35, SCREEN_HEIGHT / 2 + 10, &sempahor.GetCurrentFrame(), 0.f);
