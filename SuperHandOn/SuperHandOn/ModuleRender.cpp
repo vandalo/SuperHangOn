@@ -198,3 +198,5 @@ bool ModuleRender::DrawPoly(Color c, short x1, short y1, short w1, short x2, sho
 		c.r, c.g, c.b, c.a);
 	return true;
 }
+
+

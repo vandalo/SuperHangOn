@@ -57,7 +57,6 @@ public:
 	int N = 0;
 	int pos;
 	int playerX;
-
 private:
 	void PrintTrack();
 	void PrintGui();

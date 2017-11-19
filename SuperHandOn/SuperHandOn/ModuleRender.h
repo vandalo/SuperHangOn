@@ -25,6 +25,7 @@ public:
 	bool DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera = true);
 	bool DrawPoly(Color c, short x1, short y1, short w1, short x2, short y2, short w);
 
+
 public:
 	SDL_Renderer* renderer = nullptr;
 	SDL_Rect camera;
