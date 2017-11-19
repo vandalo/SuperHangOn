@@ -54,9 +54,10 @@ public:
 		X += (W * spriteX);
 		if (clipH >= destH) return;
 
-		sprite.h = h - h*clipH / destH;
-		if (destY + sprite.h*(destH / h) > height *0.55) 
-		App->renderer->Blit(tex, X, destY, &sprite, 0.f, false, false, sprite.w*(destW / w), sprite.h*(destH / h));
+		sprite.h = (int)(h - h*clipH / destH);
+		int spriteScaleH = (int)(sprite.h*(destH / h));
+		if (destY + spriteScaleH > height *0.55)
+			App->renderer->Blit(tex, (int)X, (int)destY, &sprite, 0.f, false, false, (int)(sprite.w*(destW / w)), spriteScaleH);
 	}
 
 };

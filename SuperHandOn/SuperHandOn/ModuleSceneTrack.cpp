@@ -95,7 +95,7 @@ void ModuleSceneTrack::PrintTrack()
 		x += dx;
 		dx += l.curve;
 
-		l.clip = maxy;
+		l.clip = (float)maxy;
 		if (l.Y >= maxy) continue;
 		maxy = (int)(l.Y);
 
