@@ -15,7 +15,7 @@
 
 ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 {
-	startSign = { 7, 2, 627, 207};
+	//startSign = 
 
 	sempahor.frames.push_back({ 12, 265, 62, 142 });
 	sempahor.frames.push_back({ 84, 265, 62, 142 });
@@ -39,9 +39,20 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	backgroundSpeed = { 275, 441, 82, 18 };
 	backgroundKm = { 367, 441, 34, 18 };
 	pos = 300000;
-	//Decoration
-	deadTree = { 649, 0, 138, 209 };
 
+	Decoration*dec_tree = new Decoration();
+	dec_tree->maxX = 4;
+	dec_tree->minX = 2.5;
+	dec_tree->rect = { 649, 0, 138, 209 };
+	decoration.push_back(dec_tree);
+	deadTree = decoration.size() - 1;
+
+	Decoration*dec_startSign = new Decoration();
+	dec_startSign->maxX = 0;
+	dec_startSign->minX = 0;
+	dec_startSign->rect = { 7, 2, 627, 207 };
+	decoration.push_back(dec_startSign);
+	startSign = decoration.size() - 1;
 }
 
 ModuleSceneTrack::~ModuleSceneTrack()
@@ -51,10 +62,15 @@ ModuleSceneTrack::~ModuleSceneTrack()
 bool ModuleSceneTrack::Start()
 {
 	LOG("Loading space intro");
+	//Load decorations
 
 	graphics = App->textures->Load("sprites/backgrounds.png");
-	decoration = App->textures->Load("sprites/decoration.png");
+
+	//decor = App->textures->Load("sprites/decoration.png");
 	gui = App->textures->Load("sprites/miscellaneous.png");
+
+	//Load decoration sprites
+	decorationSprite = App->textures->Load("sprites/decoration.png");
 
 	//Gui fonts
 	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18);
@@ -122,8 +138,8 @@ void ModuleSceneTrack::PrintTrack()
 
 	//Draw Objects
 	for (int n = startPos + 300; n > startPos; n--) {
-		if (lines[n%N].spriteX != -1)
-			lines[n%N].DrawObject(deadTree, decoration);
+		if (lines[n%N].id != -1)
+			lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite);
 	}
 }
 
@@ -154,7 +170,7 @@ void ModuleSceneTrack::PrintGui() {
 update_status ModuleSceneTrack::Update(float deltaTime)
 {
 	//Automove On debugmode
-	pos += 400;
+	//pos += 400;
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		pos += 400;

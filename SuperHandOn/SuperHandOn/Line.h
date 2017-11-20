@@ -13,7 +13,8 @@ public:
 	float scale;
 	float curve;
 
-	float spriteX;
+	int id;
+	int spriteX;
 	float clip;
 
 	int width = WIDTH;
@@ -24,7 +25,7 @@ public:
 	
 	Line() {
 		curve = x = y = z = 0; X = 0; Y = 0; W = 0;
-		spriteX = -1; clip = 0; scale = 0;
+		spriteX = id = -1; clip = 0; scale = 0;
 	}
 
 	//from world to scene

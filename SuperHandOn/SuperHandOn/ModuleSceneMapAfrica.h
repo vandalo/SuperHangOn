@@ -9,6 +9,7 @@ class ModuleSceneMapAfrica : public ModuleSceneTrack
 
 public:
 	ModuleSceneMapAfrica(bool active = true);
+	bool Start();
 	~ModuleSceneMapAfrica();
 
 };

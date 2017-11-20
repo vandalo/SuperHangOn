@@ -7,6 +7,13 @@
 class Line;
 class ModuleEnemy;
 
+struct Decoration {
+	float minX;
+	float maxX;
+
+	SDL_Rect rect;
+};
+
 class ModuleSceneTrack : public Module
 {
 
@@ -21,11 +28,11 @@ public:
 public:
 
 	SDL_Texture* graphics = nullptr;
-	SDL_Texture* decoration = nullptr;
+	SDL_Texture* decorationSprite = nullptr;
 	SDL_Texture* gui = nullptr;
 
 	Animation sempahor;
-	SDL_Rect startSign;
+	//SDL_Rect startSign;
 	SDL_Rect background;
 	SDL_Rect backgroundParalax;
 	SDL_Rect backgroundTop;
@@ -37,7 +44,7 @@ public:
 	SDL_Rect backgroundSpeed;
 	SDL_Rect backgroundKm;
 	SDL_Rect backgroundTrackName;
-	SDL_Rect deadTree;
+	//SDL_Rect deadTree;
 
 	SDL_Rect obejct;
 
@@ -57,6 +64,12 @@ public:
 	int N = 0;
 	int pos;
 	int playerX;
+
+	vector<Decoration*> decoration;
+	//Array decoration item index
+	int deadTree;
+	int startSign;
+
 private:
 	void PrintTrack();
 	void PrintGui();
@@ -65,6 +78,8 @@ private:
 	float time;
 	int score;
 	int speed;
+
+
 };
 
 #endif // __ModuleSceneTrack_H__
