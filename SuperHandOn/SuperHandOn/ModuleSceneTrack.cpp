@@ -60,12 +60,35 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	decoration.push_back(dec_enemyOne);
 	enemyOne = decoration.size() - 1;
 
+	//Animation of IA
+	greenZero.frames.push_back({ 689,915,128,110 });
+	greenZero.frames.push_back({ 819,915,128,110 });
+	greenZero.loop = true;
+	greenZero.speed = 0.04f;
+
+	greenOne.frames.push_back({ 589,899,92,126 });
+	greenOne.frames.push_back({ 487,899,92,126 });
+	greenOne.loop = true;
+	greenOne.speed = 0.04f;
+
+	greenTwo.frames.push_back({ 411,889,72,136 });
+	greenTwo.frames.push_back({ 335,889,72,136 });
+	greenTwo.loop = true;
+	greenTwo.speed = 0.04f;
+
+	greenThree.frames.push_back({ 257,879,66,146 });
+	greenThree.frames.push_back({ 181,879,66,146 });
+	greenThree.loop = true;
+	greenThree.speed = 0.04f;
+
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
 	enemy->level = 1;
 	enemy->posStopSprint = 1000;
 	enemy->posZ = 12;
 	enemy->posX = -0.5;
+	enemy->position = 3;
+	enemy->current_animation = &greenThree;
 	enemys.push_back(enemy);
 
 	Enemy* enemy2 = new Enemy();
@@ -74,6 +97,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy2->posStopSprint = 1000;
 	enemy2->posZ = 12;
 	enemy2->posX = 0.2;
+	enemy2->position = 3;
+	enemy2->current_animation = &greenThree;
 	enemys.push_back(enemy2);
 
 	Enemy* enemy3 = new Enemy();
@@ -82,6 +107,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy3->posStopSprint = 1000;
 	enemy3->posZ = 13;
 	enemy3->posX = -0.1;
+	enemy3->position = 3;
+	enemy3->current_animation = &greenThree;
 	enemys.push_back(enemy3);
 
 	Enemy* enemy4 = new Enemy();
@@ -90,6 +117,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy4->posStopSprint = 1000;
 	enemy4->posZ = 11;
 	enemy4->posX = -0.8;
+	enemy4->position = 3;
+	enemy4->current_animation = &greenThree;
 	enemys.push_back(enemy4);
 
 	Enemy* enemy5 = new Enemy();
@@ -98,6 +127,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy5->posStopSprint = 1000;
 	enemy5->posZ = 11;
 	enemy5->posX = 0.5;
+	enemy5->position = 3;
+	enemy5->current_animation = &greenThree;
 	enemys.push_back(enemy5);
 }
 
@@ -192,13 +223,63 @@ void ModuleSceneTrack::PrintTrack()
 	for (int n = 0; n < enemys.size(); n++) {
 		if (enemys[n]->posZ > startPos) {
 			float enemysCurve = lines[(int)(enemys[n]->posZ) % N].curve;
-			switch (enemys[n]->color) {
+			/*switch (enemys[n]->color) {
 			case YELLOW:
 				break;
 			case GREEN:
 				break;
+			}*/
+			bool animationChanged = false;
+			if (enemysCurve < -3) {
+				animationChanged = TrentToN(0, enemys[n]->position);
 			}
-			lines[(int)(enemys[n]->posZ) % N].DrawObject(decoration[enemyOne]->rect, gui, enemys[n]->posX);
+			else if (enemysCurve < -1.5) {
+				animationChanged = TrentToN(1, enemys[n]->position);
+			}
+			else if (enemysCurve < 0) {
+				animationChanged = TrentToN(2, enemys[n]->position);
+			}
+			else if (enemysCurve > 3) {
+				animationChanged = TrentToN(6, enemys[n]->position);
+			}
+			else if (enemysCurve > 1.5) {
+				animationChanged = TrentToN(5, enemys[n]->position);
+			}
+			else if (enemysCurve > 0) {
+				animationChanged = TrentToN(4, enemys[n]->position);
+			}
+			else {
+				animationChanged = TrentToN(3, enemys[n]->position);
+			}
+			if (animationChanged) {
+				switch (enemys[n]->position) {
+				case 0:
+					enemys[n]->current_animation = &greenZero;
+					break;
+				case 1:
+					enemys[n]->current_animation = &greenOne;
+					break;
+				case 2:
+					enemys[n]->current_animation = &greenTwo;
+					break;
+				case 3:
+					enemys[n]->current_animation = &greenThree;
+					break;
+				case 4:
+					enemys[n]->current_animation = &greenZero;
+					break;
+				case 5:
+					enemys[n]->current_animation = &greenZero;
+					break;
+				case 6:
+					enemys[n]->current_animation = &greenZero;
+					break;
+				default:
+					break;
+				}
+			}
+			//lines[(int)(enemys[n]->posZ) % N].DrawObject(decoration[enemyOne]->rect, gui, enemys[n]->posX);
+			lines[(int)(enemys[n]->posZ) % N].DrawObject(enemys[n]->current_animation->GetCurrentFrame(), gui, enemys[n]->posX);
 		}
 	}
 }
@@ -230,11 +311,11 @@ void ModuleSceneTrack::PrintGui() {
 update_status ModuleSceneTrack::Update(float deltaTime)
 {
 	//Automove On debugmode
-	//pos += 400;
+	pos += 400;
 
 	//Updates enemys position depends on the level
 	for (int i = 0; i < enemys.size(); i++) {
-		enemys[i]->posZ += 390 / SEGL;
+		enemys[i]->posZ += 400 / SEGL;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -288,4 +369,17 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	
 
 	return UPDATE_CONTINUE;
+}
+
+bool ModuleSceneTrack::TrentToN(int n, int &res) {
+	bool ret = false;
+	if (res > n) {
+		res--;
+		ret = true;
+	}
+	else if (res < n) {
+		res++;
+		ret = true;
+	}
+	return ret;
 }

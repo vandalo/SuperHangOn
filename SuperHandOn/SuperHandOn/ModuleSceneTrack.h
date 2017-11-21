@@ -25,6 +25,8 @@ struct Enemy {
 	int posStopSprint;
 	int color;
 	int level;
+	int position = 3;
+	Animation* current_animation = nullptr;
 };
 
 class ModuleSceneTrack : public Module
@@ -89,6 +91,17 @@ public:
 private:
 	void PrintTrack();
 	void PrintGui();
+	bool TrentToN(int n, int &res);
+
+private:
+	Animation greenZero;
+	Animation greenOne;
+	Animation greenTwo;
+	Animation greenThree;
+	Animation greenFour;
+	Animation greenFive;
+	Animation greenSix;
+	
 	int maxPuntuation;
 	int stage;
 	float time;
