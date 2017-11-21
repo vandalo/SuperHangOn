@@ -14,6 +14,19 @@ struct Decoration {
 	SDL_Rect rect;
 };
 
+enum EnemyColor {
+	YELLOW,
+	GREEN
+};
+
+struct Enemy {
+	float posZ;
+	float posX;
+	int posStopSprint;
+	int color;
+	int level;
+};
+
 class ModuleSceneTrack : public Module
 {
 
@@ -60,15 +73,18 @@ public:
 	Color color_line;
 
 	vector<Line> lines;
+	
 
 	int N = 0;
 	int pos;
 	int playerX;
 
 	vector<Decoration*> decoration;
+	vector<Enemy*> enemys;
 	//Array decoration item index
 	int deadTree;
 	int startSign;
+	int enemyOne;
 
 private:
 	void PrintTrack();
@@ -78,6 +94,7 @@ private:
 	float time;
 	int score;
 	int speed;
+	int enemyOneZ;
 
 
 };

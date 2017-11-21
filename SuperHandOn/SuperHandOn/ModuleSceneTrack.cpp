@@ -9,7 +9,6 @@
 #include "ModuleFadeToBlack.h"
 #include "ModuleSceneTrack.h"
 #include "ModulePlayer.h"
-#include "ModuleEnemy.h"
 #include "Line.h"
 #include <string>
 
@@ -53,6 +52,53 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	dec_startSign->rect = { 7, 2, 627, 207 };
 	decoration.push_back(dec_startSign);
 	startSign = decoration.size() - 1;
+
+	Decoration*dec_enemyOne = new Decoration();
+	dec_enemyOne->maxX = 0;
+	dec_enemyOne->minX = 0;
+	dec_enemyOne->rect = { 181, 559, 66, 146 };
+	decoration.push_back(dec_enemyOne);
+	enemyOne = decoration.size() - 1;
+
+	Enemy* enemy = new Enemy();
+	enemy->color = GREEN;
+	enemy->level = 1;
+	enemy->posStopSprint = 1000;
+	enemy->posZ = 12;
+	enemy->posX = -0.5;
+	enemys.push_back(enemy);
+
+	Enemy* enemy2 = new Enemy();
+	enemy2->color = GREEN;
+	enemy2->level = 1;
+	enemy2->posStopSprint = 1000;
+	enemy2->posZ = 12;
+	enemy2->posX = 0.2;
+	enemys.push_back(enemy2);
+
+	Enemy* enemy3 = new Enemy();
+	enemy3->color = YELLOW;
+	enemy3->level = 1;
+	enemy3->posStopSprint = 1000;
+	enemy3->posZ = 13;
+	enemy3->posX = -0.1;
+	enemys.push_back(enemy3);
+
+	Enemy* enemy4 = new Enemy();
+	enemy4->color = YELLOW;
+	enemy4->level = 1;
+	enemy4->posStopSprint = 1000;
+	enemy4->posZ = 11;
+	enemy4->posX = -0.8;
+	enemys.push_back(enemy4);
+
+	Enemy* enemy5 = new Enemy();
+	enemy5->color = YELLOW;
+	enemy5->level = 1;
+	enemy5->posStopSprint = 1000;
+	enemy5->posZ = 11;
+	enemy5->posX = 0.5;
+	enemys.push_back(enemy5);
 }
 
 ModuleSceneTrack::~ModuleSceneTrack()
@@ -141,6 +187,20 @@ void ModuleSceneTrack::PrintTrack()
 		if (lines[n%N].id != -1)
 			lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite);
 	}
+
+	//Draw Enemys
+	for (int n = 0; n < enemys.size(); n++) {
+		if (enemys[n]->posZ > startPos) {
+			float enemysCurve = lines[(int)(enemys[n]->posZ) % N].curve;
+			switch (enemys[n]->color) {
+			case YELLOW:
+				break;
+			case GREEN:
+				break;
+			}
+			lines[(int)(enemys[n]->posZ) % N].DrawObject(decoration[enemyOne]->rect, gui, enemys[n]->posX);
+		}
+	}
 }
 
 void ModuleSceneTrack::PrintGui() {
@@ -171,6 +231,12 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 {
 	//Automove On debugmode
 	//pos += 400;
+
+	//Updates enemys position depends on the level
+	for (int i = 0; i < enemys.size(); i++) {
+		enemys[i]->posZ += 390 / SEGL;
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 	{
 		pos += 400;

@@ -37,27 +37,30 @@ public:
 		W = (float)(scale * roadW * width / 2);
 	}
 
-	void DrawObject(SDL_Rect sprite, SDL_Texture* tex)
+	void DrawObject(SDL_Rect sprite, SDL_Texture* tex, float position = 999)
 	{
+		float spriteXToDraw = spriteX;
+		if(position != 999) spriteXToDraw = position;
 		int w = sprite.w;
 		int h = sprite.h;
-		float destX = X + scale * spriteX * width / 2;
+		float destX = X + scale * spriteXToDraw * width / 2;
 		float destY = Y + 4;
 		float destW = w * W / 266;
 		float destH = h * W / 266;
 
-		destX += destW * spriteX; //offsetX
+		destX += destW * spriteXToDraw; //offsetX
 		destY += destH * (-1);    //offsetY
 
 		float clipH = destY + destH - clip;
 		if (clipH<0) clipH = 0;
 
-		X += (W * spriteX);
+		
+		destX = X + (W * spriteXToDraw);
 		if (clipH >= destH) return;
 
 		sprite.h = (int)(h - h*clipH / destH);
 		int spriteScaleH = (int)(sprite.h*(destH / h));
-		App->renderer->Blit(tex, (int)X, (int)destY, &sprite, 0.f, false, false, (int)(sprite.w*(destW / w)), spriteScaleH);
+		App->renderer->Blit(tex, (int)destX, (int)destY, &sprite, 0.f, false, false, (int)(sprite.w*(destW / w)), spriteScaleH);
 	}
 
 };
