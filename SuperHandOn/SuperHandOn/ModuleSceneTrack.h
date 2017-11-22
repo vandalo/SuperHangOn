@@ -47,7 +47,8 @@ public:
 	SDL_Texture* decorationSprite = nullptr;
 	SDL_Texture* gui = nullptr;
 
-	Animation sempahor;
+	SDL_Rect sempahorYellow;
+	SDL_Rect sempahorBlue;
 	//SDL_Rect startSign;
 	SDL_Rect background;
 	SDL_Rect backgroundParalax;
@@ -87,7 +88,6 @@ public:
 	//Array decoration item index
 	int deadTree;
 	int startSign;
-	int enemyOne;
 
 private:
 	void PrintTrack(float deltaTime);
@@ -117,6 +117,9 @@ private:
 	int score;
 	int speed;
 	int enemyOneZ;
+	float startTime = 0;
+	bool firstLoop = true;
+	bool run = false;
 
 
 };

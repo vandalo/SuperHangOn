@@ -14,20 +14,15 @@
 
 ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 {
-	//startSign = 
-
-	sempahor.frames.push_back({ 12, 265, 62, 142 });
-	sempahor.frames.push_back({ 84, 265, 62, 142 });
-	sempahor.frames.push_back({ 157, 265, 62, 142 });
-	sempahor.frames.push_back({ 225, 265, 62, 142 });
-	sempahor.loop = false;
-	sempahor.speed = 0.01f;
+	sempahorYellow = { 463,250,75,32 };
+	sempahorBlue = { 463,283,75,32 };
 
 	maxPuntuation = 6514651;
 	stage = 1;
 	time = 60;
 	score = 0;
 	speed = 200;
+	startTime = 0;
 
 	backgroundTop = {33, 437, 62, 25};
 	backgroundTime = { 97, 437, 76, 26 };
@@ -49,16 +44,16 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	Decoration*dec_startSign = new Decoration();
 	dec_startSign->maxX = 0;
 	dec_startSign->minX = 0;
-	dec_startSign->rect = { 7, 2, 627, 207 };
+	dec_startSign->rect = { 17, 426, 834, 278 };
 	decoration.push_back(dec_startSign);
 	startSign = decoration.size() - 1;
 
-	Decoration*dec_enemyOne = new Decoration();
-	dec_enemyOne->maxX = 0;
-	dec_enemyOne->minX = 0;
-	dec_enemyOne->rect = { 181, 559, 66, 146 };
-	decoration.push_back(dec_enemyOne);
-	enemyOne = decoration.size() - 1;
+	/*Decoration*dec_startSempahor = new Decoration();
+	dec_startSempahor->maxX = -1;
+	dec_startSempahor->minX = -1;
+	dec_startSempahor->rect = { 323, 234, 99, 174 };
+	decoration.push_back(dec_startSempahor);
+	decSemaphor = decoration.size() - 1;*/
 
 	//Animation of IA
 	//Green
@@ -137,8 +132,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy->color = GREEN;
 	enemy->level = 1;
 	enemy->posStopSprint = 1000;
-	enemy->posZ = 12;
-	enemy->posX = -0.5;
+	enemy->posZ = 11;
+	enemy->posX = -0.4;
 	enemy->position = 3;
 	enemy->current_animation = &greenThree;
 	enemys.push_back(enemy);
@@ -147,8 +142,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy2->color = GREEN;
 	enemy2->level = 1;
 	enemy2->posStopSprint = 1000;
-	enemy2->posZ = 12;
-	enemy2->posX = 0.2;
+	enemy2->posZ = 11;
+	enemy2->posX = 0.4;
 	enemy2->position = 3;
 	enemy2->current_animation = &greenThree;
 	enemys.push_back(enemy2);
@@ -158,7 +153,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy3->level = 1;
 	enemy3->posStopSprint = 1000;
 	enemy3->posZ = 13;
-	enemy3->posX = -0.1;
+	enemy3->posX = 0;
 	enemy3->position = 3;
 	enemy3->current_animation = &yellowThree;
 	enemys.push_back(enemy3);
@@ -167,8 +162,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy4->color = YELLOW;
 	enemy4->level = 1;
 	enemy4->posStopSprint = 1000;
-	enemy4->posZ = 11;
-	enemy4->posX = -0.8;
+	enemy4->posZ = 9;
+	enemy4->posX = -0.7;
 	enemy4->position = 3;
 	enemy4->current_animation = &yellowThree;
 	enemys.push_back(enemy4);
@@ -177,8 +172,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy5->color = YELLOW;
 	enemy5->level = 1;
 	enemy5->posStopSprint = 1000;
-	enemy5->posZ = 11;
-	enemy5->posX = 0.5;
+	enemy5->posZ = 9;
+	enemy5->posX = 0.7;
 	enemy5->position = 3;
 	enemy5->current_animation = &yellowThree;
 	enemys.push_back(enemy5);
@@ -267,7 +262,44 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		if (lines[n%N].id != -1)
 			lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite);
 	}
-
+	//Sempahor animation
+	if (startTime != -1) {
+		if (firstLoop) firstLoop = false;
+		else {
+			startTime += deltaTime;
+			if (startTime < 4) {
+				if (startTime < 3) App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 62, &sempahorYellow, 0.f);
+				else App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 31, &sempahorYellow, 0.f);
+			}
+			if (startTime < 4) App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19, &sempahorBlue, 0.f);
+			else if (startTime > 5) {
+				startTime = -1;
+				run = true;
+				switch (App->musicChosed)
+				{
+				case OUTRIDE_A_CRISIS:
+					App->musicChosed = OUTRIDE_A_CRISIS;
+					App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
+					break;
+				case SPRINTER:
+					App->musicChosed = SPRINTER;
+					App->audio->PlayMusic("music/3Sprinter.ogg", 0.f);
+					break;
+				case WINNING_RUN:
+					App->musicChosed = WINNING_RUN;
+					App->audio->PlayMusic("music/4WinningRun.ogg", 0.f);
+					break;
+				case HARD_ROAD:
+					App->musicChosed = HARD_ROAD;
+					App->audio->PlayMusic("music/5HardRoad.ogg", 0.f);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+	
 	//Draw Enemys
 	for (int n = 0; n < enemys.size(); n++) {
 		if (enemys[n]->posZ > startPos) {
@@ -359,63 +391,54 @@ void ModuleSceneTrack::PrintGui() {
 // Update: draw background
 update_status ModuleSceneTrack::Update(float deltaTime)
 {
+	
 	//Automove On debugmode
-	pos += 400;
+	//pos += 200;
 
-	//Updates enemys position depends on the level
-	for (int i = 0; i < enemys.size(); i++) {
-		enemys[i]->posZ += 400 / SEGL;
-	}
+	if (run) {
+		//pos += 200;
+		//Updates enemys position depends on the level
+		for (int i = 0; i < enemys.size(); i++) {
+			enemys[i]->posZ += 200 / SEGL;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-	{
-		pos += 400;
-		score += 200;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			pos += 400;
+			score += 200;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		playerX += 70;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			playerX += 70;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
-		playerX -= 70;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			playerX -= 70;
+		}
 
-	//Move player to compensate the force of the curve
-	/*int startPos = pos / SEGL;
-	float currentCurve = lines[startPos%N].curve;
-	if (currentCurve > 3.5) playerX -= 60;
-	else if (currentCurve > 2) playerX -= 45;
-	else if (currentCurve > 1) playerX -= 25;
-	else if (currentCurve > 0) playerX -= 15;
-	else if (currentCurve < 0) {
+		//Move player to compensate the force of the curve
+		/*int startPos = pos / SEGL;
+		float currentCurve = lines[startPos%N].curve;
+		if (currentCurve > 3.5) playerX -= 60;
+		else if (currentCurve > 2) playerX -= 45;
+		else if (currentCurve > 1) playerX -= 25;
+		else if (currentCurve > 0) playerX -= 15;
+		else if (currentCurve < 0) {
 		if (currentCurve > -1) playerX += 15;
 		else if (currentCurve > 2) playerX += 25;
 		else if (currentCurve > 3.5) playerX += 45;
 		else playerX += 60;
-	}*/
-	
-	
-	PrintTrack(deltaTime);
-	
-	//DrawDecoration
-	//App->renderer->Blit(decoration, 5, SCREEN_HEIGHT / 2  - 60, &startSign, 0.f);
-	//App->renderer->Blit(decoration,  35, SCREEN_HEIGHT / 2 + 10, &sempahor.GetCurrentFrame(), 0.f);
-
-	if (App->fade->isFading() == false && (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN))
-	{
-
+		}*/
 	}
+
+	PrintTrack(deltaTime);
 
 	time -= deltaTime;
 	if (time < 0) time = 0;
 	//Print GUI
-
 	PrintGui();
-
-	
 
 	return UPDATE_CONTINUE;
 }

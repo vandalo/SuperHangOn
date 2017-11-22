@@ -64,6 +64,7 @@ public:
 	unsigned int numericFontWhite;
 	unsigned int numericFontRed;
 	unsigned int numericFontGreen;
+	unsigned int musicChosed = 0;
 
 private:
 	clock_t timer = 0;

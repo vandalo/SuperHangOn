@@ -70,7 +70,7 @@ bool ModulePlayer::Start()
 
 	destroyed = false;
 	position.x = SCREEN_WIDTH / 2;
-	position.y = SCREEN_HEIGHT - 20;
+	position.y = SCREEN_HEIGHT;
 
 	return true;
 }

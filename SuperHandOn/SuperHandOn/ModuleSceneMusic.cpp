@@ -88,15 +88,19 @@ update_status ModuleSceneMusic::Update(float deltaTime)
 		switch (musicSelected)
 		{
 		case OUTRIDE_A_CRISIS:
+			App->musicChosed = OUTRIDE_A_CRISIS;
 			App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
 			break;
 		case SPRINTER:
+			App->musicChosed = SPRINTER;
 			App->audio->PlayMusic("music/3Sprinter.ogg", 0.f);
 			break;
 		case WINNING_RUN:
+			App->musicChosed = WINNING_RUN;
 			App->audio->PlayMusic("music/4WinningRun.ogg", 0.f);
 			break;
 		case HARD_ROAD:
+			App->musicChosed = HARD_ROAD;
 			App->audio->PlayMusic("music/5HardRoad.ogg", 0.f);
 			break;
 		default:

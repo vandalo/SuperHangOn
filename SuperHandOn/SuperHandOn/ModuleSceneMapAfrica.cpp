@@ -118,7 +118,7 @@ bool ModuleSceneMapAfrica::Start(){
 			}
 		}
 		//Decoration
-		if (i % 10 == 0) {
+		if (i % 10 == 0 && i > 300) {
 			line.id = deadTree;
 			int negate = (int)(rand() % 2);
 			if (negate == 0) negate = -1;
@@ -126,13 +126,11 @@ bool ModuleSceneMapAfrica::Start(){
 		}
 
 		//StartSign
-		/*if (i == 12) {
+		if (i == 13) {
 			line.id = startSign;
 			line.spriteX = 0;
-		}*/
-
+		}
 		lines.push_back(line);
-		
 	}
 
 	N = lines.size();

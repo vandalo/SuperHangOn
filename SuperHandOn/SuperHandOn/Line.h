@@ -14,7 +14,7 @@ public:
 	float curve;
 
 	int id;
-	int spriteX;
+	float spriteX;
 	float clip;
 
 	int width = WIDTH;
@@ -37,7 +37,7 @@ public:
 		W = (float)(scale * roadW * width / 2);
 	}
 
-	void DrawObject(SDL_Rect sprite, SDL_Texture* tex, float position = 999)
+	void DrawObject(SDL_Rect sprite, SDL_Texture* tex, float position = 999, bool midle=false)
 	{
 		float spriteXToDraw = spriteX;
 		if(position != 999) spriteXToDraw = position;
@@ -60,7 +60,8 @@ public:
 
 		sprite.h = (int)(h - h*clipH / destH);
 		int spriteScaleH = (int)(sprite.h*(destH / h));
-		App->renderer->Blit(tex, (int)destX, (int)destY, &sprite, 0.f, false, false, (int)(sprite.w*(destW / w)), spriteScaleH);
+		int spriteScaleW = (int)(sprite.w*(destW / w));
+		App->renderer->Blit(tex, (int)destX - spriteScaleW/2, (int)destY, &sprite, 0.f, false, false, spriteScaleW, spriteScaleH);
 	}
 
 };

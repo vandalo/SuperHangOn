@@ -18,6 +18,13 @@ enum update_status
 	UPDATE_ERROR
 };
 
+enum MusicSelected {
+	OUTRIDE_A_CRISIS,
+	SPRINTER,
+	WINNING_RUN,
+	HARD_ROAD
+};
+
 struct Color {
 	int r;
 	int g;

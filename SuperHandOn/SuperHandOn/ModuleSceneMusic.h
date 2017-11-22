@@ -4,14 +4,6 @@
 #include "Module.h"
 #include "Animation.h"
 
-
-enum MusicSelected {
-	OUTRIDE_A_CRISIS,
-	SPRINTER,
-	WINNING_RUN,
-	HARD_ROAD
-};
-
 class ModuleSceneMusic : public Module
 {
 public:
