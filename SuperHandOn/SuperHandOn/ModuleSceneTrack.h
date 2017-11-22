@@ -81,6 +81,7 @@ public:
 
 	int N = 0;
 	int pos;
+	int realPos = 0;
 	int playerX;
 
 	vector<Decoration*> decoration;
@@ -115,11 +116,12 @@ private:
 	int stage;
 	float time;
 	int score;
-	int speed;
+	float speed = 0;
 	int enemyOneZ;
 	float startTime = 0;
 	bool firstLoop = true;
 	bool run = false;
+	float acceleration = ACCELERATION;
 
 
 };

@@ -19,9 +19,9 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 
 	maxPuntuation = 6514651;
 	stage = 1;
-	time = 60;
+	time = 50;
 	score = 0;
-	speed = 200;
+	speed = 0;
 	startTime = 0;
 
 	backgroundTop = {33, 437, 62, 25};
@@ -133,7 +133,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy->level = 1;
 	enemy->posStopSprint = 1000;
 	enemy->posZ = 11;
-	enemy->posX = -0.4;
+	enemy->posX = -0.4f;
 	enemy->position = 3;
 	enemy->current_animation = &greenThree;
 	enemys.push_back(enemy);
@@ -143,7 +143,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy2->level = 1;
 	enemy2->posStopSprint = 1000;
 	enemy2->posZ = 11;
-	enemy2->posX = 0.4;
+	enemy2->posX = 0.4f;
 	enemy2->position = 3;
 	enemy2->current_animation = &greenThree;
 	enemys.push_back(enemy2);
@@ -153,7 +153,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy3->level = 1;
 	enemy3->posStopSprint = 1000;
 	enemy3->posZ = 13;
-	enemy3->posX = 0;
+	enemy3->posX = 0.0f;
 	enemy3->position = 3;
 	enemy3->current_animation = &yellowThree;
 	enemys.push_back(enemy3);
@@ -163,7 +163,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy4->level = 1;
 	enemy4->posStopSprint = 1000;
 	enemy4->posZ = 9;
-	enemy4->posX = -0.7;
+	enemy4->posX = -0.7f;
 	enemy4->position = 3;
 	enemy4->current_animation = &yellowThree;
 	enemys.push_back(enemy4);
@@ -173,7 +173,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy5->level = 1;
 	enemy5->posStopSprint = 1000;
 	enemy5->posZ = 9;
-	enemy5->posX = 0.7;
+	enemy5->posX = 0.7f;
 	enemy5->position = 3;
 	enemy5->current_animation = &yellowThree;
 	enemys.push_back(enemy5);
@@ -224,7 +224,8 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	while (pos < 0) pos += N * SEGL;
 
 	float x = 0, dx = 0;
-	int startPos = pos / SEGL;
+	int segL = SEGL;
+	int startPos = (int)(pos / segL);
 	int camH = (int)(1500 + lines[startPos].y);
 	int maxy = HEIGHT;
 
@@ -236,7 +237,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 
 	for (int n = startPos; n < startPos + 300; n++) {
 		Line &l = lines[n%N];
-		l.project((int)(playerX - x), camH, pos - (n >= N ? N * 200 : 0));
+		l.project((int)(playerX - x), camH, pos - (n >= N ? N * segL : 0));
 		x += dx;
 		dx += l.curve;
 
@@ -248,6 +249,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		Color rumble = (n / 3) % 2 ? rumble1 : rumble2;
 		Color line = (n / 10) % 2 ? color_line : color_road;
 
+		if (n == 0)n++;
 		Line p = lines[(n - 1) % N]; //previous line
 
 		//App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
@@ -301,7 +303,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	}
 	
 	//Draw Enemys
-	for (int n = 0; n < enemys.size(); n++) {
+	for (unsigned int n = 0; n < enemys.size(); n++) {
 		if (enemys[n]->posZ > startPos) {
 			float enemysCurve = lines[(int)(enemys[n]->posZ) % N].curve;
 			bool animationChanged = false;
@@ -393,19 +395,26 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 {
 	
 	//Automove On debugmode
-	//pos += 200;
+	//pos += 100;
 
 	if (run) {
-		//pos += 200;
+
+		time -= deltaTime;
+		if (time < 0) time = 0;
+
+		int segL = SEGL;
+		if (speed < MIN_SPEED) speed += acceleration*deltaTime;
 		//Updates enemys position depends on the level
-		for (int i = 0; i < enemys.size(); i++) {
+		for (unsigned int i = 0; i < enemys.size(); i++) {
 			enemys[i]->posZ += 200 / SEGL;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
-			pos += 400;
-			score += 200;
+			if (speed < MAX_SPEED_NO_TURBO) speed += acceleration*deltaTime;
+		}
+		else {
+			if(speed > MIN_SPEED) speed -= acceleration*deltaTime;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
@@ -417,6 +426,13 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		{
 			playerX -= 70;
 		}
+
+		realPos += (int)(speed*deltaTime*75);
+		if (realPos > 200) {
+			pos += 200 * (realPos / segL);
+			realPos -= 200 * (realPos / segL);
+		}
+		score += 200;
 
 		//Move player to compensate the force of the curve
 		/*int startPos = pos / SEGL;
@@ -435,8 +451,8 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 
 	PrintTrack(deltaTime);
 
-	time -= deltaTime;
-	if (time < 0) time = 0;
+	
+
 	//Print GUI
 	PrintGui();
 

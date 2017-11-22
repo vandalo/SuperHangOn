@@ -25,7 +25,7 @@ public:
 	
 	Line() {
 		curve = x = y = z = 0; X = 0; Y = 0; W = 0;
-		spriteX = id = -1; clip = 0; scale = 0;
+		id = -1; clip = 0; scale = 0; spriteX = -1.f;
 	}
 
 	//from world to scene

@@ -81,4 +81,9 @@ typedef unsigned int uint;
 #define CAMD 0.84; //camera depth
 
 #define TIME_TO_SWAP 0.1
+#define MIN_SPEED 80
+#define ACCELERATION 25
+#define MAX_SPEED_NO_TURBO 280
+#define MAX_SPEED__TURBO 324
+#define CHECK_TIME 30
 #endif //__GLOBALS_H__
