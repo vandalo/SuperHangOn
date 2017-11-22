@@ -12,7 +12,6 @@
 ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
 	timer_movment = 0;
-	time_to_swap = 0.1f;
 	state = STRAIGHT;
 
 	// straight moto
@@ -91,7 +90,7 @@ update_status ModulePlayer::Update(float deltaTime)
 {
 	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
 		timer_movment += deltaTime;
-		if (timer_movment > time_to_swap) {
+		if (timer_movment > TIME_TO_SWAP) {
 			if (state < RIGHT_THREE) {
 				state++;
 				timer_movment = 0;
@@ -101,7 +100,7 @@ update_status ModulePlayer::Update(float deltaTime)
 	}
 	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
 		timer_movment += deltaTime;
-		if (timer_movment > time_to_swap) {
+		if (timer_movment > TIME_TO_SWAP) {
 			if (state > LEFT_THREE) {
 				state--;
 				timer_movment = 0;
@@ -112,7 +111,7 @@ update_status ModulePlayer::Update(float deltaTime)
 	else {
 		if (state != STRAIGHT) {
 			timer_movment += deltaTime;
-			if (timer_movment > time_to_swap) {
+			if (timer_movment > TIME_TO_SWAP) {
 				if(state < STRAIGHT) state++;
 				else if (state > STRAIGHT) state--;
 				timer_movment = 0;

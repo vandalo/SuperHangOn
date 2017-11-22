@@ -45,7 +45,6 @@ public:
 private:
 	unsigned int state;
 	float timer_movment;
-	float time_to_swap = 0.5;
 };
 
 #endif

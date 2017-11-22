@@ -61,6 +61,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemyOne = decoration.size() - 1;
 
 	//Animation of IA
+	//Green
 	greenZero.frames.push_back({ 689,915,128,110 });
 	greenZero.frames.push_back({ 819,915,128,110 });
 	greenZero.loop = true;
@@ -80,6 +81,57 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	greenThree.frames.push_back({ 181,879,66,146 });
 	greenThree.loop = true;
 	greenThree.speed = 0.04f;
+
+	greenFour.frames.push_back({ 859,1215,72,142 });
+	greenFour.frames.push_back({ 783,1215,72,142 });
+	greenFour.loop = true;
+	greenFour.speed = 0.04f;
+
+	greenFive.frames.push_back({ 687,1231,92,126 });
+	greenFive.frames.push_back({ 585,1231,92,126 });
+	greenFive.loop = true;
+	greenFive.speed = 0.04f;
+
+	greenSix.frames.push_back({ 451,1247,126,110 });
+	greenSix.frames.push_back({ 321,1247,126,110 });
+	greenSix.loop = true;
+	greenSix.speed = 0.04f;
+
+	//Yellow
+	yellowZero.frames.push_back({ 819,1075,126,110 });
+	yellowZero.frames.push_back({ 689,1075,126,110 });
+	yellowZero.loop = true;
+	yellowZero.speed = 0.04f;
+
+	yellowOne.frames.push_back({ 589,1059,92,126 });
+	yellowOne.frames.push_back({ 487,1059,92,126 });
+	yellowOne.loop = true;
+	yellowOne.speed = 0.04f;
+
+	yellowTwo.frames.push_back({ 411,1043,72,136 });
+	yellowTwo.frames.push_back({ 335,1043,72,136 });
+	yellowTwo.loop = true;
+	yellowTwo.speed = 0.04f;
+
+	yellowThree.frames.push_back({ 257,1039,66,146 });
+	yellowThree.frames.push_back({ 181,1039,66,146 });
+	yellowThree.loop = true;
+	yellowThree.speed = 0.04f;
+
+	yellowFour.frames.push_back({ 859,1375,72,142 });
+	yellowFour.frames.push_back({ 859,1375,72,142 });
+	yellowFour.loop = true;
+	yellowFour.speed = 0.04f;
+
+	yellowFive.frames.push_back({ 687,1390,92,126 });
+	yellowFive.frames.push_back({ 585,1390,92,126 });
+	yellowFive.loop = true;
+	yellowFive.speed = 0.04f;
+
+	yellowSix.frames.push_back({ 451,1407,126,110 });
+	yellowSix.frames.push_back({ 321,1407,126,110 });
+	yellowSix.loop = true;
+	yellowSix.speed = 0.04f;
 
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
@@ -108,7 +160,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy3->posZ = 13;
 	enemy3->posX = -0.1;
 	enemy3->position = 3;
-	enemy3->current_animation = &greenThree;
+	enemy3->current_animation = &yellowThree;
 	enemys.push_back(enemy3);
 
 	Enemy* enemy4 = new Enemy();
@@ -118,7 +170,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy4->posZ = 11;
 	enemy4->posX = -0.8;
 	enemy4->position = 3;
-	enemy4->current_animation = &greenThree;
+	enemy4->current_animation = &yellowThree;
 	enemys.push_back(enemy4);
 
 	Enemy* enemy5 = new Enemy();
@@ -128,7 +180,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy5->posZ = 11;
 	enemy5->posX = 0.5;
 	enemy5->position = 3;
-	enemy5->current_animation = &greenThree;
+	enemy5->current_animation = &yellowThree;
 	enemys.push_back(enemy5);
 }
 
@@ -171,7 +223,7 @@ bool ModuleSceneTrack::CleanUp()
 	return true;
 }
 
-void ModuleSceneTrack::PrintTrack()
+void ModuleSceneTrack::PrintTrack(float deltaTime)
 {
 	while (pos >= N * 200) pos -= N * SEGL;
 	while (pos < 0) pos += N * SEGL;
@@ -210,9 +262,6 @@ void ModuleSceneTrack::PrintTrack()
 		App->renderer->DrawPoly(line, (short)p.X, (short)p.Y, (short)(p.W*0.05), (short)l.X, (short)l.Y, (short)(l.W*0.05));
 	}
 
-
-
-
 	//Draw Objects
 	for (int n = startPos + 300; n > startPos; n--) {
 		if (lines[n%N].id != -1)
@@ -223,62 +272,62 @@ void ModuleSceneTrack::PrintTrack()
 	for (int n = 0; n < enemys.size(); n++) {
 		if (enemys[n]->posZ > startPos) {
 			float enemysCurve = lines[(int)(enemys[n]->posZ) % N].curve;
-			/*switch (enemys[n]->color) {
-			case YELLOW:
-				break;
-			case GREEN:
-				break;
-			}*/
 			bool animationChanged = false;
 			if (enemysCurve < -3) {
-				animationChanged = TrentToN(0, enemys[n]->position);
+				animationChanged = TrentToN(0, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			else if (enemysCurve < -1.5) {
-				animationChanged = TrentToN(1, enemys[n]->position);
+				animationChanged = TrentToN(1, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			else if (enemysCurve < 0) {
-				animationChanged = TrentToN(2, enemys[n]->position);
+				animationChanged = TrentToN(2, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			else if (enemysCurve > 3) {
-				animationChanged = TrentToN(6, enemys[n]->position);
+				animationChanged = TrentToN(6, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			else if (enemysCurve > 1.5) {
-				animationChanged = TrentToN(5, enemys[n]->position);
+				animationChanged = TrentToN(5, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			else if (enemysCurve > 0) {
-				animationChanged = TrentToN(4, enemys[n]->position);
+				animationChanged = TrentToN(4, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			else {
-				animationChanged = TrentToN(3, enemys[n]->position);
+				animationChanged = TrentToN(3, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 			}
 			if (animationChanged) {
 				switch (enemys[n]->position) {
 				case 0:
-					enemys[n]->current_animation = &greenZero;
+					if(enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowZero;
+					else enemys[n]->current_animation = &greenZero;
 					break;
 				case 1:
-					enemys[n]->current_animation = &greenOne;
+					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowOne;
+					else enemys[n]->current_animation = &greenOne;
 					break;
 				case 2:
-					enemys[n]->current_animation = &greenTwo;
+					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowTwo;
+					else enemys[n]->current_animation = &greenTwo;
 					break;
 				case 3:
-					enemys[n]->current_animation = &greenThree;
+					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowThree;
+					else enemys[n]->current_animation = &greenThree;
 					break;
 				case 4:
-					enemys[n]->current_animation = &greenZero;
+					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowFour;
+					else enemys[n]->current_animation = &greenFour;
 					break;
 				case 5:
-					enemys[n]->current_animation = &greenZero;
+					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowFive;
+					else enemys[n]->current_animation = &greenFive;
 					break;
 				case 6:
-					enemys[n]->current_animation = &greenZero;
+					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowSix;
+					else enemys[n]->current_animation = &greenSix;
 					break;
 				default:
 					break;
 				}
 			}
-			//lines[(int)(enemys[n]->posZ) % N].DrawObject(decoration[enemyOne]->rect, gui, enemys[n]->posX);
 			lines[(int)(enemys[n]->posZ) % N].DrawObject(enemys[n]->current_animation->GetCurrentFrame(), gui, enemys[n]->posX);
 		}
 	}
@@ -349,7 +398,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	}*/
 	
 	
-	PrintTrack();
+	PrintTrack(deltaTime);
 	
 	//DrawDecoration
 	//App->renderer->Blit(decoration, 5, SCREEN_HEIGHT / 2  - 60, &startSign, 0.f);
@@ -371,15 +420,19 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleSceneTrack::TrentToN(int n, int &res) {
+bool ModuleSceneTrack::TrentToN(int n, int &res, float deltaTime, float &animationTime) {
+	animationTime += deltaTime;
 	bool ret = false;
-	if (res > n) {
-		res--;
-		ret = true;
-	}
-	else if (res < n) {
-		res++;
-		ret = true;
+	if (animationTime > TIME_TO_SWAP) {
+		if (res > n) {
+			res--;
+			ret = true;
+		}
+		else if (res < n) {
+			res++;
+			ret = true;
+		}
+		if (ret) animationTime = 0;
 	}
 	return ret;
 }

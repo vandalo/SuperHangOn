@@ -72,4 +72,6 @@ typedef unsigned int uint;
 #define ROADW 2000;
 #define SEGL 200; //segmentLenght
 #define CAMD 0.84; //camera depth
+
+#define TIME_TO_SWAP 0.1
 #endif //__GLOBALS_H__

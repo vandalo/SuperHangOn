@@ -22,6 +22,7 @@ enum EnemyColor {
 struct Enemy {
 	float posZ;
 	float posX;
+	float animationTime = 0;
 	int posStopSprint;
 	int color;
 	int level;
@@ -89,9 +90,9 @@ public:
 	int enemyOne;
 
 private:
-	void PrintTrack();
+	void PrintTrack(float deltaTime);
 	void PrintGui();
-	bool TrentToN(int n, int &res);
+	bool TrentToN(int n, int &res, float deltaTime, float &animationTime);
 
 private:
 	Animation greenZero;
@@ -101,6 +102,14 @@ private:
 	Animation greenFour;
 	Animation greenFive;
 	Animation greenSix;
+
+	Animation yellowZero;
+	Animation yellowOne;
+	Animation yellowTwo;
+	Animation yellowThree;
+	Animation yellowFour;
+	Animation yellowFive;
+	Animation yellowSix;
 	
 	int maxPuntuation;
 	int stage;
