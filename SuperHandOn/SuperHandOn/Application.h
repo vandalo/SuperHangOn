@@ -66,10 +66,16 @@ public:
 	unsigned int numericFontGreen;
 	unsigned int musicChosed = 0;
 
+	// Music
+	unsigned int fxLoadTrack;
+	unsigned int fxSemaphorOne;
+	unsigned int fxSemaphorFinish;
+
 private:
 	clock_t timer = 0;
 	float deltaTime = 0;
 	std::list<Module*> modules;
+
 };
 
 extern Application* App;

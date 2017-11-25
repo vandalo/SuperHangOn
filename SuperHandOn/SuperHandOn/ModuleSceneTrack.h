@@ -122,8 +122,7 @@ private:
 	bool firstLoop = true;
 	bool run = false;
 	float acceleration = ACCELERATION;
-
-
+	unsigned int sempahorState = 0;
 };
 
 #endif // __ModuleSceneTrack_H__

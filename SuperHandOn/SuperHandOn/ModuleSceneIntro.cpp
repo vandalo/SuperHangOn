@@ -29,8 +29,10 @@ bool ModuleSceneIntro::Start()
 {
 	LOG("Loading space intro");
 
+	App->fxLoadTrack = App->audio->LoadFx("music/fxLoadTrack.wav");
+	App->fxSemaphorOne = App->audio->LoadFx("music/fxSempahorOne.wav");
+	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");
 	graphics = App->textures->Load("sprites/segaLogo.bmp");
-
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	//Load all fonts

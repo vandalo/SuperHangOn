@@ -186,11 +186,17 @@ ModuleSceneTrack::~ModuleSceneTrack()
 bool ModuleSceneTrack::Start()
 {
 	LOG("Loading space intro");
-	//Load decorations
+	//ON DEBUG MODE
+	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
+	App->fxLoadTrack = App->audio->LoadFx("music/fxLoadTrack.wav");
+	App->fxSemaphorOne = App->audio->LoadFx("music/fxSempahorOne.wav");
+	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");
 
+
+	//Load decorations
+	App->audio->PlayFx(App->fxLoadTrack);
 	graphics = App->textures->Load("sprites/backgrounds.png");
 
-	//decor = App->textures->Load("sprites/decoration.png");
 	gui = App->textures->Load("sprites/miscellaneous.png");
 
 	//Load decoration sprites
@@ -202,8 +208,6 @@ bool ModuleSceneTrack::Start()
 	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 36);
 	App->numericFontGreen = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 54);
 
-	//ON DEBUG MODE
-	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 
 	App->player->Enable();
 	//App->enemy->Enable();
@@ -270,10 +274,21 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		else {
 			startTime += deltaTime;
 			if (startTime < 4) {
-				if (startTime < 3) App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 62, &sempahorYellow, 0.f);
-				else App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 31, &sempahorYellow, 0.f);
+				if (startTime < 3) {
+					App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 62, &sempahorYellow, 0.f);
+					if (sempahorState == 0 && startTime > 2)sempahorState++;
+				}
+				else {
+					App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 31, &sempahorYellow, 0.f);
+					if (sempahorState == 2)sempahorState++;
+				}
 			}
-			if (startTime < 4) App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19, &sempahorBlue, 0.f);
+			if (startTime < 4) {
+				App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19, &sempahorBlue, 0.f);
+			}
+			else if(startTime < 5){
+				if (sempahorState == 4) sempahorState++;
+			}
 			else if (startTime > 5) {
 				startTime = -1;
 				run = true;
@@ -299,6 +314,14 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 					break;
 				}
 			}
+		}
+		if (sempahorState == 1 || sempahorState == 3) {
+			App->audio->PlayFx(App->fxSemaphorOne);
+			sempahorState++;
+		} 
+		else if (sempahorState == 5) {
+			App->audio->PlayFx(App->fxSemaphorFinish);
+			sempahorState++;
 		}
 	}
 	
