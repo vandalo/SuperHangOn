@@ -74,11 +74,12 @@ typedef unsigned int uint;
 #define INTERMITENT_SLOW 0.5
 
 
-#define WIDTH 640;
-#define HEIGHT 480;
-#define ROADW 2000;
-#define SEGL 200; //segmentLenght
-#define CAMD 0.84; //camera depth
+#define WIDTH 640
+#define HEIGHT 480
+#define ROADW 2000
+#define SEGL 200 //segmentLenght
+#define CAMD 0.84 //camera depth
+#define FIRST_ROAD_STRIGHT 650
 
 #define TIME_TO_SWAP 0.1
 #define MIN_SPEED 80
@@ -86,4 +87,5 @@ typedef unsigned int uint;
 #define MAX_SPEED_NO_TURBO 280
 #define MAX_SPEED__TURBO 324
 #define CHECK_TIME 30
+#define TRUN_CONST 100
 #endif //__GLOBALS_H__
