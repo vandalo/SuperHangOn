@@ -130,8 +130,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
-	enemy->level = 1;
-	enemy->posStopSprint = 1000;
+	enemy->speed = 300;
+	enemy->posStopSprint = 650;
 	enemy->posZ = 11;
 	enemy->posX = -0.4f;
 	enemy->position = 3;
@@ -140,8 +140,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 
 	Enemy* enemy2 = new Enemy();
 	enemy2->color = GREEN;
-	enemy2->level = 1;
-	enemy2->posStopSprint = 1000;
+	enemy2->speed = 270;
+	enemy2->posStopSprint = 1500;
 	enemy2->posZ = 11;
 	enemy2->posX = 0.4f;
 	enemy2->position = 3;
@@ -150,7 +150,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 
 	Enemy* enemy3 = new Enemy();
 	enemy3->color = YELLOW;
-	enemy3->level = 1;
+	enemy3->speed = 270;
 	enemy3->posStopSprint = 1000;
 	enemy3->posZ = 13;
 	enemy3->posX = 0.0f;
@@ -160,8 +160,8 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 
 	Enemy* enemy4 = new Enemy();
 	enemy4->color = YELLOW;
-	enemy4->level = 1;
-	enemy4->posStopSprint = 1000;
+	enemy4->speed = 270;
+	enemy4->posStopSprint = 900;
 	enemy4->posZ = 9;
 	enemy4->posX = -0.7f;
 	enemy4->position = 3;
@@ -170,13 +170,15 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 
 	Enemy* enemy5 = new Enemy();
 	enemy5->color = YELLOW;
-	enemy5->level = 1;
-	enemy5->posStopSprint = 1000;
+	enemy5->speed = 270;
+	enemy5->posStopSprint = 1900;
 	enemy5->posZ = 9;
 	enemy5->posX = 0.7f;
 	enemy5->position = 3;
 	enemy5->current_animation = &yellowThree;
 	enemys.push_back(enemy5);
+
+	mostAdvancedEnemyZ = 1900;
 }
 
 ModuleSceneTrack::~ModuleSceneTrack()
@@ -429,7 +431,9 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		if (speed < MIN_SPEED) speed += acceleration*deltaTime;
 		//Updates enemys position depends on the level
 		for (unsigned int i = 0; i < enemys.size(); i++) {
-			enemys[i]->posZ += 200 / SEGL;
+			if(enemys[i]->posZ < enemys[i]->posStopSprint && enemys[i]->posZ > 650) enemys[i]->posZ = enemys[i]->posStopSprint;
+			else enemys[i]->posZ += (enemys[i]->speed / segL) * deltaTime * 75;
+			mostAdvancedEnemyZ += (enemys[i]->speed / segL) * deltaTime * 75;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)

@@ -25,7 +25,7 @@ struct Enemy {
 	float animationTime = 0;
 	int posStopSprint;
 	int color;
-	int level;
+	int speed;
 	int position = 3;
 	Animation* current_animation = nullptr;
 };
@@ -123,6 +123,8 @@ private:
 	bool run = false;
 	float acceleration = ACCELERATION;
 	unsigned int sempahorState = 0;
+
+	float mostAdvancedEnemyZ;
 };
 
 #endif // __ModuleSceneTrack_H__
