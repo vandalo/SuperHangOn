@@ -38,9 +38,18 @@ public:
 	Animation turnLeftOne;
 	Animation turnLeftTwo;
 	Animation turnLeftThree;
+
+	Animation breakStraight;
+	Animation breakTurnRightOne;
+	Animation breakTurnRightTwo;
+	Animation breakTurnRightThree;
+	Animation breakTurnLeftOne;
+	Animation breakTurnLeftTwo;
+	Animation breakTurnLeftThree;
 	//Animation down;
 	iPoint position;
 	bool destroyed = false;
+	bool breaking;
 
 private:
 	unsigned int state;

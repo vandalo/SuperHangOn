@@ -13,6 +13,7 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 {
 	timer_movment = 0;
 	state = STRAIGHT;
+	breaking = false;
 
 	// straight moto
 	straight.frames.push_back({ 181, 559, 66, 146 });
@@ -55,6 +56,50 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	turnLeftThree.frames.push_back({ 819, 595, 126, 110 });
 	turnLeftThree.loop = true;
 	turnLeftThree.speed = 0.04f;
+
+	//BREAK
+	// straight moto
+	breakStraight.frames.push_back({ 992, 564, 66, 146 });
+	breakStraight.frames.push_back({ 1068, 564, 66, 146 });
+	breakStraight.loop = true;
+	breakStraight.speed = 0.04f;
+	
+	// turn LeftOne
+	breakTurnLeftThree.frames.push_back({ 1500, 600, 126, 110 });
+	breakTurnLeftThree.frames.push_back({ 1630, 600, 126, 110 });
+	breakTurnLeftThree.loop = true;
+	breakTurnLeftThree.speed = 0.04f;
+
+	// turn LeftTwo
+	breakTurnLeftTwo.frames.push_back({ 1298, 584, 92, 126 });
+	breakTurnLeftTwo.frames.push_back({ 1400, 584, 92, 126 });
+	breakTurnLeftTwo.loop = true;
+	breakTurnLeftTwo.speed = 0.04f;
+
+	// turn LeftThree
+	breakTurnLeftOne.frames.push_back({ 1146, 568, 72, 142 });
+	breakTurnLeftOne.frames.push_back({ 1222, 568, 72, 142 });
+	breakTurnLeftOne.loop = true;
+	breakTurnLeftOne.speed = 0.04f;
+
+	// turn RighttOne
+	breakTurnRightOne.frames.push_back({ 1606, 726, 72, 142 });
+	breakTurnRightOne.frames.push_back({ 1682, 726, 72, 142 });
+	breakTurnRightOne.loop = true;
+	breakTurnRightOne.speed = 0.04f;
+
+	// turn RightTwo
+	breakTurnRightTwo.frames.push_back({ 1408, 742, 92, 126 });
+	breakTurnRightTwo.frames.push_back({ 1510, 742, 92, 126 });
+	breakTurnRightTwo.loop = true;
+	breakTurnRightTwo.speed = 0.04f;
+
+	// turn RightThree
+	breakTurnRightThree.frames.push_back({ 1144, 758, 126, 110 });
+	breakTurnRightThree.frames.push_back({ 1274, 758, 126, 110 });
+	breakTurnRightThree.loop = true;
+	breakTurnRightThree.speed = 0.04f;
+	
 
 }
 
@@ -121,28 +166,36 @@ update_status ModulePlayer::Update(float deltaTime)
 
 	switch (state) {
 		case LEFT_ONE:
-			current_animation = &turnLeftOne;
+			if (breaking) current_animation = &breakTurnLeftOne;
+			else current_animation = &turnLeftOne;
 			break;
 		case LEFT_TWO:
-			current_animation = &turnLeftTwo;
+			if (breaking) current_animation = &breakTurnLeftTwo;
+			else current_animation = &turnLeftTwo;
 			break;
 		case LEFT_THREE:
-			current_animation = &turnLeftThree;
+			if (breaking) current_animation = &breakTurnLeftThree;
+			else current_animation = &turnLeftThree;
 			break;
 		case STRAIGHT:
-			current_animation = &straight;
+			if(breaking) current_animation = &breakStraight;
+			else current_animation = &straight;
 			break;
 		case RIGHT_ONE:
-			current_animation = &turnRightOne;
+			if (breaking) current_animation = &breakTurnRightOne;
+			else current_animation = &turnRightOne;
 			break;
 		case RIGHT_TWO:
-			current_animation = &turnRightTwo;
+			if (breaking) current_animation = &breakTurnRightTwo;
+			else current_animation = &turnRightTwo;
 			break;
 		case RIGHT_THREE:
-			current_animation = &turnRightThree;
+			if (breaking) current_animation = &breakTurnRightThree;
+			else current_animation = &turnRightThree;
 			break;
 		default:
-			current_animation = &straight;
+			if (breaking) current_animation = &breakStraight;
+			else current_animation = &straight;
 			break;
 	}
 	
