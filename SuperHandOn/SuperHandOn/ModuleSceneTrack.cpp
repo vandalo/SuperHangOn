@@ -244,6 +244,10 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	for (int n = startPos; n < startPos + 300; n++) {
 		Line &l = lines[n%N];
 		l.project((int)(playerX - x), camH, pos - (n >= N ? N * segL : 0));
+		if (n-1 == startPos) {
+			//TODO: Set sprite out of road
+			if (playerX > l.W || playerX < -l.W) speed = 0;
+		}
 		x += dx;
 		dx += l.curve;
 
@@ -450,6 +454,15 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			if(speed > MIN_SPEED) speed -= acceleration*deltaTime;
 		}
 
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			if (speed > MIN_SPEED) speed -= acceleration*deltaTime;
+			App->player->breaking = true;
+		}
+		else {
+			App->player->breaking = false;
+		}
+
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
 			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
@@ -470,9 +483,9 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			realPos -= 200 * (realPos / segL);
 		}
 		score += 200;
-
+		
 		//Move player to compensate the force of the curve
-		/*int startPos = pos / SEGL;
+		int startPos = pos / SEGL;
 		float currentCurve = lines[startPos%N].curve;
 		if (currentCurve > 3.5) playerX -= 60;
 		else if (currentCurve > 2) playerX -= 45;
@@ -483,12 +496,10 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		else if (currentCurve > 2) playerX += 25;
 		else if (currentCurve > 3.5) playerX += 45;
 		else playerX += 60;
-		}*/
+		}
 	}
 
 	PrintTrack(deltaTime);
-
-	
 
 	//Print GUI
 	PrintGui();
