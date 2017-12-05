@@ -178,6 +178,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy5->current_animation = &yellowThree;
 	enemys.push_back(enemy5);
 
+	
 	mostAdvancedEnemyZ = 1550;
 }
 
@@ -237,16 +238,26 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 
 	//Draw background
 	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
-	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
-	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .05f, true);
+	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
+	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
+	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
 
 	for (int n = startPos; n < startPos + 300; n++) {
 		Line &l = lines[n%N];
 		l.project((int)(playerX - x), camH, pos - (n >= N ? N * segL : 0));
+
+		//Check if player is out of road
 		if (n-1 == startPos) {
-			//TODO: Set sprite out of road
-			if (playerX > l.W || playerX < -l.W) speed = 0;
+			if (playerX > l.W || playerX < -l.W) {
+				if(speed > MIN_VEL) speed -= acceleration * deltaTime * 2;
+				if (!App->player->isOutofRoad) {
+					App->player->isOutofRoad = true;
+					App->player->outOfRoad.Reset();
+				}
+			}
+			else {
+				App->player->isOutofRoad = false;
+			}
 		}
 		x += dx;
 		dx += l.curve;
@@ -463,7 +474,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			App->player->breaking = false;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		/*if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
 			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
 			if (moveX > TRUN_CONST) moveX = TRUN_CONST;
@@ -475,8 +486,15 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
 			if(moveX > TRUN_CONST) moveX = TRUN_CONST;
 			playerX -= moveX;
-		}
+		}*/
 
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		{
+			App->player->turbo = true;
+		}
+		else {
+			App->player->turbo = false;
+		}
 		realPos += (int)(speed*deltaTime*75);
 		if (realPos > 200) {
 			pos += 200 * (realPos / segL);

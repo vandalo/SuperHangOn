@@ -51,6 +51,20 @@ public:
 	bool destroyed = false;
 	bool breaking;
 
+	//Particles
+	float xParticle;
+
+	bool isOutofRoad;
+	bool turbo;
+	Animation outOfRoad;
+	Animation turboRightThree;
+	Animation turboLeftThree;
+	Animation turboRightTow;
+	Animation turboLeftTow;
+	Animation turboRightOne;
+	Animation turboLeftOne;
+	Animation turboStraight;
+
 private:
 	unsigned int state;
 	float timer_movment;

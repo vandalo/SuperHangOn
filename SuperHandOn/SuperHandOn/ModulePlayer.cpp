@@ -100,7 +100,26 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	breakTurnRightThree.loop = true;
 	breakTurnRightThree.speed = 0.04f;
 	
+	//Particles
+	outOfRoad.frames.push_back({ 1285,56,28,13 });
+	outOfRoad.frames.push_back({ 1317,44,43,25 });
+	outOfRoad.frames.push_back({ 1363,19,45,50 });
+	outOfRoad.frames.push_back({ 1238,12,41,56 });
+	outOfRoad.loop = true;
+	outOfRoad.speed = 0.04f;
 
+	turboRightThree.frames.push_back({1141,900,126,110});
+	turboRightThree.frames.push_back({ 1271, 900,126,110 });
+	turboRightThree.loop = true;
+	turboRightThree.speed = 0.04f;
+
+	turboStraight.frames.push_back({ 982, 870, 66, 146 });
+	turboStraight.frames.push_back({ 1058, 870, 66, 146 });
+	turboStraight.loop = true;
+	turboStraight.speed = 0.04f;
+
+	isOutofRoad = false;
+	turbo = false;
 }
 
 ModulePlayer::~ModulePlayer()
@@ -168,39 +187,49 @@ update_status ModulePlayer::Update(float deltaTime)
 		case LEFT_ONE:
 			if (breaking) current_animation = &breakTurnLeftOne;
 			else current_animation = &turnLeftOne;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
 			break;
 		case LEFT_TWO:
 			if (breaking) current_animation = &breakTurnLeftTwo;
 			else current_animation = &turnLeftTwo;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
 			break;
 		case LEFT_THREE:
 			if (breaking) current_animation = &breakTurnLeftThree;
 			else current_animation = &turnLeftThree;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
 			break;
 		case STRAIGHT:
 			if(breaking) current_animation = &breakStraight;
+			else if (turbo) current_animation = &turboStraight;
 			else current_animation = &straight;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2;
 			break;
 		case RIGHT_ONE:
 			if (breaking) current_animation = &breakTurnRightOne;
 			else current_animation = &turnRightOne;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
 			break;
 		case RIGHT_TWO:
 			if (breaking) current_animation = &breakTurnRightTwo;
 			else current_animation = &turnRightTwo;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
 			break;
 		case RIGHT_THREE:
 			if (breaking) current_animation = &breakTurnRightThree;
+			else if(turbo) current_animation = &turboRightThree;
 			else current_animation = &turnRightThree;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
 			break;
 		default:
 			if (breaking) current_animation = &breakStraight;
 			else current_animation = &straight;
+			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2;
 			break;
 	}
 	
 	if (destroyed == false)
 		App->renderer->Blit(graphics, position.x - current_animation->GetCurrentFrame().w / 2, position.y - current_animation->GetCurrentFrame().h, &(current_animation->GetCurrentFrame()), 0.f);
-
+		if(isOutofRoad)	App->renderer->Blit(graphics, xParticle, SCREEN_HEIGHT - outOfRoad.GetCurrentFrame().h, &outOfRoad.GetCurrentFrame(), 0.f);
 	return UPDATE_CONTINUE;
 }

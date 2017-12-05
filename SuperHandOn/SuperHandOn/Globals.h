@@ -82,10 +82,12 @@ typedef unsigned int uint;
 #define FIRST_ROAD_STRIGHT 650
 
 #define TIME_TO_SWAP 0.1
-#define MIN_SPEED 80
+#define MIN_SPEED 0
 #define ACCELERATION 25
 #define MAX_SPEED_NO_TURBO 280
+//#define MAX_SPEED_NO_TURBO 0
 #define MAX_SPEED__TURBO 324
 #define CHECK_TIME 30
 #define TRUN_CONST 100
+#define MIN_VEL 80
 #endif //__GLOBALS_H__
