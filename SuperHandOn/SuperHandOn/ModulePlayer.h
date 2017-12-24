@@ -59,8 +59,8 @@ public:
 	Animation outOfRoad;
 	Animation turboRightThree;
 	Animation turboLeftThree;
-	Animation turboRightTow;
-	Animation turboLeftTow;
+	Animation turboRightTwo;
+	Animation turboLeftTwo;
 	Animation turboRightOne;
 	Animation turboLeftOne;
 	Animation turboStraight;
