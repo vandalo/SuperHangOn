@@ -184,7 +184,7 @@ bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uin
 		ret = false;
 	}
 
-	return ret;
+	return ret;s
 }
 
 bool ModuleRender::DrawPoly(Color c, short x1, short y1, short w1, short x2, short y2, short w2)
