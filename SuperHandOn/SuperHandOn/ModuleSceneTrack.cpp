@@ -17,13 +17,6 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	sempahorYellow = { 463,250,75,32 };
 	sempahorBlue = { 463,283,75,32 };
 
-	maxPuntuation = 6514651;
-	stage = 1;
-	time = 50;
-	score = 0;
-	speed = 0;
-	startTime = 0;
-
 	backgroundTop = {33, 437, 62, 25};
 	backgroundTime = { 97, 437, 76, 26 };
 	backgroundScore = { 175, 437, 98, 26 };
@@ -32,7 +25,7 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	backgroundCourse = { 409, 421, 98, 18 };
 	backgroundSpeed = { 275, 441, 82, 18 };
 	backgroundKm = { 367, 441, 34, 18 };
-	pos = 300000;
+	finishPose = { 634, 1399, 96, 145 };
 
 	Decoration*dec_tree = new Decoration();
 	dec_tree->maxX = 4;
@@ -48,12 +41,26 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	decoration.push_back(dec_startSign);
 	startSign = decoration.size() - 1;
 
-	/*Decoration*dec_startSempahor = new Decoration();
-	dec_startSempahor->maxX = -1;
-	dec_startSempahor->minX = -1;
-	dec_startSempahor->rect = { 323, 234, 99, 174 };
-	decoration.push_back(dec_startSempahor);
-	decSemaphor = decoration.size() - 1;*/
+	Decoration*dec_checkSign = new Decoration();
+	dec_checkSign->maxX = 0;
+	dec_checkSign->minX = 0;
+	dec_checkSign->rect = { 13, 721, 840, 279 };
+	decoration.push_back(dec_checkSign);
+	checkSign = decoration.size() - 1;
+
+	Decoration*dec_goalSign = new Decoration();
+	dec_goalSign->maxX = 0;
+	dec_goalSign->minX = 0;
+	dec_goalSign->rect = { 7, 1003, 852, 311 };
+	decoration.push_back(dec_goalSign);
+	goalSign = decoration.size() - 1;
+
+	Decoration*dec_people = new Decoration();
+	dec_people->maxX = 0;
+	dec_people->minX = 0;
+	dec_people->rect = { 21, 1357, 548, 184 };
+	decoration.push_back(dec_people);
+	people = decoration.size() - 1;
 
 	//Animation of IA
 	//Green
@@ -128,6 +135,39 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	yellowSix.loop = true;
 	yellowSix.speed = 0.04f;
 
+	//finishPlayer
+	finishPlayer.frames.push_back({ 181, 559, 66, 146 });
+	finishPlayer.frames.push_back({ 257, 559, 66, 146 });
+	finishPlayer.loop = true;
+	finishPlayer.speed = 0.04f;
+
+
+}
+
+ModuleSceneTrack::~ModuleSceneTrack()
+{}
+
+// Load assets
+bool ModuleSceneTrack::Start()
+{
+	LOG("Loading space intro");
+
+	maxPuntuation = 6514651;
+	stage = 1;
+	time = 50;
+	score = 0;
+	speed = 0;
+	startTime = 0;
+	N = 0;
+	pos = 0;
+	realPos = 0;
+	startTime = 0;
+	timeBonus = 5;
+	sempahorState = 0;
+	firstLoop = true;
+	run = false;
+	finished = RUNNING;
+
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
 	enemy->speed = 300;
@@ -178,22 +218,22 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	enemy5->current_animation = &yellowThree;
 	enemys.push_back(enemy5);
 
-	
+	finishAnimation = new Enemy();
+	finishAnimation->color = YELLOW;
+	finishAnimation->speed = 270;
+	finishAnimation->posStopSprint = 1550;
+	finishAnimation->posZ = 0;
+	finishAnimation->posX = 0.0f;
+	finishAnimation->position = 3;
+	finishAnimation->current_animation = &finishPlayer;
+
 	mostAdvancedEnemyZ = 1550;
-}
 
-ModuleSceneTrack::~ModuleSceneTrack()
-{}
-
-// Load assets
-bool ModuleSceneTrack::Start()
-{
-	LOG("Loading space intro");
 	//ON DEBUG MODE
-	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
+	/*App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 	App->fxLoadTrack = App->audio->LoadFx("music/fxLoadTrack.wav");
 	App->fxSemaphorOne = App->audio->LoadFx("music/fxSempahorOne.wav");
-	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");
+	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");*/
 
 
 	//Load decorations
@@ -206,11 +246,10 @@ bool ModuleSceneTrack::Start()
 	decorationSprite = App->textures->Load("sprites/decoration.png");
 
 	//Gui fonts
-	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18);
-	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 18);
-	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 36);
+	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890SEC ", 16, 18);
+	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890*= ", 16, 18, 18);
+	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890BONUSPIT ", 16, 18, 36);
 	App->numericFontGreen = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 54);
-
 
 	App->player->Enable();
 	//App->enemy->Enable();
@@ -242,6 +281,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
 	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
 
+	//Draw track
 	for (int n = startPos; n < startPos + 300; n++) {
 		Line &l = lines[n%N];
 		l.project((int)(playerX - x), camH, pos - (n >= N ? N * segL : 0));
@@ -282,128 +322,176 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 
 	//Draw Objects
 	for (int n = startPos + 300; n > startPos; n--) {
-		if (lines[n%N].id != -1)
-			lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite);
+		if (lines[n%N].id != -1) {
+			if ((startPos + 10) > n && n > (startPos + 5) && checkSign == lines[n%N].id && delayCheckPoint == 0) {
+				time += 30;
+				delayCheckPoint += 5;
+			}
+			else if((startPos + 10) > n && n > (startPos + 5) && goalSign == lines[n%N].id && finished == RUNNING) {
+				finished = ANIMATION;
+				finishAnimation->posZ = startPos + 7;
+				goalPos = finishAnimation->posZ;
+			}
+			else 
+				lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite, 999.0f, false, (startPos + 10) > n && n > (startPos + 5) && startSign != lines[n%N].id);
+
+		}
+			
 	}
-	//Sempahor animation
-	if (startTime != -1) {
-		if (firstLoop) firstLoop = false;
-		else {
-			startTime += deltaTime;
-			if (startTime < 4) {
-				if (startTime < 3) {
-					App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 62, &sempahorYellow, 0.f);
-					if (sempahorState == 0 && startTime > 2)sempahorState++;
+	if (finished == RUNNING) {
+		//Sempahor animation
+		if (startTime != -1) {
+			if (firstLoop) firstLoop = false;
+			else {
+				startTime += deltaTime;
+				if (startTime < 4) {
+					if (startTime < 3) {
+						App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 62, &sempahorYellow, 0.f);
+						if (sempahorState == 0 && startTime > 2)sempahorState++;
+					}
+					else {
+						App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 31, &sempahorYellow, 0.f);
+						if (sempahorState == 2)sempahorState++;
+					}
+				}
+				if (startTime < 4) {
+					App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19, &sempahorBlue, 0.f);
+				}
+				else if (startTime < 5) {
+					if (sempahorState == 4) sempahorState++;
+				}
+				else if (startTime > 5) {
+					startTime = -1;
+					run = true;
+					switch (App->musicChosed)
+					{
+					case OUTRIDE_A_CRISIS:
+						App->musicChosed = OUTRIDE_A_CRISIS;
+						App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
+						break;
+					case SPRINTER:
+						App->musicChosed = SPRINTER;
+						App->audio->PlayMusic("music/3Sprinter.ogg", 0.f);
+						break;
+					case WINNING_RUN:
+						App->musicChosed = WINNING_RUN;
+						App->audio->PlayMusic("music/4WinningRun.ogg", 0.f);
+						break;
+					case HARD_ROAD:
+						App->musicChosed = HARD_ROAD;
+						App->audio->PlayMusic("music/5HardRoad.ogg", 0.f);
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			if (sempahorState == 1 || sempahorState == 3) {
+				App->audio->PlayFx(App->fxSemaphorOne);
+				sempahorState++;
+			}
+			else if (sempahorState == 5) {
+				App->audio->PlayFx(App->fxSemaphorFinish);
+				sempahorState++;
+			}
+		}
+
+		//Draw Enemys
+		for (unsigned int n = 0; n < enemys.size(); n++) {
+			if (enemys[n]->posZ > startPos) {
+				float enemysCurve = lines[(int)(enemys[n]->posZ) % N].curve;
+				bool animationChanged = false;
+				if (enemysCurve < -3) {
+					animationChanged = TrentToN(0, enemys[n]->position, deltaTime, enemys[n]->animationTime);
+				}
+				else if (enemysCurve < -1.5) {
+					animationChanged = TrentToN(1, enemys[n]->position, deltaTime, enemys[n]->animationTime);
+				}
+				else if (enemysCurve < 0) {
+					animationChanged = TrentToN(2, enemys[n]->position, deltaTime, enemys[n]->animationTime);
+				}
+				else if (enemysCurve > 3) {
+					animationChanged = TrentToN(6, enemys[n]->position, deltaTime, enemys[n]->animationTime);
+				}
+				else if (enemysCurve > 1.5) {
+					animationChanged = TrentToN(5, enemys[n]->position, deltaTime, enemys[n]->animationTime);
+				}
+				else if (enemysCurve > 0) {
+					animationChanged = TrentToN(4, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 				}
 				else {
-					App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19 + 31, &sempahorYellow, 0.f);
-					if (sempahorState == 2)sempahorState++;
+					animationChanged = TrentToN(3, enemys[n]->position, deltaTime, enemys[n]->animationTime);
 				}
-			}
-			if (startTime < 4) {
-				App->renderer->Blit(decorationSprite, 14, SCREEN_HEIGHT / 2 + 19, &sempahorBlue, 0.f);
-			}
-			else if(startTime < 5){
-				if (sempahorState == 4) sempahorState++;
-			}
-			else if (startTime > 5) {
-				startTime = -1;
-				run = true;
-				switch (App->musicChosed)
-				{
-				case OUTRIDE_A_CRISIS:
-					App->musicChosed = OUTRIDE_A_CRISIS;
-					App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
-					break;
-				case SPRINTER:
-					App->musicChosed = SPRINTER;
-					App->audio->PlayMusic("music/3Sprinter.ogg", 0.f);
-					break;
-				case WINNING_RUN:
-					App->musicChosed = WINNING_RUN;
-					App->audio->PlayMusic("music/4WinningRun.ogg", 0.f);
-					break;
-				case HARD_ROAD:
-					App->musicChosed = HARD_ROAD;
-					App->audio->PlayMusic("music/5HardRoad.ogg", 0.f);
-					break;
-				default:
-					break;
+				if (animationChanged) {
+					switch (enemys[n]->position) {
+					case 0:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowZero;
+						else enemys[n]->current_animation = &greenZero;
+						break;
+					case 1:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowOne;
+						else enemys[n]->current_animation = &greenOne;
+						break;
+					case 2:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowTwo;
+						else enemys[n]->current_animation = &greenTwo;
+						break;
+					case 3:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowThree;
+						else enemys[n]->current_animation = &greenThree;
+						break;
+					case 4:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowFour;
+						else enemys[n]->current_animation = &greenFour;
+						break;
+					case 5:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowFive;
+						else enemys[n]->current_animation = &greenFive;
+						break;
+					case 6:
+						if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowSix;
+						else enemys[n]->current_animation = &greenSix;
+						break;
+					default:
+						break;
+					}
 				}
+				lines[(int)(enemys[n]->posZ) % N].DrawObject(enemys[n]->current_animation->GetCurrentFrame(), gui, enemys[n]->posX);
 			}
-		}
-		if (sempahorState == 1 || sempahorState == 3) {
-			App->audio->PlayFx(App->fxSemaphorOne);
-			sempahorState++;
-		} 
-		else if (sempahorState == 5) {
-			App->audio->PlayFx(App->fxSemaphorFinish);
-			sempahorState++;
 		}
 	}
-	
-	//Draw Enemys
-	for (unsigned int n = 0; n < enemys.size(); n++) {
-		if (enemys[n]->posZ > startPos) {
-			float enemysCurve = lines[(int)(enemys[n]->posZ) % N].curve;
-			bool animationChanged = false;
-			if (enemysCurve < -3) {
-				animationChanged = TrentToN(0, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			else if (enemysCurve < -1.5) {
-				animationChanged = TrentToN(1, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			else if (enemysCurve < 0) {
-				animationChanged = TrentToN(2, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			else if (enemysCurve > 3) {
-				animationChanged = TrentToN(6, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			else if (enemysCurve > 1.5) {
-				animationChanged = TrentToN(5, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			else if (enemysCurve > 0) {
-				animationChanged = TrentToN(4, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			else {
-				animationChanged = TrentToN(3, enemys[n]->position, deltaTime, enemys[n]->animationTime);
-			}
-			if (animationChanged) {
-				switch (enemys[n]->position) {
-				case 0:
-					if(enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowZero;
-					else enemys[n]->current_animation = &greenZero;
-					break;
-				case 1:
-					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowOne;
-					else enemys[n]->current_animation = &greenOne;
-					break;
-				case 2:
-					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowTwo;
-					else enemys[n]->current_animation = &greenTwo;
-					break;
-				case 3:
-					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowThree;
-					else enemys[n]->current_animation = &greenThree;
-					break;
-				case 4:
-					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowFour;
-					else enemys[n]->current_animation = &greenFour;
-					break;
-				case 5:
-					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowFive;
-					else enemys[n]->current_animation = &greenFive;
-					break;
-				case 6:
-					if (enemys[n]->color == YELLOW) enemys[n]->current_animation = &yellowSix;
-					else enemys[n]->current_animation = &greenSix;
-					break;
-				default:
-					break;
-				}
-			}
-			lines[(int)(enemys[n]->posZ) % N].DrawObject(enemys[n]->current_animation->GetCurrentFrame(), gui, enemys[n]->posX);
+	else {
+		//if(finishAnimation->posZ == 0) finishAnimation->posZ = 50;
+		if (finishAnimation->posZ < goalPos + 150) {
+			finishAnimation->posZ += deltaTime * 75;
+			lines[(int)(finishAnimation->posZ) % N].DrawObject(finishAnimation->current_animation->GetCurrentFrame(), gui, 0);
 		}
+		else if (pos < (goalPos + 140) *segL) {
+				realPos += deltaTime * 75 * 100;
+				if (realPos > 200) {
+					pos += 200 * (realPos / segL);
+					realPos -= 200 * (realPos / segL);
+				}
+				lines[(int)(finishAnimation->posZ) % N].DrawObject(finishPose, decorationSprite, 0);
+		}
+		else {
+			lines[(int)(finishAnimation->posZ) % N].DrawObject(finishPose, decorationSprite, 0);
+			if (finished == ANIMATION) {
+				finished = BONUS;
+				App->audio->PlayMusic("music/6Finished.ogg", 0.f);
+			}
+		}
+		if (finished == BONUS) {
+			App->renderer->Print(App->numericFontRed, "BONUS POINTS", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 6 , 0.f, true);
+			App->renderer->Print(App->menusFont, to_string((int)time).c_str(), (SCREEN_WIDTH / 20) * 5, SCREEN_HEIGHT / 20 * 7, 0.f);
+			App->renderer->Print(App->numericFontYellow, "SEC", (SCREEN_WIDTH / 20) * 7, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
+			App->renderer->Print(App->numericFontWhite, "* 1000000 = ", (SCREEN_WIDTH / 20) * 11, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
+			App->renderer->Print(App->menusFont, (to_string((int)time)+'0').c_str(), (SCREEN_WIDTH / 20) * 15, SCREEN_HEIGHT / 20 * 7, 0.f);
+			App->renderer->Print(App->numericFontYellow, " 00000", (SCREEN_WIDTH / 20) * 17, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
+			if (timeBonus > 0) timeBonus -= deltaTime;
+		}
+
+		App->player->Disable();
 	}
 }
 
@@ -437,10 +525,12 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	//Automove On debugmode
 	//pos += 200;
 
-	if (run) {
+	if (run && finished == RUNNING) {
 		//pos += 200;
 		time -= deltaTime;
 		if (time < 0) time = 0;
+		delayCheckPoint -= deltaTime;
+		if (delayCheckPoint < 0) delayCheckPoint = 0;
 
 		int segL = SEGL;
 		if (speed < MIN_SPEED) speed += acceleration*deltaTime;
@@ -474,7 +564,8 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			App->player->breaking = false;
 		}
 
-		/*if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		//Turn right and left
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
 			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
 			if (moveX > TRUN_CONST) moveX = TRUN_CONST;
@@ -486,7 +577,13 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
 			if(moveX > TRUN_CONST) moveX = TRUN_CONST;
 			playerX -= moveX;
-		}*/
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT && App->player->colision == NOT_FALLING)
+		{
+			App->player->colision = COLLISIONED;
+			run = false;
+		}
 
 		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 		{
@@ -505,7 +602,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		//Move player to compensate the force of the curve
 		int startPos = pos / SEGL;
 		float currentCurve = lines[startPos%N].curve;
-		if (currentCurve > 3.5) playerX -= 60;
+		/*if (currentCurve > 3.5) playerX -= 60;
 		else if (currentCurve > 2) playerX -= 45;
 		else if (currentCurve > 1) playerX -= 25;
 		else if (currentCurve > 0) playerX -= 15;
@@ -514,14 +611,21 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		else if (currentCurve > 2) playerX += 25;
 		else if (currentCurve > 3.5) playerX += 45;
 		else playerX += 60;
-		}
+		}*/
 	}
-
+	
 	PrintTrack(deltaTime);
 
 	//Print GUI
 	PrintGui();
-
+	if(timeBonus < 0) {
+		timeBonus = 5;
+		for (int i = 0; i < enemys.size(); i++) {
+			enemys.pop_back();
+		}
+		App->audio->PauseMusic();
+		App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
+	}
 	return UPDATE_CONTINUE;
 }
 

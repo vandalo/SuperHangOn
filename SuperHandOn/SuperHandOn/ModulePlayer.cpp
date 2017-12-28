@@ -7,6 +7,9 @@
 //#include "ModuleCollision.h"
 #include "ModuleFadeToBlack.h"
 #include "ModulePlayer.h"
+#include "ModuleSceneTrack.h"
+//TMP
+#include "ModuleSceneMapAfrica.h"
 
 
 ModulePlayer::ModulePlayer(bool active) : Module(active)
@@ -14,6 +17,7 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	timer_movment = 0;
 	state = STRAIGHT;
 	breaking = false;
+	colision = NOT_FALLING;
 
 	// straight moto
 	straight.frames.push_back({ 181, 559, 66, 146 });
@@ -145,7 +149,48 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	turboStraight.loop = true;
 	turboStraight.speed = 0.04f;
 
-	
+	//falls
+	slowFall.frames.push_back({ 0, 0, 220, 124 });
+	slowFall.frames.push_back({ 220, 0, 220, 124 });
+	slowFall.frames.push_back({ 440, 0, 220, 124 });
+	slowFall.frames.push_back({ 660, 0, 220, 124 });
+	slowFall.frames.push_back({ 880, 0, 220, 124 });
+	slowFall.frames.push_back({ 1100, 0, 220, 124 });
+	slowFall.frames.push_back({ 0, 124, 220, 124 });
+	slowFall.frames.push_back({ 220, 124, 220, 124 });
+	slowFall.frames.push_back({ 440, 124, 220, 124 });
+	slowFall.frames.push_back({ 660, 124, 220, 124 });
+	slowFall.frames.push_back({ 880, 124, 220, 124 });
+	slowFall.frames.push_back({ 1100, 124, 220, 124 });
+	slowFall.frames.push_back({ 0, 248, 220, 124 });
+	slowFall.frames.push_back({ 0, 248, 220, 124 });
+	slowFall.frames.push_back({ 0, 248, 220, 124 });
+	slowFall.frames.push_back({ 0, 248, 220, 124 });
+	slowFall.frames.push_back({ 0, 248, 220, 124 });
+	slowFall.frames.push_back({ 0, 248, 220, 124 });
+	slowFall.frames.push_back({ 99, 99, 0, 0 });
+	slowFall.loop = false;
+	slowFall.speed = 0.04f;
+
+	fastFall.frames.push_back({ 0, 373, 171, 144 });
+	fastFall.frames.push_back({ 171, 373, 171, 144 });
+	fastFall.frames.push_back({ 342, 373, 171, 144 });
+	fastFall.frames.push_back({ 513, 373, 171, 144 });
+	fastFall.frames.push_back({ 684, 373, 171, 144 });
+	fastFall.frames.push_back({ 855, 373, 171, 144 });
+	fastFall.frames.push_back({ 1026, 373, 171, 144 });
+	fastFall.frames.push_back({ 0, 517, 171, 144 });
+	fastFall.frames.push_back({ 171, 517, 171, 144 });
+	fastFall.frames.push_back({ 342, 517, 171, 144 });
+	fastFall.frames.push_back({ 513, 517, 171, 144 });
+	fastFall.frames.push_back({ 513, 517, 171, 144 });
+	fastFall.frames.push_back({ 513, 517, 171, 144 });
+	fastFall.frames.push_back({ 513, 517, 171, 144 });
+	fastFall.frames.push_back({ 513, 517, 171, 144 });
+	fastFall.frames.push_back({ 513, 517, 171, 144 });
+	fastFall.frames.push_back({ 99, 99, 0, 0 });
+	fastFall.loop = false;
+	fastFall.speed = 0.04f;
 
 	isOutofRoad = false;
 	turbo = false;
@@ -160,7 +205,7 @@ bool ModulePlayer::Start()
 	LOG("Loading player");
 
 	graphics = App->textures->Load("sprites/miscellaneous.png");
-
+	graphicsFalls = App->textures->Load("sprites/falls.png");
 	destroyed = false;
 	position.x = SCREEN_WIDTH / 2;
 	position.y = SCREEN_HEIGHT;
@@ -181,38 +226,49 @@ bool ModulePlayer::CleanUp()
 // Update: draw background
 update_status ModulePlayer::Update(float deltaTime)
 {
-	if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
-		timer_movment += deltaTime;
-		if (timer_movment > TIME_TO_SWAP) {
-			if (state < RIGHT_THREE) {
-				state++;
-				timer_movment = 0;
-			}
+	if (colision == COLLISIONED || colision == FALLING) {
+		if(App->scene_menu_africa->speed > 200 && colision == COLLISIONED) {
+			current_animation = &fastFall;
 		}
-
-	}
-	else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
-		timer_movment += deltaTime;
-		if (timer_movment > TIME_TO_SWAP) {
-			if (state > LEFT_THREE) {
-				state--;
-				timer_movment = 0;
-			}
-		}
-
+		else if (colision == COLLISIONED) current_animation = &slowFall;
+		if (colision == COLLISIONED) current_animation->Reset();
+		colision = FALLING;
+		App->scene_menu_africa->speed = 0;
+		fallDist = abs(App->scene_menu_africa->playerX);
 	}
 	else {
-		if (state != STRAIGHT) {
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
 			timer_movment += deltaTime;
 			if (timer_movment > TIME_TO_SWAP) {
-				if(state < STRAIGHT) state++;
-				else if (state > STRAIGHT) state--;
-				timer_movment = 0;
+				if (state < RIGHT_THREE) {
+					state++;
+					timer_movment = 0;
+				}
+			}
+
+		}
+		else if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT) {
+			timer_movment += deltaTime;
+			if (timer_movment > TIME_TO_SWAP) {
+				if (state > LEFT_THREE) {
+					state--;
+					timer_movment = 0;
+				}
+			}
+
+		}
+		else {
+			if (state != STRAIGHT) {
+				timer_movment += deltaTime;
+				if (timer_movment > TIME_TO_SWAP) {
+					if (state < STRAIGHT) state++;
+					else if (state > STRAIGHT) state--;
+					timer_movment = 0;
+				}
 			}
 		}
-	}
 
-	switch (state) {
+		switch (state) {
 		case LEFT_ONE:
 			if (breaking) current_animation = &breakTurnLeftOne;
 			else if (turbo) current_animation = &turboLeftOne;
@@ -232,7 +288,7 @@ update_status ModulePlayer::Update(float deltaTime)
 			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
 			break;
 		case STRAIGHT:
-			if(breaking) current_animation = &breakStraight;
+			if (breaking) current_animation = &breakStraight;
 			else if (turbo) current_animation = &turboStraight;
 			else current_animation = &straight;
 			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2;
@@ -251,7 +307,7 @@ update_status ModulePlayer::Update(float deltaTime)
 			break;
 		case RIGHT_THREE:
 			if (breaking) current_animation = &breakTurnRightThree;
-			else if(turbo) current_animation = &turboRightThree;
+			else if (turbo) current_animation = &turboRightThree;
 			else current_animation = &turnRightThree;
 			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
 			break;
@@ -260,10 +316,28 @@ update_status ModulePlayer::Update(float deltaTime)
 			else current_animation = &straight;
 			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2;
 			break;
+		}
 	}
-	
 	if (destroyed == false)
-		App->renderer->Blit(graphics, position.x - current_animation->GetCurrentFrame().w / 2, position.y - current_animation->GetCurrentFrame().h, &(current_animation->GetCurrentFrame()), 0.f);
-		if(isOutofRoad)	App->renderer->Blit(graphics, xParticle, SCREEN_HEIGHT - outOfRoad.GetCurrentFrame().h, &outOfRoad.GetCurrentFrame(), 0.f);
+		if (colision == FALLING) {
+			App->renderer->Blit(graphicsFalls, position.x - (current_animation->GetCurrentFrame().w / 2) * 2, position.y - (current_animation->GetCurrentFrame().h) * 2, &(current_animation->GetCurrentFrame()), 0.f, false, false, current_animation->GetCurrentFrame().w * 2, current_animation->GetCurrentFrame().h * 2);
+			if (current_animation->Finished()) {
+				if(App->scene_menu_africa->playerX > 0)
+					App->scene_menu_africa->playerX -= (fallDist / RECOVERY_MOVMENT) * deltaTime * 100;
+				else if (App->scene_menu_africa->playerX < 0)
+					App->scene_menu_africa->playerX += (fallDist / RECOVERY_MOVMENT) * deltaTime * 100;
+
+				if (App->scene_menu_africa->playerX < 0.3 && App->scene_menu_africa->playerX > 0.0 || App->scene_menu_africa->playerX > -0.3  && App->scene_menu_africa->playerX < 0.0 || App->scene_menu_africa->playerX == 0.0) {
+					App->scene_menu_africa->playerX = 0;
+					App->scene_menu_africa->run = true;
+					colision = NOT_FALLING;
+					state = STRAIGHT;
+				}
+			}
+		}
+		else {
+			App->renderer->Blit(graphics, position.x - current_animation->GetCurrentFrame().w / 2, position.y - current_animation->GetCurrentFrame().h, &(current_animation->GetCurrentFrame()), 0.f);
+			if (isOutofRoad) App->renderer->Blit(graphics, xParticle, SCREEN_HEIGHT - outOfRoad.GetCurrentFrame().h, &outOfRoad.GetCurrentFrame(), 0.f);
+		}
 	return UPDATE_CONTINUE;
 }

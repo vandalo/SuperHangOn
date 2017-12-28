@@ -90,4 +90,5 @@ typedef unsigned int uint;
 #define CHECK_TIME 30
 #define TRUN_CONST 100
 #define MIN_VEL 80
+#define RECOVERY_MOVMENT 10
 #endif //__GLOBALS_H__

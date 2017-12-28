@@ -19,6 +19,13 @@ enum EnemyColor {
 	GREEN
 };
 
+enum FinishState {
+	RUNNING,
+	ANIMATION,
+	BONUS,
+	PUNTUATION
+};
+
 struct Enemy {
 	float posZ;
 	float posX;
@@ -84,12 +91,17 @@ public:
 	int pos;
 	int realPos = 0;
 	int playerX;
+	float speed = 0;
+	bool run = false;
 
 	vector<Decoration*> decoration;
 	vector<Enemy*> enemys;
 	//Array decoration item index
 	int deadTree;
 	int startSign;
+	int checkSign;
+	int goalSign;
+	int people;
 
 private:
 	void PrintTrack(float deltaTime);
@@ -112,16 +124,24 @@ private:
 	Animation yellowFour;
 	Animation yellowFive;
 	Animation yellowSix;
+
+	//Finish animation
+	Animation finishPlayer;
+	Enemy* finishAnimation;
+	float goalPos;
+	SDL_Rect finishPose;
 	
 	int maxPuntuation;
 	int stage;
 	float time;
 	int score;
-	float speed = 0;
 	int enemyOneZ;
 	float startTime = 0;
 	bool firstLoop = true;
-	bool run = false;
+	float delayCheckPoint;
+	FinishState finished;
+	float timeBonus = 5;
+
 	float acceleration = ACCELERATION;
 	unsigned int sempahorState = 0;
 

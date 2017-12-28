@@ -43,8 +43,8 @@ bool ModuleSceneMapAfrica::Start(){
 		Line line;
 		line.z = (float)i * line.segL;
 
-		if (i > 300 && i < 500) line.curve = -2;
-		else if (i > 600 && i < 850) line.curve = -2;
+		//if (i > 300 && i < 500) line.curve = -2;
+		/*else if (i > 600 && i < 850) line.curve = -2;
 		else if (i > 900 && !endY) {
 			line.curve = 3;
 			if (up) {
@@ -116,7 +116,7 @@ bool ModuleSceneMapAfrica::Start(){
 				line.y = 0;
 				mustAlign = false;
 			}
-		}
+		}*/
 		//Decoration
 		if (i % 10 == 0 && i > 300) {
 			line.id = deadTree;
@@ -128,6 +128,19 @@ bool ModuleSceneMapAfrica::Start(){
 		//StartSign
 		if (i == 13) {
 			line.id = startSign;
+			line.spriteX = 0;
+		}
+
+		/*if (i == 150) {
+			line.id = checkSign;
+			line.spriteX = 0;
+		}*/
+		if (i == 50) {
+			line.id = goalSign;
+			line.spriteX = 0;
+		}
+		if (i == 200) {
+			line.id = people;
 			line.spriteX = 0;
 		}
 		lines.push_back(line);

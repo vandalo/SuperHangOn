@@ -37,7 +37,7 @@ public:
 		W = (float)(scale * roadW * width / 2);
 	}
 
-	void DrawObject(SDL_Rect sprite, SDL_Texture* tex, float position = 999, bool midle=false)
+	void DrawObject(SDL_Rect sprite, SDL_Texture* tex, float position = 999, bool midle=false, bool isLine = false)
 	{
 		float spriteXToDraw = spriteX;
 		if(position != 999) spriteXToDraw = position;
@@ -62,6 +62,9 @@ public:
 		int spriteScaleH = (int)(sprite.h*(destH / h));
 		int spriteScaleW = (int)(sprite.w*(destW / w));
 		App->renderer->Blit(tex, (int)destX - spriteScaleW/2, (int)destY, &sprite, 0.f, false, false, spriteScaleW, spriteScaleH);
+		//Coilision detect
+		if (isLine && (int)destX - spriteScaleW / 2 - spriteScaleW  < App->player->current_animation->GetCurrentFrame().w / 2 && (int)destX - spriteScaleW >  -App->player->current_animation->GetCurrentFrame().w / 2)
+			if(App->player->colision == NOT_FALLING) App->player->colision = COLLISIONED;
 	}
 
 };

@@ -14,7 +14,13 @@ enum BikeState {
 	STRAIGHT,
 	RIGHT_ONE,
 	RIGHT_TWO,
-	RIGHT_THREE
+	RIGHT_THREE,
+};
+
+enum Falls {
+	COLLISIONED,
+	NOT_FALLING,
+	FALLING,
 };
 
 class ModulePlayer : public Module
@@ -30,6 +36,7 @@ public:
 public:
 
 	SDL_Texture* graphics = nullptr;
+	SDL_Texture* graphicsFalls = nullptr;
 	Animation* current_animation = nullptr;
 	Animation straight;
 	Animation turnRightOne;
@@ -56,6 +63,7 @@ public:
 
 	bool isOutofRoad;
 	bool turbo;
+	Falls colision;
 	Animation outOfRoad;
 	Animation turboRightThree;
 	Animation turboLeftThree;
@@ -65,9 +73,13 @@ public:
 	Animation turboLeftOne;
 	Animation turboStraight;
 
+	Animation fastFall;
+	Animation slowFall;
+
 private:
 	unsigned int state;
 	float timer_movment;
+	float fallDist;
 };
 
 #endif

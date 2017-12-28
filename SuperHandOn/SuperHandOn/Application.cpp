@@ -64,8 +64,8 @@ bool Application::Init()
 	}
 
 	// Start the first scene --
-	//fade->FadeToBlack(scene_intro, nullptr, 3.0f);
-	fade->FadeToBlack(scene_menu_africa, nullptr, 3.0f);
+	fade->FadeToBlack(scene_intro, nullptr, 3.0f);
+	//fade->FadeToBlack(scene_menu_africa, nullptr, 3.0f);
 
 	return ret;
 }
