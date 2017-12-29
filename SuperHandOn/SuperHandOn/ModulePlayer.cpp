@@ -234,7 +234,7 @@ update_status ModulePlayer::Update(float deltaTime)
 		if (colision == COLLISIONED) current_animation->Reset();
 		colision = FALLING;
 		App->scene_menu_africa->speed = 0;
-		fallDist = abs(App->scene_menu_africa->playerX);
+		fallDist = (float)(abs(App->scene_menu_africa->playerX));
 	}
 	else {
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT) {
@@ -273,48 +273,48 @@ update_status ModulePlayer::Update(float deltaTime)
 			if (breaking) current_animation = &breakTurnLeftOne;
 			else if (turbo) current_animation = &turboLeftOne;
 			else current_animation = &turnLeftOne;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2);
 			break;
 		case LEFT_TWO:
 			if (breaking) current_animation = &breakTurnLeftTwo;
 			else if (turbo) current_animation = &turboLeftTwo;
 			else current_animation = &turnLeftTwo;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2);
 			break;
 		case LEFT_THREE:
 			if (breaking) current_animation = &breakTurnLeftThree;
 			else if (turbo) current_animation = &turboLeftThree;
 			else current_animation = &turnLeftThree;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w - outOfRoad.GetCurrentFrame().w / 2);
 			break;
 		case STRAIGHT:
 			if (breaking) current_animation = &breakStraight;
 			else if (turbo) current_animation = &turboStraight;
 			else current_animation = &straight;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2);
 			break;
 		case RIGHT_ONE:
 			if (breaking) current_animation = &breakTurnRightOne;
 			else if (turbo) current_animation = &turboRightOne;
 			else current_animation = &turnRightOne;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2);
 			break;
 		case RIGHT_TWO:
 			if (breaking) current_animation = &breakTurnRightTwo;
 			else if (turbo) current_animation = &turboRightTwo;
 			else current_animation = &turnRightTwo;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2);
 			break;
 		case RIGHT_THREE:
 			if (breaking) current_animation = &breakTurnRightThree;
 			else if (turbo) current_animation = &turboRightThree;
 			else current_animation = &turnRightThree;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2);
 			break;
 		default:
 			if (breaking) current_animation = &breakStraight;
 			else current_animation = &straight;
-			xParticle = position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2;
+			xParticle = (float)(position.x - current_animation->GetCurrentFrame().w / 2 + current_animation->GetCurrentFrame().w / 2 - outOfRoad.GetCurrentFrame().w / 2);
 			break;
 		}
 	}
@@ -323,9 +323,9 @@ update_status ModulePlayer::Update(float deltaTime)
 			App->renderer->Blit(graphicsFalls, position.x - (current_animation->GetCurrentFrame().w / 2) * 2, position.y - (current_animation->GetCurrentFrame().h) * 2, &(current_animation->GetCurrentFrame()), 0.f, false, false, current_animation->GetCurrentFrame().w * 2, current_animation->GetCurrentFrame().h * 2);
 			if (current_animation->Finished()) {
 				if(App->scene_menu_africa->playerX > 0)
-					App->scene_menu_africa->playerX -= (fallDist / RECOVERY_MOVMENT) * deltaTime * 100;
+					App->scene_menu_africa->playerX -= (int)((fallDist / RECOVERY_MOVMENT) * deltaTime * 100);
 				else if (App->scene_menu_africa->playerX < 0)
-					App->scene_menu_africa->playerX += (fallDist / RECOVERY_MOVMENT) * deltaTime * 100;
+					App->scene_menu_africa->playerX += (int)((fallDist / RECOVERY_MOVMENT) * deltaTime * 100);
 
 				if (App->scene_menu_africa->playerX < 0.3 && App->scene_menu_africa->playerX > 0.0 || App->scene_menu_africa->playerX > -0.3  && App->scene_menu_africa->playerX < 0.0 || App->scene_menu_africa->playerX == 0.0) {
 					App->scene_menu_africa->playerX = 0;
@@ -337,7 +337,7 @@ update_status ModulePlayer::Update(float deltaTime)
 		}
 		else {
 			App->renderer->Blit(graphics, position.x - current_animation->GetCurrentFrame().w / 2, position.y - current_animation->GetCurrentFrame().h, &(current_animation->GetCurrentFrame()), 0.f);
-			if (isOutofRoad) App->renderer->Blit(graphics, xParticle, SCREEN_HEIGHT - outOfRoad.GetCurrentFrame().h, &outOfRoad.GetCurrentFrame(), 0.f);
+			if (isOutofRoad) App->renderer->Blit(graphics, (int)xParticle, SCREEN_HEIGHT - outOfRoad.GetCurrentFrame().h, &outOfRoad.GetCurrentFrame(), 0.f);
 		}
 	return UPDATE_CONTINUE;
 }

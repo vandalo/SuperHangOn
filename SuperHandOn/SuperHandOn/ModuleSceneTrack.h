@@ -14,6 +14,21 @@ struct Decoration {
 	SDL_Rect rect;
 };
 
+struct Bioma {
+	Color grass1;
+	Color grass2;
+	Color rumble1;
+	Color rumble2;
+	Color color_road1;
+	Color color_road2;
+	Color color_line1;
+	Color color_line2;
+	Color sky;
+
+	SDL_Rect background;
+	SDL_Rect backgroundParalax;
+};
+
 enum EnemyColor {
 	YELLOW,
 	GREEN
@@ -81,8 +96,11 @@ public:
 	Color grass2;
 	Color rumble1;
 	Color rumble2;
-	Color color_road;
-	Color color_line;
+	Color color_road1;
+	Color color_road2;
+	Color color_line1;
+	Color color_line2;
+	Color sky;
 
 	vector<Line> lines;
 	
@@ -99,16 +117,23 @@ public:
 	//Array decoration item index
 	int deadTree;
 	int startSign;
+	int signRight;
 	int checkSign;
 	int goalSign;
 	int people;
+	int signLeft;
+	int tonnel;
+	int bidalstone;
+	int rock;
+	int biomSwapPoint;
 
 private:
 	void PrintTrack(float deltaTime);
-	void PrintGui();
+	void PrintGui(float deltaTime);
 	bool TrentToN(int n, int &res, float deltaTime, float &animationTime);
+	void swapBioma(float deltaTime);
 
-private:
+protected:
 	Animation greenZero;
 	Animation greenOne;
 	Animation greenTwo;
@@ -146,6 +171,16 @@ private:
 	unsigned int sempahorState = 0;
 
 	float mostAdvancedEnemyZ;
+
+	int currentBiomId;
+	//BiomsIds
+	int desertBiom;
+	int mountainBiom;
+	bool biomSwap;
+	vector<int> biomsSequence;
+	vector<Bioma*> bioms;
+	float updateBiomTimer;
+	bool biomSwapBackgroundHelper;
 };
 
 #endif // __ModuleSceneTrack_H__

@@ -34,6 +34,41 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	decoration.push_back(dec_tree);
 	deadTree = decoration.size() - 1;
 
+	Decoration*dec_signLeft = new Decoration();
+	dec_signLeft->maxX = 4;
+	dec_signLeft->minX = 2.5;
+	dec_signLeft->rect = { 961, 31, 173, 122 };
+	decoration.push_back(dec_signLeft);
+	signLeft = decoration.size() - 1;
+
+	Decoration*dec_signRight = new Decoration();
+	dec_signRight->maxX = 4;
+	dec_signRight->minX = 2.5;
+	dec_signRight->rect = { 1164, 28, 173, 126 };
+	decoration.push_back(dec_signRight);
+	signRight = decoration.size() - 1;
+
+	Decoration*dec_tonnel = new Decoration();
+	dec_tonnel->maxX = 4;
+	dec_tonnel->minX = 2.5;
+	dec_tonnel->rect = { 1517, 178, 175, 170 };
+	decoration.push_back(dec_tonnel);
+	tonnel = decoration.size() - 1;
+
+	Decoration*dec_bidalstone = new Decoration();
+	dec_bidalstone->maxX = 4;
+	dec_bidalstone->minX = 2.5;
+	dec_bidalstone->rect = { 1377, 37, 431, 120 };
+	decoration.push_back(dec_bidalstone);
+	bidalstone = decoration.size() - 1;
+
+	Decoration*dec_rock = new Decoration();
+	dec_rock->maxX = 4;
+	dec_rock->minX = 2.5;
+	dec_rock->rect = { 1290, 358, 356, 168 };
+	decoration.push_back(dec_rock);
+	rock = decoration.size() - 1;
+
 	Decoration*dec_startSign = new Decoration();
 	dec_startSign->maxX = 0;
 	dec_startSign->minX = 0;
@@ -47,6 +82,13 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	dec_checkSign->rect = { 13, 721, 840, 279 };
 	decoration.push_back(dec_checkSign);
 	checkSign = decoration.size() - 1;
+
+	Decoration*dec_biomSwap = new Decoration();
+	dec_biomSwap->maxX = 0;
+	dec_biomSwap->minX = 0;
+	dec_biomSwap->rect = { 2200, 2200, 840, 279 };
+	decoration.push_back(dec_biomSwap);
+	biomSwapPoint = decoration.size() - 1;
 
 	Decoration*dec_goalSign = new Decoration();
 	dec_goalSign->maxX = 0;
@@ -166,7 +208,9 @@ bool ModuleSceneTrack::Start()
 	sempahorState = 0;
 	firstLoop = true;
 	run = false;
+	biomSwap = false;
 	finished = RUNNING;
+	biomSwapBackgroundHelper = false;
 
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
@@ -230,10 +274,10 @@ bool ModuleSceneTrack::Start()
 	mostAdvancedEnemyZ = 1550;
 
 	//ON DEBUG MODE
-	/*App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
+	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 	App->fxLoadTrack = App->audio->LoadFx("music/fxLoadTrack.wav");
 	App->fxSemaphorOne = App->audio->LoadFx("music/fxSempahorOne.wav");
-	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");*/
+	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");
 
 
 	//Load decorations
@@ -277,6 +321,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 
 	//Draw background
 	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
+	if (biomSwapBackgroundHelper)App->renderer->DrawPoly(sky, 0, 0, SCREEN_WIDTH, 0, 300, SCREEN_WIDTH);
 	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
 	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
 	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
@@ -308,7 +353,8 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 
 		Color grass = (n / 3) % 2 ? grass1 : grass2;
 		Color rumble = (n / 3) % 2 ? rumble1 : rumble2;
-		Color line = (n / 10) % 2 ? color_line : color_road;
+		Color line = (n / 10) % 2 ? color_line1 : color_line2;
+		Color road = (n / 10) % 2 ? color_road1 : color_road2;
 
 		if (n == 0)n++;
 		Line p = lines[(n - 1) % N]; //previous line
@@ -316,8 +362,9 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		//App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(rumble, (short)p.X, (short)p.Y, (short)(p.W*1.2), (short)l.X, (short)l.Y, (short)(l.W*1.2));
-		App->renderer->DrawPoly(color_road, (short)p.X, (short)p.Y, (short)p.W, (short)l.X, (short)l.Y, (short)l.W);
+		App->renderer->DrawPoly(road, (short)p.X, (short)p.Y, (short)p.W, (short)l.X, (short)l.Y, (short)l.W);
 		App->renderer->DrawPoly(line, (short)p.X, (short)p.Y, (short)(p.W*0.05), (short)l.X, (short)l.Y, (short)(l.W*0.05));
+		
 	}
 
 	//Draw Objects
@@ -329,8 +376,13 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 			}
 			else if((startPos + 10) > n && n > (startPos + 5) && goalSign == lines[n%N].id && finished == RUNNING) {
 				finished = ANIMATION;
-				finishAnimation->posZ = startPos + 7;
+				finishAnimation->posZ = (float)(startPos + 7);
 				goalPos = finishAnimation->posZ;
+			}
+			else if ((startPos + 10) > n && n > (startPos + 5) && biomSwapPoint == lines[n%N].id && !biomSwap) {
+				biomSwap = true;
+				currentBiomId++;
+				updateBiomTimer = 0;
 			}
 			else 
 				lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite, 999.0f, false, (startPos + 10) > n && n > (startPos + 5) && startSign != lines[n%N].id);
@@ -467,7 +519,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 			lines[(int)(finishAnimation->posZ) % N].DrawObject(finishAnimation->current_animation->GetCurrentFrame(), gui, 0);
 		}
 		else if (pos < (goalPos + 140) *segL) {
-				realPos += deltaTime * 75 * 100;
+				realPos += (int)(deltaTime * 75 * 100);
 				if (realPos > 200) {
 					pos += 200 * (realPos / segL);
 					realPos -= 200 * (realPos / segL);
@@ -481,21 +533,12 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 				App->audio->PlayMusic("music/6Finished.ogg", 0.f);
 			}
 		}
-		if (finished == BONUS) {
-			App->renderer->Print(App->numericFontRed, "BONUS POINTS", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 6 , 0.f, true);
-			App->renderer->Print(App->menusFont, to_string((int)time).c_str(), (SCREEN_WIDTH / 20) * 5, SCREEN_HEIGHT / 20 * 7, 0.f);
-			App->renderer->Print(App->numericFontYellow, "SEC", (SCREEN_WIDTH / 20) * 7, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
-			App->renderer->Print(App->numericFontWhite, "* 1000000 = ", (SCREEN_WIDTH / 20) * 11, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
-			App->renderer->Print(App->menusFont, (to_string((int)time)+'0').c_str(), (SCREEN_WIDTH / 20) * 15, SCREEN_HEIGHT / 20 * 7, 0.f);
-			App->renderer->Print(App->numericFontYellow, " 00000", (SCREEN_WIDTH / 20) * 17, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
-			if (timeBonus > 0) timeBonus -= deltaTime;
-		}
 
 		App->player->Disable();
 	}
 }
 
-void ModuleSceneTrack::PrintGui() {
+void ModuleSceneTrack::PrintGui(float deltaTime) {
 	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20), &backgroundTop, 0.f);
 	App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - backgroundTime.w / 2, (SCREEN_HEIGHT / 20), &backgroundTime, 0.f);
 	App->renderer->Blit(gui, (SCREEN_WIDTH / 10) * 6, (SCREEN_HEIGHT / 20), &backgroundScore, 0.f);
@@ -515,6 +558,16 @@ void ModuleSceneTrack::PrintGui() {
 		App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
 	App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 20 * 3, 0.f);
 	App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (int)((SCREEN_WIDTH / 10) * 2.4), (int)((SCREEN_HEIGHT / 20) * 3), 0.f, false);
+
+	if (finished == BONUS) {
+		App->renderer->Print(App->numericFontRed, "BONUS POINTS", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 6, 0.f, true);
+		App->renderer->Print(App->menusFont, to_string((int)time).c_str(), (SCREEN_WIDTH / 20) * 5, SCREEN_HEIGHT / 20 * 7, 0.f);
+		App->renderer->Print(App->numericFontYellow, "SEC", (SCREEN_WIDTH / 20) * 7, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
+		App->renderer->Print(App->numericFontWhite, "* 1000000 = ", (SCREEN_WIDTH / 20) * 11, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
+		App->renderer->Print(App->menusFont, (to_string((int)time) + '0').c_str(), (SCREEN_WIDTH / 20) * 15, SCREEN_HEIGHT / 20 * 7, 0.f);
+		App->renderer->Print(App->numericFontYellow, " 00000", (SCREEN_WIDTH / 20) * 17, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
+		if (timeBonus > 0) timeBonus -= deltaTime;
+	}
 }
 
 
@@ -524,6 +577,8 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	
 	//Automove On debugmode
 	//pos += 200;
+
+	if (biomSwap) swapBioma(deltaTime);
 
 	if (run && finished == RUNNING) {
 		//pos += 200;
@@ -542,7 +597,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 				enemys[i]->posZ = mostAdvancedEnemyZ + randAdvance;
 				mostAdvancedEnemyZ += randAdvance;
 			}
-			if(enemys[i]->posZ < enemys[i]->posStopSprint && enemys[i]->posZ > FIRST_ROAD_STRIGHT) enemys[i]->posZ = enemys[i]->posStopSprint;
+			if(enemys[i]->posZ < enemys[i]->posStopSprint && enemys[i]->posZ > FIRST_ROAD_STRIGHT) enemys[i]->posZ = (float)enemys[i]->posStopSprint;
 			else enemys[i]->posZ += (enemys[i]->speed / segL) * deltaTime * 75;
 		}
 		mostAdvancedEnemyZ += (enemys[enemys.size()-1]->speed / segL) * deltaTime * 75;
@@ -567,16 +622,16 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		//Turn right and left
 		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		{
-			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
+			float moveX = (TRUN_CONST * deltaTime * 100.0f) / (speed * 0.01f);
 			if (moveX > TRUN_CONST) moveX = TRUN_CONST;
-			playerX += moveX;
+			playerX += (int)moveX;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 		{
-			float moveX = (TRUN_CONST * deltaTime * 100) / (speed * 0.01);
+			float moveX = (TRUN_CONST * deltaTime * 100.0f) / (speed * 0.01f);
 			if(moveX > TRUN_CONST) moveX = TRUN_CONST;
-			playerX -= moveX;
+			playerX -= (int)moveX;
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT && App->player->colision == NOT_FALLING)
@@ -617,10 +672,10 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	PrintTrack(deltaTime);
 
 	//Print GUI
-	PrintGui();
+	PrintGui(deltaTime);
 	if(timeBonus < 0) {
 		timeBonus = 5;
-		for (int i = 0; i < enemys.size(); i++) {
+		for (unsigned int i = 0; i < enemys.size(); i++) {
 			enemys.pop_back();
 		}
 		App->audio->PauseMusic();
@@ -644,4 +699,113 @@ bool ModuleSceneTrack::TrentToN(int n, int &res, float deltaTime, float &animati
 		if (ret) animationTime = 0;
 	}
 	return ret;
+}
+
+void ModuleSceneTrack::swapBioma(float deltaTime)
+{
+	background = bioms[currentBiomId]->background;
+	backgroundParalax = bioms[currentBiomId]->backgroundParalax;
+	int swapFinished = 0;
+	updateBiomTimer += deltaTime;
+	biomSwapBackgroundHelper = false;
+	if (updateBiomTimer > 0.005) {
+		updateBiomTimer = 0;
+		//Update R
+		if (grass1.r < bioms[currentBiomId]->grass1.r) grass1.r++;
+		else if (grass1.r > bioms[currentBiomId]->grass1.r) grass1.r--;
+		else swapFinished++;
+		if (grass2.r < bioms[currentBiomId]->grass2.r) grass2.r++;
+		else if (grass2.r > bioms[currentBiomId]->grass2.r) grass2.r--;
+		else swapFinished++;
+		if (rumble1.r < bioms[currentBiomId]->rumble1.r) rumble1.r++;
+		else if (rumble1.r > bioms[currentBiomId]->rumble1.r) rumble1.r--;
+		else swapFinished++;
+		if (rumble2.r < bioms[currentBiomId]->rumble2.r) rumble2.r++;
+		else if (rumble2.r > bioms[currentBiomId]->rumble2.r) rumble2.r--;
+		else swapFinished++;
+		if (color_road1.r < bioms[currentBiomId]->color_road1.r) color_road1.r++;
+		else if (color_road1.r > bioms[currentBiomId]->color_road1.r) color_road1.r--;
+		else swapFinished++;
+		if (color_road2.r < bioms[currentBiomId]->color_road2.r) color_road2.r++;
+		else if (color_road2.r > bioms[currentBiomId]->color_road2.r) color_road2.r--;
+		else swapFinished++;
+		if (color_line1.r < bioms[currentBiomId]->color_line1.r) color_line1.r++;
+		else if (color_line1.r > bioms[currentBiomId]->color_line1.r) color_line1.r--;
+		else swapFinished++;
+		if (color_line2.r < bioms[currentBiomId]->color_line2.r) color_line2.r++;
+		else if (color_line2.r > bioms[currentBiomId]->color_line2.r) color_line2.r--;
+		else swapFinished++;
+		if (sky.r < bioms[currentBiomId]->sky.r) sky.r += 3;
+		else if (sky.r > bioms[currentBiomId]->sky.r) sky.r -= 3;
+		else swapFinished++;
+		if (abs(sky.r - bioms[currentBiomId]->sky.r) < 5) 
+			sky.r = bioms[currentBiomId]->sky.r;
+		else biomSwapBackgroundHelper = true;
+		
+
+		//Update G
+		if (grass1.g < bioms[currentBiomId]->grass1.g) grass1.g++;
+		else if (grass1.g > bioms[currentBiomId]->grass1.g) grass1.g--;
+		else swapFinished++;
+		if (grass2.g < bioms[currentBiomId]->grass2.g) grass2.g++;
+		else if (grass2.g > bioms[currentBiomId]->grass2.g) grass2.g--;
+		else swapFinished++;
+		if (rumble1.g < bioms[currentBiomId]->rumble1.g) rumble1.g++;
+		else if (rumble1.g > bioms[currentBiomId]->rumble1.g) rumble1.g--;
+		else swapFinished++;
+		if (rumble2.g < bioms[currentBiomId]->rumble2.g) rumble2.g++;
+		else if (rumble2.g > bioms[currentBiomId]->rumble2.g) rumble2.g--;
+		else swapFinished++;
+		if (color_road1.g < bioms[currentBiomId]->color_road1.g) color_road1.g++;
+		else if (color_road1.g > bioms[currentBiomId]->color_road1.g) color_road1.g--;
+		else swapFinished++;
+		if (color_road2.g < bioms[currentBiomId]->color_road2.g) color_road2.g++;
+		else if (color_road2.g > bioms[currentBiomId]->color_road2.g) color_road2.g--;
+		else swapFinished++;
+		if (color_line1.g < bioms[currentBiomId]->color_line1.g) color_line1.g++;
+		else if (color_line1.g > bioms[currentBiomId]->color_line1.g) color_line1.g--;
+		else swapFinished++;
+		if (color_line2.g < bioms[currentBiomId]->color_line2.g) color_line2.g++;
+		else if (color_line2.g > bioms[currentBiomId]->color_line2.g) color_line2.g--;
+		else swapFinished++;
+		if (sky.g < bioms[currentBiomId]->sky.g) sky.g += 3;
+		else if (sky.g > bioms[currentBiomId]->sky.g) sky.g -= 3;
+		else swapFinished++;
+		if (abs(sky.g - bioms[currentBiomId]->sky.g) < 5) 
+			sky.g = bioms[currentBiomId]->sky.g;
+		else biomSwapBackgroundHelper = true;
+
+		//Update B
+		if (grass1.b < bioms[currentBiomId]->grass1.b) grass1.b++;
+		else if (grass1.b > bioms[currentBiomId]->grass1.b) grass1.b--;
+		else swapFinished++;
+		if (grass2.b < bioms[currentBiomId]->grass2.b) grass2.b++;
+		else if (grass2.b > bioms[currentBiomId]->grass2.b) grass2.b--;
+		else swapFinished++;
+		if (rumble1.b < bioms[currentBiomId]->rumble1.b) rumble1.b++;
+		else if (rumble1.b > bioms[currentBiomId]->rumble1.b) rumble1.b--;
+		else swapFinished++;
+		if (rumble2.b < bioms[currentBiomId]->rumble2.b) rumble2.b++;
+		else if (rumble2.b > bioms[currentBiomId]->rumble2.b) rumble2.b--;
+		else swapFinished++;
+		if (color_road1.b < bioms[currentBiomId]->color_road1.b) color_road1.b++;
+		else if (color_road1.b > bioms[currentBiomId]->color_road1.b) color_road1.b--;
+		else swapFinished++;
+		if (color_road2.b < bioms[currentBiomId]->color_road2.b) color_road2.b++;
+		else if (color_road2.b > bioms[currentBiomId]->color_road2.b) color_road2.b--;
+		else swapFinished++;
+		if (color_line1.b < bioms[currentBiomId]->color_line1.b) color_line1.b++;
+		else if (color_line1.b > bioms[currentBiomId]->color_line1.b) color_line1.b--;
+		else swapFinished++;
+		if (color_line2.b < bioms[currentBiomId]->color_line2.b) color_line2.b++;
+		else if (color_line2.b > bioms[currentBiomId]->color_line2.b) color_line2.b--;
+		else swapFinished++;
+		if (sky.b < bioms[currentBiomId]->sky.b) sky.b += 3;
+		else if (sky.b > bioms[currentBiomId]->sky.b) sky.b -= 3;
+		else swapFinished++;
+		if (abs(sky.r - bioms[currentBiomId]->sky.r) < 5) 
+			sky.r = bioms[currentBiomId]->sky.r;
+		else biomSwapBackgroundHelper = true;
+	}
+	if (swapFinished == 27) biomSwap = false;
 }
