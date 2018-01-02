@@ -95,6 +95,18 @@ bool ModuleSceneMapAfrica::Start(){
 	float lastValue = 0;
 	bool mustAlign = false;
 
+	//Load segments times
+	ifstream myScore;
+	string input;
+	myScore.open("level/africaStageTime.txt");
+	getline(myScore, input);
+	int seg = stoi(input);
+	for (int i = 0; i < seg; i++) {
+		getline(myScore, input);
+		stageTimeSaved.push_back(stof(input));
+	}
+
+	//Create the track
 	for (int i = 0; i < 10; i++) {
 		Line line;
 		line.z = (float)lines.size() * line.segL;
@@ -103,7 +115,7 @@ bool ModuleSceneMapAfrica::Start(){
 	int startSignPos = 10, oldIdDecoration;
 	bool setSwapBiom = false;
 	ifstream myfile;
-	string input;
+
 	myfile.open("level/africa.txt");
 	if (myfile.is_open())
 	{

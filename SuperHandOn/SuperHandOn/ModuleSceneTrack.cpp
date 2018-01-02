@@ -26,6 +26,9 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	backgroundSpeed = { 275, 441, 82, 18 };
 	backgroundKm = { 367, 441, 34, 18 };
 	finishPose = { 634, 1399, 96, 145 };
+	checkFill = { 51, 552, 31, 4 };
+	gameOver = { 1154,249,180,30 };
+	extendedPlay = { 1155,295,152,16 };
 
 	Decoration*dec_tree = new Decoration();
 	dec_tree->maxX = 4;
@@ -228,6 +231,7 @@ bool ModuleSceneTrack::Start()
 	score = 0;
 	speed = 0;
 	startTime = 0;
+	lapTime = 0;
 	N = 0;
 	pos = 0;
 	realPos = 0;
@@ -318,8 +322,8 @@ bool ModuleSceneTrack::Start()
 	decorationSprite = App->textures->Load("sprites/decoration.png");
 
 	//Gui fonts
-	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890SEC ", 16, 18);
-	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890*= ", 16, 18, 18);
+	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890SEC'\" ", 16, 18);
+	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890*=ABCDEFGHIJKLMNOPQRSTUVWXYZ ", 16, 18, 18);
 	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890BONUSPIT ", 16, 18, 36);
 	App->numericFontGreen = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 54);
 
@@ -332,6 +336,13 @@ bool ModuleSceneTrack::Start()
 bool ModuleSceneTrack::CleanUp()
 {
 	LOG("Unloading space scene");
+	for (unsigned int i = 0; i < enemys.size(); i++) delete(enemys[i]);
+	for (unsigned int i = 0; i < decoration.size(); i++) delete(decoration[i]);
+	for (unsigned int i = 0; i < bioms.size(); i++) delete(bioms[i]);
+	delete(finishAnimation);
+
+	saveScore();
+
 	App->textures->Unload(graphics);
 	return true;
 }
@@ -400,10 +411,16 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		if (lines[n%N].id != -1) {
 			if ((startPos + 10) > n && n > (startPos + 5) && checkSign == lines[n%N].id && delayCheckPoint == 0) {
 				time += 30;
+				if (lapTime < stageTimeSaved[stage - 1]) stageTimeSaved[stage - 1] = lapTime;
 				delayCheckPoint += 5;
+				checkTime = 5;
+				lastLapTime = lapTime;
+				lapTime = 0;
+				stage++;
 			}
 			else if((startPos + 10) > n && n > (startPos + 5) && goalSign == lines[n%N].id && finished == RUNNING) {
 				finished = ANIMATION;
+				stage++;
 				finishAnimation->posZ = (float)(startPos + 7);
 				goalPos = finishAnimation->posZ;
 			}
@@ -576,6 +593,8 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 6.5), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundSpeed, 0.f);
 	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 8.5) + 16, (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundKm, 0.f);
 	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 2.7), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundTrackName, 0.f, false);
+	for(int i = 1; i < stage; i++)
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 20) + 21 + ((i-1)*checkFill.w), (SCREEN_HEIGHT / 20) * 4 + 7, &checkFill, 0.f);
 
 	//Text
 	App->renderer->Print(App->numericFontRed, to_string((int)maxPuntuation).c_str(), (SCREEN_WIDTH / 10) + backgroundTop.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
@@ -586,7 +605,7 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 		App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
 	App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 20 * 3, 0.f);
 	App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (int)((SCREEN_WIDTH / 10) * 2.4), (int)((SCREEN_HEIGHT / 20) * 3), 0.f, false);
-
+	
 	if (finished == BONUS) {
 		App->renderer->Print(App->numericFontRed, "BONUS POINTS", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 6, 0.f, true);
 		App->renderer->Print(App->menusFont, to_string((int)time).c_str(), (SCREEN_WIDTH / 20) * 5, SCREEN_HEIGHT / 20 * 7, 0.f);
@@ -596,24 +615,39 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 		App->renderer->Print(App->numericFontYellow, " 00000", (SCREEN_WIDTH / 20) * 17, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
 		if (timeBonus > 0) timeBonus -= deltaTime;
 	}
+
+	if(time <= 0) 
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - gameOver.w/2, (SCREEN_HEIGHT / 3), &gameOver, 0.f);
+
+	if (checkTime > 0) {
+		if((int)checkTime % 2 == 0) App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 2) - extendedPlay.w/2), (SCREEN_HEIGHT / 20) * 6, &extendedPlay, 0.f, false);
+		App->renderer->Print(App->numericFontWhite, "LAPTIME", (SCREEN_WIDTH / 2) - (8*18) + 8, (SCREEN_HEIGHT / 20) * 7, 0.f, false);
+		App->renderer->Print(App->numericFontYellow, getTimeFromFloat(lastLapTime).c_str(), (SCREEN_WIDTH / 2) + 16, (SCREEN_HEIGHT / 20) * 7, 0.f, false);
+		App->renderer->Print(App->numericFontWhite, "BEST LAPTIME", (SCREEN_WIDTH / 2) - (12*18), (SCREEN_HEIGHT / 20) * 8, 0.f, false);
+		App->renderer->Print(App->numericFontYellow, getTimeFromFloat(stageTimeSaved[stage-2]).c_str(), (SCREEN_WIDTH / 2) + 16, (SCREEN_HEIGHT / 20) * 8, 0.f, false);
+	}
+
 }
 
 
 // Update: draw background
 update_status ModuleSceneTrack::Update(float deltaTime)
 {
-	
-	//Automove On debugmode
-	//pos += 200;
+	if (time <= 0) {
+		run = false;
+	}
 
 	if (biomSwap) swapBioma(deltaTime);
 
 	if (run && finished == RUNNING) {
-		//pos += 200;
+
 		time -= deltaTime;
-		if (time < 0) time = 0;
 		delayCheckPoint -= deltaTime;
+		checkTime -= deltaTime;
+		lapTime += deltaTime;
 		if (delayCheckPoint < 0) delayCheckPoint = 0;
+		if (checkTime < 0) checkTime = 0;
+		if (time < 0) time = 0;
 
 		int segL = SEGL;
 		if (speed < MIN_SPEED) speed += acceleration*deltaTime;
@@ -680,7 +714,8 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			pos += 200 * (realPos / segL);
 			realPos -= 200 * (realPos / segL);
 		}
-		score += 200;
+
+		score += speed * deltaTime * 10;
 		
 		//Move player to compensate the force of the curve
 		int startPos = pos / SEGL;
@@ -706,6 +741,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		for (unsigned int i = 0; i < enemys.size(); i++) {
 			enemys.pop_back();
 		}
+		saveScore();
 		App->audio->PauseMusic();
 		App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
 	}
@@ -836,4 +872,31 @@ void ModuleSceneTrack::swapBioma(float deltaTime)
 		else biomSwapBackgroundHelper = true;
 	}
 	if (swapFinished == 27) biomSwap = false;
+}
+
+string ModuleSceneTrack::getTimeFromFloat(float time)
+{
+	string result;
+	if (time > 60) {
+		result = "1'";
+		time -= 60;
+	}
+	else result = "0'";
+	result.append(to_string((int)time));
+	result.append("\"");
+	result.append(to_string((int)(time * 100) % 100));
+	return result;
+}
+
+void ModuleSceneTrack::saveScore()
+{
+	//Record the times
+	ofstream myScore;
+	string input;
+	myScore.open("level/africaStageTime.txt");
+
+	myScore << to_string(stageTimeSaved.size()) << endl;
+	for (int i = 0; i < stageTimeSaved.size(); i++) {
+		myScore << to_string(stageTimeSaved[i]) << endl;
+	}
 }

@@ -3,6 +3,9 @@
 
 #include "Module.h"
 #include "Animation.h"
+#include <fstream>
+#include <iostream>
+#include <string>
 
 class Line;
 class ModuleEnemy;
@@ -83,6 +86,9 @@ public:
 	SDL_Rect backgroundSpeed;
 	SDL_Rect backgroundKm;
 	SDL_Rect backgroundTrackName;
+	SDL_Rect checkFill;
+	SDL_Rect gameOver;
+	SDL_Rect extendedPlay;
 
 	//SDL_Rect deadTree;
 
@@ -137,6 +143,8 @@ private:
 	void PrintGui(float deltaTime);
 	bool TrentToN(int n, int &res, float deltaTime, float &animationTime);
 	void swapBioma(float deltaTime);
+	string getTimeFromFloat(float time);
+	void saveScore();
 
 protected:
 	Animation greenZero;
@@ -176,6 +184,9 @@ protected:
 	unsigned int sempahorState = 0;
 
 	float mostAdvancedEnemyZ;
+	float checkTime;
+	float lapTime;
+	float lastLapTime;
 
 	int currentBiomId;
 	//BiomsIds
@@ -187,6 +198,8 @@ protected:
 	vector<Bioma*> bioms;
 	float updateBiomTimer;
 	bool biomSwapBackgroundHelper;
+
+	vector<float>stageTimeSaved;
 };
 
 #endif // __ModuleSceneTrack_H__
