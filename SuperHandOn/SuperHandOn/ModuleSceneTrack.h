@@ -126,6 +126,11 @@ public:
 	int bidalstone;
 	int rock;
 	int biomSwapPoint;
+	int bushTree;
+	int birdbird;
+	int palmTree;
+	int cactus;
+
 
 private:
 	void PrintTrack(float deltaTime);
@@ -176,6 +181,7 @@ protected:
 	//BiomsIds
 	int desertBiom;
 	int mountainBiom;
+	int desert2Biom;
 	bool biomSwap;
 	vector<int> biomsSequence;
 	vector<Bioma*> bioms;

@@ -89,6 +89,34 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	dec_biomSwap->rect = { 2200, 2200, 840, 279 };
 	decoration.push_back(dec_biomSwap);
 	biomSwapPoint = decoration.size() - 1;
+	
+	Decoration*dec_bushTree = new Decoration();
+	dec_bushTree->maxX = 4;
+	dec_bushTree->minX = 2.5;
+	dec_bushTree->rect = { 1152, 1001, 241, 212 };
+	decoration.push_back(dec_bushTree);
+	bushTree = decoration.size() - 1;
+	
+	Decoration*dec_birdbird = new Decoration();
+	dec_birdbird->maxX = 4;
+	dec_birdbird->minX = 2.5;
+	dec_birdbird->rect = { 949, 178, 284, 165 };
+	decoration.push_back(dec_birdbird);
+	birdbird = decoration.size() - 1;
+
+	Decoration*dec_palmTree = new Decoration();
+	dec_palmTree->maxX = 3;
+	dec_palmTree->minX = 2;
+	dec_palmTree->rect = { 955, 852, 172, 420 };
+	decoration.push_back(dec_palmTree);
+	palmTree = decoration.size() - 1;
+
+	Decoration*dec_cactus = new Decoration();
+	dec_cactus->maxX = 3;
+	dec_cactus->minX = 2;
+	dec_cactus->rect = { 1718, 276, 204, 169 };
+	decoration.push_back(dec_cactus);
+	cactus = decoration.size() - 1;
 
 	Decoration*dec_goalSign = new Decoration();
 	dec_goalSign->maxX = 0;
@@ -604,7 +632,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
-			if (speed < MAX_SPEED_NO_TURBO) speed += acceleration*deltaTime;
+			if (speed < MAX_SPEED_NO_TURBO*2) speed += acceleration*deltaTime*2;
 		}
 		else {
 			if(speed > MIN_SPEED) speed -= acceleration*deltaTime;

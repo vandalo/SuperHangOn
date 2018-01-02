@@ -53,6 +53,22 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 	bioms.push_back(biomaMountain);
 	mountainBiom = bioms.size() - 1;
 
+	Bioma *biomaDesert2 = new Bioma();
+	biomaDesert2->grass1 = Color(253, 243, 139, 255);
+	biomaDesert2->grass2 = Color(219, 210, 101, 255);
+	biomaDesert2->rumble1 = Color(251, 247, 249, 255);
+	biomaDesert2->rumble2 = Color(148, 162, 0, 255);
+	biomaDesert2->color_road1 = Color(250, 208, 66, 255);
+	biomaDesert2->color_road2 = Color(222, 169, 0, 255);
+	biomaDesert2->color_line1 = Color(250, 208, 66, 255);
+	biomaDesert2->color_line2 = Color(222, 169, 0, 255);
+	biomaDesert2->sky = Color(64, 32, 224, 255);
+
+	biomaDesert2->background = { 1323, 1040, 640, 275 };
+	biomaDesert2->backgroundParalax = { 1338,133,640,45 };
+	bioms.push_back(biomaDesert2);
+	desert2Biom = bioms.size() - 1;
+
 
 	grass1 = Color(224, 240, 160, 255);
 	grass2 = Color(192, 192, 128, 255);
@@ -107,6 +123,8 @@ bool ModuleSceneMapAfrica::Start(){
 				idBiom = desertBiom;
 			else if (input == "mountainBiom")
 				idBiom = mountainBiom;
+			else if (input == "desert2Biom")
+				idBiom = desert2Biom;
 			biomsSequence.push_back(idBiom);
 		}
 		//CREATE ROAD
@@ -144,6 +162,18 @@ bool ModuleSceneMapAfrica::Start(){
 				decorationId = rock;
 			else if (input == "changeBiom")
 				decorationId = biomSwapPoint;
+			else if (input == "bushTree")
+				decorationId = bushTree;
+			else if (input == "birdbird")
+				decorationId = birdbird;
+			else if (input == "palmTree")
+				decorationId = palmTree;
+			else if (input == "cactus")
+				decorationId = cactus;
+			else if (input == "goalSign")
+				decorationId = goalSign;
+			else if (input == "people")
+				decorationId = people;
 			getline(myfile, input);
 			decFreq = (float)stoi(input);
 			getline(myfile, input);
@@ -204,12 +234,12 @@ bool ModuleSceneMapAfrica::Start(){
 	lines[startSignPos].id = startSign;
 	lines[startSignPos].spriteX = 0;
 
-	for (int i = 0; i < 40000; i++) {
+	/*for (int i = 0; i < 40000; i++) {
 		Line line;
 		line.z = (float)lines.size() * line.segL;
 		line.y = lines[lines.size() - 1].y;
 		lines.push_back(line);
-	}
+	}*/
 	/*for (int i = 0; i < 40000; i++)
 	{
 		Line line;
@@ -324,28 +354,3 @@ bool ModuleSceneMapAfrica::Start(){
 
 ModuleSceneMapAfrica::~ModuleSceneMapAfrica()
 {}
-
-
-/*
-{ //RoadSeg (length, curve, climb, decorationId, decFreq)
-300
-3
-200
-0
-10
-}
-{ //RoadSeg (length, curve, climb, decorationId, decFreq)
-300
--3
-0
-0
-5
-}
-{ //RoadSeg (length, curve, climb, decorationId, decFreq)
-280
-0
--100
-0
-20
-}
-*/
