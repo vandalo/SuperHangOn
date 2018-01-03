@@ -32,16 +32,11 @@ struct Bioma {
 	SDL_Rect backgroundParalax;
 };
 
-enum EnemyColor {
-	YELLOW,
-	GREEN
-};
-
-enum FinishState {
-	RUNNING,
-	ANIMATION,
-	BONUS,
-	PUNTUATION
+struct Score {
+	int score;
+	int stage;
+	string name;
+	float time;
 };
 
 struct Enemy {
@@ -53,6 +48,18 @@ struct Enemy {
 	int speed;
 	int position = 3;
 	Animation* current_animation = nullptr;
+};
+
+enum EnemyColor {
+	YELLOW,
+	GREEN
+};
+
+enum FinishState {
+	RUNNING,
+	ANIMATION,
+	BONUS,
+	PUNTUATION
 };
 
 class ModuleSceneTrack : public Module
@@ -89,6 +96,7 @@ public:
 	SDL_Rect checkFill;
 	SDL_Rect gameOver;
 	SDL_Rect extendedPlay;
+	SDL_Rect beginnerCourse;
 
 	//SDL_Rect deadTree;
 
@@ -179,6 +187,7 @@ protected:
 	float delayCheckPoint;
 	FinishState finished;
 	float timeBonus = 5;
+	float timeGameOver;
 
 	float acceleration = ACCELERATION;
 	unsigned int sempahorState = 0;
@@ -187,6 +196,7 @@ protected:
 	float checkTime;
 	float lapTime;
 	float lastLapTime;
+	float totalTime;
 
 	int currentBiomId;
 	//BiomsIds
@@ -197,9 +207,15 @@ protected:
 	vector<int> biomsSequence;
 	vector<Bioma*> bioms;
 	float updateBiomTimer;
+	float swapLeter;
 	bool biomSwapBackgroundHelper;
+	bool updatedPuntuation;
+	int puntuationPoistion;
+	int dictionariPosition;
 
 	vector<float>stageTimeSaved;
+	vector<Score> bestScores;
+	vector<string> dictionari;
 };
 
 #endif // __ModuleSceneTrack_H__

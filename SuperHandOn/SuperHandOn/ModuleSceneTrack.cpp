@@ -29,111 +29,11 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	checkFill = { 51, 552, 31, 4 };
 	gameOver = { 1154,249,180,30 };
 	extendedPlay = { 1155,295,152,16 };
+	beginnerCourse = { 1156, 314, 219, 15 };
 
-	Decoration*dec_tree = new Decoration();
-	dec_tree->maxX = 4;
-	dec_tree->minX = 2.5;
-	dec_tree->rect = { 649, 0, 138, 209 };
-	decoration.push_back(dec_tree);
-	deadTree = decoration.size() - 1;
+	dictionari = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "<" };
 
-	Decoration*dec_signLeft = new Decoration();
-	dec_signLeft->maxX = 4;
-	dec_signLeft->minX = 2.5;
-	dec_signLeft->rect = { 961, 31, 173, 122 };
-	decoration.push_back(dec_signLeft);
-	signLeft = decoration.size() - 1;
-
-	Decoration*dec_signRight = new Decoration();
-	dec_signRight->maxX = 4;
-	dec_signRight->minX = 2.5;
-	dec_signRight->rect = { 1164, 28, 173, 126 };
-	decoration.push_back(dec_signRight);
-	signRight = decoration.size() - 1;
-
-	Decoration*dec_tonnel = new Decoration();
-	dec_tonnel->maxX = 4;
-	dec_tonnel->minX = 2.5;
-	dec_tonnel->rect = { 1517, 178, 175, 170 };
-	decoration.push_back(dec_tonnel);
-	tonnel = decoration.size() - 1;
-
-	Decoration*dec_bidalstone = new Decoration();
-	dec_bidalstone->maxX = 4;
-	dec_bidalstone->minX = 2.5;
-	dec_bidalstone->rect = { 1377, 37, 431, 120 };
-	decoration.push_back(dec_bidalstone);
-	bidalstone = decoration.size() - 1;
-
-	Decoration*dec_rock = new Decoration();
-	dec_rock->maxX = 4;
-	dec_rock->minX = 2.5;
-	dec_rock->rect = { 1290, 358, 356, 168 };
-	decoration.push_back(dec_rock);
-	rock = decoration.size() - 1;
-
-	Decoration*dec_startSign = new Decoration();
-	dec_startSign->maxX = 0;
-	dec_startSign->minX = 0;
-	dec_startSign->rect = { 17, 426, 834, 278 };
-	decoration.push_back(dec_startSign);
-	startSign = decoration.size() - 1;
-
-	Decoration*dec_checkSign = new Decoration();
-	dec_checkSign->maxX = 0;
-	dec_checkSign->minX = 0;
-	dec_checkSign->rect = { 13, 721, 840, 279 };
-	decoration.push_back(dec_checkSign);
-	checkSign = decoration.size() - 1;
-
-	Decoration*dec_biomSwap = new Decoration();
-	dec_biomSwap->maxX = 0;
-	dec_biomSwap->minX = 0;
-	dec_biomSwap->rect = { 2200, 2200, 840, 279 };
-	decoration.push_back(dec_biomSwap);
-	biomSwapPoint = decoration.size() - 1;
 	
-	Decoration*dec_bushTree = new Decoration();
-	dec_bushTree->maxX = 4;
-	dec_bushTree->minX = 2.5;
-	dec_bushTree->rect = { 1152, 1001, 241, 212 };
-	decoration.push_back(dec_bushTree);
-	bushTree = decoration.size() - 1;
-	
-	Decoration*dec_birdbird = new Decoration();
-	dec_birdbird->maxX = 4;
-	dec_birdbird->minX = 2.5;
-	dec_birdbird->rect = { 949, 178, 284, 165 };
-	decoration.push_back(dec_birdbird);
-	birdbird = decoration.size() - 1;
-
-	Decoration*dec_palmTree = new Decoration();
-	dec_palmTree->maxX = 3;
-	dec_palmTree->minX = 2;
-	dec_palmTree->rect = { 955, 852, 172, 420 };
-	decoration.push_back(dec_palmTree);
-	palmTree = decoration.size() - 1;
-
-	Decoration*dec_cactus = new Decoration();
-	dec_cactus->maxX = 3;
-	dec_cactus->minX = 2;
-	dec_cactus->rect = { 1718, 276, 204, 169 };
-	decoration.push_back(dec_cactus);
-	cactus = decoration.size() - 1;
-
-	Decoration*dec_goalSign = new Decoration();
-	dec_goalSign->maxX = 0;
-	dec_goalSign->minX = 0;
-	dec_goalSign->rect = { 7, 1003, 852, 311 };
-	decoration.push_back(dec_goalSign);
-	goalSign = decoration.size() - 1;
-
-	Decoration*dec_people = new Decoration();
-	dec_people->maxX = 0;
-	dec_people->minX = 0;
-	dec_people->rect = { 21, 1357, 548, 184 };
-	decoration.push_back(dec_people);
-	people = decoration.size() - 1;
 
 	//Animation of IA
 	//Green
@@ -232,17 +132,23 @@ bool ModuleSceneTrack::Start()
 	speed = 0;
 	startTime = 0;
 	lapTime = 0;
+	totalTime = 0;
+	dictionariPosition = 0;
 	N = 0;
 	pos = 0;
 	realPos = 0;
 	startTime = 0;
-	timeBonus = 5;
+	timeBonus = 3;
+	timeGameOver = 2;
 	sempahorState = 0;
 	firstLoop = true;
 	run = false;
 	biomSwap = false;
 	finished = RUNNING;
 	biomSwapBackgroundHelper = false;
+	updatedPuntuation = false;
+	puntuationPoistion = 9;
+	swapLeter = 0;
 
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
@@ -305,6 +211,112 @@ bool ModuleSceneTrack::Start()
 
 	mostAdvancedEnemyZ = 1550;
 
+	//Decoration
+	Decoration*dec_tree = new Decoration();
+	dec_tree->maxX = 4;
+	dec_tree->minX = 2.5;
+	dec_tree->rect = { 649, 0, 138, 209 };
+	decoration.push_back(dec_tree);
+	deadTree = decoration.size() - 1;
+
+	Decoration*dec_signLeft = new Decoration();
+	dec_signLeft->maxX = 4;
+	dec_signLeft->minX = 2.5;
+	dec_signLeft->rect = { 961, 31, 173, 122 };
+	decoration.push_back(dec_signLeft);
+	signLeft = decoration.size() - 1;
+
+	Decoration*dec_signRight = new Decoration();
+	dec_signRight->maxX = 4;
+	dec_signRight->minX = 2.5;
+	dec_signRight->rect = { 1164, 28, 173, 126 };
+	decoration.push_back(dec_signRight);
+	signRight = decoration.size() - 1;
+
+	Decoration*dec_tonnel = new Decoration();
+	dec_tonnel->maxX = 4;
+	dec_tonnel->minX = 2.5;
+	dec_tonnel->rect = { 1517, 178, 175, 170 };
+	decoration.push_back(dec_tonnel);
+	tonnel = decoration.size() - 1;
+
+	Decoration*dec_bidalstone = new Decoration();
+	dec_bidalstone->maxX = 4;
+	dec_bidalstone->minX = 2.5;
+	dec_bidalstone->rect = { 1377, 37, 431, 120 };
+	decoration.push_back(dec_bidalstone);
+	bidalstone = decoration.size() - 1;
+
+	Decoration*dec_rock = new Decoration();
+	dec_rock->maxX = 4;
+	dec_rock->minX = 2.5;
+	dec_rock->rect = { 1290, 358, 356, 168 };
+	decoration.push_back(dec_rock);
+	rock = decoration.size() - 1;
+
+	Decoration*dec_startSign = new Decoration();
+	dec_startSign->maxX = 0;
+	dec_startSign->minX = 0;
+	dec_startSign->rect = { 17, 426, 834, 278 };
+	decoration.push_back(dec_startSign);
+	startSign = decoration.size() - 1;
+
+	Decoration*dec_checkSign = new Decoration();
+	dec_checkSign->maxX = 0;
+	dec_checkSign->minX = 0;
+	dec_checkSign->rect = { 13, 721, 840, 279 };
+	decoration.push_back(dec_checkSign);
+	checkSign = decoration.size() - 1;
+
+	Decoration*dec_biomSwap = new Decoration();
+	dec_biomSwap->maxX = 0;
+	dec_biomSwap->minX = 0;
+	dec_biomSwap->rect = { 2200, 2200, 840, 279 };
+	decoration.push_back(dec_biomSwap);
+	biomSwapPoint = decoration.size() - 1;
+
+	Decoration*dec_bushTree = new Decoration();
+	dec_bushTree->maxX = 4;
+	dec_bushTree->minX = 2.5;
+	dec_bushTree->rect = { 1152, 1001, 241, 212 };
+	decoration.push_back(dec_bushTree);
+	bushTree = decoration.size() - 1;
+
+	Decoration*dec_birdbird = new Decoration();
+	dec_birdbird->maxX = 4;
+	dec_birdbird->minX = 2.5;
+	dec_birdbird->rect = { 949, 178, 284, 165 };
+	decoration.push_back(dec_birdbird);
+	birdbird = decoration.size() - 1;
+
+	Decoration*dec_palmTree = new Decoration();
+	dec_palmTree->maxX = 3;
+	dec_palmTree->minX = 2;
+	dec_palmTree->rect = { 955, 852, 172, 420 };
+	decoration.push_back(dec_palmTree);
+	palmTree = decoration.size() - 1;
+
+	Decoration*dec_cactus = new Decoration();
+	dec_cactus->maxX = 3;
+	dec_cactus->minX = 2;
+	dec_cactus->rect = { 1718, 276, 204, 169 };
+	decoration.push_back(dec_cactus);
+	cactus = decoration.size() - 1;
+
+	Decoration*dec_goalSign = new Decoration();
+	dec_goalSign->maxX = 0;
+	dec_goalSign->minX = 0;
+	dec_goalSign->rect = { 7, 1003, 852, 311 };
+	decoration.push_back(dec_goalSign);
+	goalSign = decoration.size() - 1;
+
+	Decoration*dec_people = new Decoration();
+	dec_people->maxX = 0;
+	dec_people->minX = 0;
+	dec_people->rect = { 21, 1357, 548, 184 };
+	decoration.push_back(dec_people);
+	people = decoration.size() - 1;
+
 	//ON DEBUG MODE
 	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 	App->fxLoadTrack = App->audio->LoadFx("music/fxLoadTrack.wav");
@@ -323,9 +335,9 @@ bool ModuleSceneTrack::Start()
 
 	//Gui fonts
 	App->numericFontYellow = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890SEC'\" ", 16, 18);
-	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890*=ABCDEFGHIJKLMNOPQRSTUVWXYZ ", 16, 18, 18);
-	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890BONUSPIT ", 16, 18, 36);
-	App->numericFontGreen = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890", 16, 18, 54);
+	App->numericFontWhite = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890*=ABCDEFGHIJKLMNOPQRSTUVWXYZ< ", 16, 18, 18);
+	App->numericFontRed = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ'\" ", 16, 18, 36);
+	App->numericFontGreen = App->font->LoadMedia("fonts/fontNumber18x18.png", "1234567890< ", 16, 18, 54);
 
 	App->player->Enable();
 	//App->enemy->Enable();
@@ -337,8 +349,11 @@ bool ModuleSceneTrack::CleanUp()
 {
 	LOG("Unloading space scene");
 	for (unsigned int i = 0; i < enemys.size(); i++) delete(enemys[i]);
+	enemys.clear();
 	for (unsigned int i = 0; i < decoration.size(); i++) delete(decoration[i]);
+	decoration.clear();
 	for (unsigned int i = 0; i < bioms.size(); i++) delete(bioms[i]);
+	bioms.clear();
 	delete(finishAnimation);
 
 	saveScore();
@@ -359,11 +374,13 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	int maxy = HEIGHT;
 
 	//Draw background
+	float paralaxMovment = 0;
+	if (finished == RUNNING)paralaxMovment = 0.3;
 	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
 	if (biomSwapBackgroundHelper)App->renderer->DrawPoly(sky, 0, 0, SCREEN_WIDTH, 0, 300, SCREEN_WIDTH);
-	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
-	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
-	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, .5f, true);
+	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, paralaxMovment, true);
+	App->renderer->Blit(graphics, 610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, paralaxMovment, true);
+	App->renderer->Blit(graphics, -610, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, paralaxMovment, true);
 
 	//Draw track
 	for (int n = startPos; n < startPos + 300; n++) {
@@ -398,7 +415,6 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		if (n == 0)n++;
 		Line p = lines[(n - 1) % N]; //previous line
 
-		//App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(grass, 0, (short)p.Y, (short)p.width, 0, (short)l.Y, (short)l.width);
 		App->renderer->DrawPoly(rumble, (short)p.X, (short)p.Y, (short)(p.W*1.2), (short)l.X, (short)l.Y, (short)(l.W*1.2));
 		App->renderer->DrawPoly(road, (short)p.X, (short)p.Y, (short)p.W, (short)l.X, (short)l.Y, (short)l.W);
@@ -584,28 +600,29 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 }
 
 void ModuleSceneTrack::PrintGui(float deltaTime) {
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20), &backgroundTop, 0.f);
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - backgroundTime.w / 2, (SCREEN_HEIGHT / 20), &backgroundTime, 0.f);
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 10) * 6, (SCREEN_HEIGHT / 20), &backgroundScore, 0.f);
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 2 + 8, &backgroundCourse, 0.f);
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 3, &backgroundStage, 0.f);
-	App->renderer->Blit(gui, (SCREEN_WIDTH / 20), (SCREEN_HEIGHT / 20) * 4, &backgroundStageProces, 0.f);
-	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 6.5), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundSpeed, 0.f);
-	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 8.5) + 16, (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundKm, 0.f);
-	App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 2.7), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundTrackName, 0.f, false);
-	for(int i = 1; i < stage; i++)
-		App->renderer->Blit(gui, (SCREEN_WIDTH / 20) + 21 + ((i-1)*checkFill.w), (SCREEN_HEIGHT / 20) * 4 + 7, &checkFill, 0.f);
+	if (finished != PUNTUATION) {
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20), &backgroundTop, 0.f);
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - backgroundTime.w / 2, (SCREEN_HEIGHT / 20), &backgroundTime, 0.f);
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 10) * 6, (SCREEN_HEIGHT / 20), &backgroundScore, 0.f);
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 2 + 8, &backgroundCourse, 0.f);
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 3, &backgroundStage, 0.f);
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 20), (SCREEN_HEIGHT / 20) * 4, &backgroundStageProces, 0.f);
+		App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 6.5), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundSpeed, 0.f);
+		App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 8.5) + 16, (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundKm, 0.f);
+		App->renderer->Blit(gui, (int)((SCREEN_WIDTH / 10) * 2.7), (int)((SCREEN_HEIGHT / 20) * 2 + 8), &backgroundTrackName, 0.f, false);
+		for (int i = 1; i < stage; i++)
+			App->renderer->Blit(gui, (SCREEN_WIDTH / 20) + 21 + ((i - 1)*checkFill.w), (SCREEN_HEIGHT / 20) * 4 + 7, &checkFill, 0.f);
 
-	//Text
-	App->renderer->Print(App->numericFontRed, to_string((int)maxPuntuation).c_str(), (SCREEN_WIDTH / 10) + backgroundTop.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
-	App->renderer->Print(App->numericFontGreen, to_string((int)score).c_str(), (SCREEN_WIDTH / 10) * 6 + backgroundScore.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
-	if(speed < 280)
-		App->renderer->Print(App->numericFontWhite, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
-	else
-		App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w , (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
-	App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2 , SCREEN_HEIGHT / 20 * 3, 0.f);
-	App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (int)((SCREEN_WIDTH / 10) * 2.4), (int)((SCREEN_HEIGHT / 20) * 3), 0.f, false);
-	
+		//Text
+		App->renderer->Print(App->numericFontRed, to_string((int)maxPuntuation).c_str(), (SCREEN_WIDTH / 10) + backgroundTop.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
+		App->renderer->Print(App->numericFontGreen, to_string((int)score).c_str(), (SCREEN_WIDTH / 10) * 6 + backgroundScore.w + 5, (SCREEN_HEIGHT / 20) + 4, 0.f, false);
+		if (speed < 280)
+			App->renderer->Print(App->numericFontWhite, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w, (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
+		else
+			App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w, (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
+		App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20 * 3, 0.f);
+		App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (int)((SCREEN_WIDTH / 10) * 2.4), (int)((SCREEN_HEIGHT / 20) * 3), 0.f, false);
+	}
 	if (finished == BONUS) {
 		App->renderer->Print(App->numericFontRed, "BONUS POINTS", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 6, 0.f, true);
 		App->renderer->Print(App->menusFont, to_string((int)time).c_str(), (SCREEN_WIDTH / 20) * 5, SCREEN_HEIGHT / 20 * 7, 0.f);
@@ -614,9 +631,70 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 		App->renderer->Print(App->menusFont, (to_string((int)time) + '0').c_str(), (SCREEN_WIDTH / 20) * 15, SCREEN_HEIGHT / 20 * 7, 0.f);
 		App->renderer->Print(App->numericFontYellow, " 00000", (SCREEN_WIDTH / 20) * 17, SCREEN_HEIGHT / 20 * 7 + 7, 0.f);
 		if (timeBonus > 0) timeBonus -= deltaTime;
+		if (timeBonus <= 0) {
+			finished = PUNTUATION;
+			score += time * 1000000;
+		}
+	}
+	else if (finished == PUNTUATION) {
+		if (!updatedPuntuation) {
+			bool updated = false;
+			int prevScore = 0;
+			vector<Score> scores_tmp;
+			for (int i = 0; i < bestScores.size(); i++) {
+				if (bestScores[i].score < score && !updated) {
+					updated = true;
+					Score score_tmp;
+					score_tmp.score = score;
+					score_tmp.stage = stage;
+					score_tmp.name = "";
+					score_tmp.time = totalTime;
+					puntuationPoistion = i;
+					scores_tmp.push_back(score_tmp);
+				}
+				else {
+					if(updated)scores_tmp.push_back(bestScores[i-1]);
+					else scores_tmp.push_back(bestScores[i]);
+				}
+			}
+			bestScores = scores_tmp;
+		}
+		App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - beginnerCourse.w / 2, (SCREEN_HEIGHT / 20) * 5, &beginnerCourse, 0.f, true);
+		App->renderer->Print(App->numericFontWhite, "RANK", (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * 6, 0.f, true);
+		App->renderer->Print(App->numericFontWhite, "SCORE", (SCREEN_WIDTH / 10) * 3, (SCREEN_HEIGHT / 20) * 6, 0.f, true);
+		App->renderer->Print(App->numericFontWhite, "STAGE", (SCREEN_WIDTH / 10) * 5, (SCREEN_HEIGHT / 20) * 6, 0.f, true);
+		App->renderer->Print(App->numericFontWhite, "NAME", (SCREEN_WIDTH / 10) * 7, (SCREEN_HEIGHT / 20) * 6, 0.f, true);
+		App->renderer->Print(App->numericFontWhite, "TIME", (SCREEN_WIDTH / 10) * 9, (SCREEN_HEIGHT / 20) * 6, 0.f, true);
+		for (int i = 0; i < 8; i++) {
+			if (i == puntuationPoistion) {
+				App->renderer->Print(App->numericFontRed, (to_string(i + 1).append("ST")).c_str(), (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontRed, to_string(bestScores[i].score).c_str(), (SCREEN_WIDTH / 10) * 3, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontRed, to_string(bestScores[i].stage).c_str(), (SCREEN_WIDTH / 10) * 5, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontRed, bestScores[i].name.c_str(), (SCREEN_WIDTH / 10) * 7, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontRed, getTimeFromFloat(bestScores[i].time).c_str(), (SCREEN_WIDTH / 10) * 9, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+			}
+			else {
+				App->renderer->Print(App->numericFontWhite, (to_string(i + 1).append("ST")).c_str(), (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontYellow, to_string(bestScores[i].score).c_str(), (SCREEN_WIDTH / 10) * 3, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontYellow, to_string(bestScores[i].stage).c_str(), (SCREEN_WIDTH / 10) * 5, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontWhite, bestScores[i].name.c_str(), (SCREEN_WIDTH / 10) * 7, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+				App->renderer->Print(App->numericFontYellow, getTimeFromFloat(bestScores[i].time).c_str(), (SCREEN_WIDTH / 10) * 9, (SCREEN_HEIGHT / 20) * (7 + i), 0.f, true);
+			}
+			
+		}
+		App->renderer->Print(App->numericFontWhite, "ABCDEFGHIJKLMNOPQRSTUVWXYZ<", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 16, 0.f, true);
+		string letterSelected = "";
+		for (int i = 0; i < dictionari.size(); i++) {
+			if (i == dictionariPosition) letterSelected.append(dictionari[i]);
+			else letterSelected.append(" ");
+		}
+		if(dictionariPosition == dictionari.size()-1)
+			App->renderer->Print(App->numericFontGreen, letterSelected.c_str(), (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 16, 0.f, true);
+		else
+			App->renderer->Print(App->numericFontRed, letterSelected.c_str(), (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 16, 0.f, true);
 	}
 
-	if(time <= 0) 
+	if(time <= 0 && finished == RUNNING) 
 		App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - gameOver.w/2, (SCREEN_HEIGHT / 3), &gameOver, 0.f);
 
 	if (checkTime > 0) {
@@ -635,16 +713,18 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 {
 	if (time <= 0) {
 		run = false;
+		if (finished == RUNNING && timeGameOver <= 0) finished = BONUS;
+		timeGameOver -= deltaTime;
 	}
 
 	if (biomSwap) swapBioma(deltaTime);
 
 	if (run && finished == RUNNING) {
-
 		time -= deltaTime;
 		delayCheckPoint -= deltaTime;
 		checkTime -= deltaTime;
 		lapTime += deltaTime;
+		totalTime += deltaTime;
 		if (delayCheckPoint < 0) delayCheckPoint = 0;
 		if (checkTime < 0) checkTime = 0;
 		if (time < 0) time = 0;
@@ -715,7 +795,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			realPos -= 200 * (realPos / segL);
 		}
 
-		score += speed * deltaTime * 10;
+		score += (int)(speed * deltaTime * 10);
 		
 		//Move player to compensate the force of the curve
 		int startPos = pos / SEGL;
@@ -731,20 +811,42 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		else playerX += 60;
 		}*/
 	}
-	
+	else if (finished == PUNTUATION) {
+		swapLeter -= deltaTime;
+		if (swapLeter <= 0) {
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			{
+				swapLeter = 0.2;
+				dictionariPosition++;
+				if (dictionariPosition == dictionari.size())dictionariPosition = 0;
+			}
+
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			{
+				swapLeter = 0.2;
+				dictionariPosition--;
+				if (dictionariPosition < 0)dictionariPosition = dictionari.size() - 1;
+			}
+		}
+		if (puntuationPoistion >= 8) dictionariPosition = 26;
+		//Name completed return menu
+		if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) && dictionariPosition == 26) {
+				timeBonus = 5;
+				saveScore();
+				App->audio->PauseMusic();
+				App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
+		}
+		else if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) && bestScores[puntuationPoistion].name.size() < 3) {
+			bestScores[puntuationPoistion].name.append(dictionari[dictionariPosition]);
+		}
+
+	}
+	//Print Track
 	PrintTrack(deltaTime);
 
 	//Print GUI
 	PrintGui(deltaTime);
-	if(timeBonus < 0) {
-		timeBonus = 5;
-		for (unsigned int i = 0; i < enemys.size(); i++) {
-			enemys.pop_back();
-		}
-		saveScore();
-		App->audio->PauseMusic();
-		App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
-	}
+
 	return UPDATE_CONTINUE;
 }
 
@@ -878,8 +980,8 @@ string ModuleSceneTrack::getTimeFromFloat(float time)
 {
 	string result;
 	if (time > 60) {
-		result = "1'";
-		time -= 60;
+		result = to_string((int)(time/60)).append("'");
+		time -= 60 * ((int)(time / 60));
 	}
 	else result = "0'";
 	result.append(to_string((int)time));
@@ -896,7 +998,17 @@ void ModuleSceneTrack::saveScore()
 	myScore.open("level/africaStageTime.txt");
 
 	myScore << to_string(stageTimeSaved.size()) << endl;
-	for (int i = 0; i < stageTimeSaved.size(); i++) {
+	for (unsigned int i = 0; i < stageTimeSaved.size(); i++) {
 		myScore << to_string(stageTimeSaved[i]) << endl;
+	}
+
+	//Record scores
+	ofstream myFinalScore;
+	myFinalScore.open("level/africaBestScores.txt");
+	for (unsigned int i = 0; i < bestScores.size(); i++) {
+		myFinalScore << to_string(bestScores[i].score) << endl;
+		myFinalScore << to_string(bestScores[i].stage) << endl;
+		myFinalScore << bestScores[i].name << endl;
+		myFinalScore << to_string(bestScores[i].time) << endl;
 	}
 }
