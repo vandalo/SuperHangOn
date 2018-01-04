@@ -31,7 +31,7 @@ ModulePlayer::ModulePlayer(bool active) : Module(active)
 	turnRightOne.loop = true;
 	turnRightOne.speed = 0.04f;
 
-	// turn rightTwo
+	// turn rightTwof
 	turnRightTwo.frames.push_back({ 699, 737, 92, 126 });
 	turnRightTwo.frames.push_back({ 597, 737, 92, 126 });
 	turnRightTwo.loop = true;
@@ -318,7 +318,7 @@ update_status ModulePlayer::Update(float deltaTime)
 			break;
 		}
 	}
-	if (destroyed == false)
+	if (!destroyed)
 		if (colision == FALLING) {
 			App->renderer->Blit(graphicsFalls, position.x - (current_animation->GetCurrentFrame().w / 2) * 2, position.y - (current_animation->GetCurrentFrame().h) * 2, &(current_animation->GetCurrentFrame()), 0.f, false, false, current_animation->GetCurrentFrame().w * 2, current_animation->GetCurrentFrame().h * 2);
 			if (current_animation->Finished()) {
@@ -327,7 +327,7 @@ update_status ModulePlayer::Update(float deltaTime)
 				else if (App->scene_menu_africa->playerX < 0)
 					App->scene_menu_africa->playerX += (int)((fallDist / RECOVERY_MOVMENT) * deltaTime * 100);
 
-				if (App->scene_menu_africa->playerX < 0.3 && App->scene_menu_africa->playerX > 0.0 || App->scene_menu_africa->playerX > -0.3  && App->scene_menu_africa->playerX < 0.0 || App->scene_menu_africa->playerX == 0.0) {
+				if (App->scene_menu_africa->playerX < 100 && App->scene_menu_africa->playerX > 0.0 || App->scene_menu_africa->playerX > -100  && App->scene_menu_africa->playerX < 0.0 || App->scene_menu_africa->playerX == 0.0) {
 					App->scene_menu_africa->playerX = 0;
 					App->scene_menu_africa->run = true;
 					colision = NOT_FALLING;

@@ -16,7 +16,6 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 {
 	sempahorYellow = { 463,250,75,32 };
 	sempahorBlue = { 463,283,75,32 };
-
 	backgroundTop = {33, 437, 62, 25};
 	backgroundTime = { 97, 437, 76, 26 };
 	backgroundScore = { 175, 437, 98, 26 };
@@ -32,8 +31,6 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	beginnerCourse = { 1156, 314, 219, 15 };
 
 	dictionari = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "<" };
-
-	
 
 	//Animation of IA
 	//Green
@@ -113,8 +110,6 @@ ModuleSceneTrack::ModuleSceneTrack(bool active) : Module(active)
 	finishPlayer.frames.push_back({ 257, 559, 66, 146 });
 	finishPlayer.loop = true;
 	finishPlayer.speed = 0.04f;
-
-
 }
 
 ModuleSceneTrack::~ModuleSceneTrack()
@@ -125,7 +120,6 @@ bool ModuleSceneTrack::Start()
 {
 	LOG("Loading space intro");
 
-	maxPuntuation = 6514651;
 	stage = 1;
 	time = 50;
 	score = 0;
@@ -141,14 +135,16 @@ bool ModuleSceneTrack::Start()
 	timeBonus = 3;
 	timeGameOver = 2;
 	sempahorState = 0;
+	puntuationPoistion = 9;
+	swapLeter = 0;
+	playerX = 0;
 	firstLoop = true;
 	run = false;
 	biomSwap = false;
-	finished = RUNNING;
 	biomSwapBackgroundHelper = false;
 	updatedPuntuation = false;
-	puntuationPoistion = 9;
-	swapLeter = 0;
+
+	finished = RUNNING;
 
 	Enemy* enemy = new Enemy();
 	enemy->color = GREEN;
@@ -375,7 +371,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 
 	//Draw background
 	float paralaxMovment = 0;
-	if (finished == RUNNING)paralaxMovment = 0.3;
+	if (finished == RUNNING)paralaxMovment = 0.3f;
 	App->renderer->Blit(graphics, 0, 0, &background, 0.0f);
 	if (biomSwapBackgroundHelper)App->renderer->DrawPoly(sky, 0, 0, SCREEN_WIDTH, 0, 300, SCREEN_WIDTH);
 	App->renderer->Blit(graphics, 0, SCREEN_HEIGHT / 2 + 7, &backgroundParalax, paralaxMovment, true);
@@ -446,8 +442,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 				updateBiomTimer = 0;
 			}
 			else 
-				lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite, 999.0f, false, (startPos + 10) > n && n > (startPos + 5) && startSign != lines[n%N].id);
-
+				lines[n%N].DrawObject(decoration[lines[n%N].id]->rect, decorationSprite, 999.0f, false, (startPos + 10) > n && n > (startPos + 5) && startSign != lines[n%N].id && biomSwapPoint != lines[n%N].id);
 		}
 			
 	}
@@ -584,6 +579,8 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 				if (realPos > 200) {
 					pos += 200 * (realPos / segL);
 					realPos -= 200 * (realPos / segL);
+					if (playerX > 0)playerX--;
+					else if (playerX < 0)playerX++;
 				}
 				lines[(int)(finishAnimation->posZ) % N].DrawObject(finishPose, decorationSprite, 0);
 		}
@@ -599,7 +596,8 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	}
 }
 
-void ModuleSceneTrack::PrintGui(float deltaTime) {
+void ModuleSceneTrack::PrintGui(float deltaTime) 
+{
 	if (finished != PUNTUATION) {
 		App->renderer->Blit(gui, (SCREEN_WIDTH / 10), (SCREEN_HEIGHT / 20), &backgroundTop, 0.f);
 		App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - backgroundTime.w / 2, (SCREEN_HEIGHT / 20), &backgroundTime, 0.f);
@@ -633,7 +631,7 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 		if (timeBonus > 0) timeBonus -= deltaTime;
 		if (timeBonus <= 0) {
 			finished = PUNTUATION;
-			score += time * 1000000;
+			score += (int)(time * 1000000);
 		}
 	}
 	else if (finished == PUNTUATION) {
@@ -641,7 +639,7 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 			bool updated = false;
 			int prevScore = 0;
 			vector<Score> scores_tmp;
-			for (int i = 0; i < bestScores.size(); i++) {
+			for (unsigned int i = 0; i < bestScores.size(); i++) {
 				if (bestScores[i].score < score && !updated) {
 					updated = true;
 					Score score_tmp;
@@ -657,6 +655,7 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 					else scores_tmp.push_back(bestScores[i]);
 				}
 			}
+			updatedPuntuation = true;
 			bestScores = scores_tmp;
 		}
 		App->renderer->Blit(gui, (SCREEN_WIDTH / 2) - beginnerCourse.w / 2, (SCREEN_HEIGHT / 20) * 5, &beginnerCourse, 0.f, true);
@@ -684,7 +683,7 @@ void ModuleSceneTrack::PrintGui(float deltaTime) {
 		}
 		App->renderer->Print(App->numericFontWhite, "ABCDEFGHIJKLMNOPQRSTUVWXYZ<", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 16, 0.f, true);
 		string letterSelected = "";
-		for (int i = 0; i < dictionari.size(); i++) {
+		for (unsigned int i = 0; i < dictionari.size(); i++) {
 			if (i == dictionariPosition) letterSelected.append(dictionari[i]);
 			else letterSelected.append(" ");
 		}
@@ -730,6 +729,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		if (time < 0) time = 0;
 
 		int segL = SEGL;
+		//if (speed < MIN_SPEED*6) speed += acceleration*deltaTime*6;
 		if (speed < MIN_SPEED) speed += acceleration*deltaTime;
 		//Updates enemys position depends on the level
 		for (unsigned int i = 0; i < enemys.size(); i++) {
@@ -746,7 +746,7 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 
 		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		{
-			if (speed < MAX_SPEED_NO_TURBO*2) speed += acceleration*deltaTime*2;
+			if (speed < MAX_SPEED_NO_TURBO) speed += acceleration*deltaTime;
 		}
 		else {
 			if(speed > MIN_SPEED) speed -= acceleration*deltaTime;
@@ -782,12 +782,14 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			run = false;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		if ((App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) && speed > MIN_VEL_TURBO)
 		{
 			App->player->turbo = true;
+			if (speed < MAX_VEL_TURBO) speed += acceleration*deltaTime;
 		}
 		else {
 			App->player->turbo = false;
+			if (speed > MAX_SPEED_NO_TURBO) speed -= acceleration*deltaTime;
 		}
 		realPos += (int)(speed*deltaTime*75);
 		if (realPos > 200) {
@@ -795,35 +797,33 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 			realPos -= 200 * (realPos / segL);
 		}
 
-		score += (int)(speed * deltaTime * 10);
+		score += (int)((speed/10) * deltaTime * 10);
 		
 		//Move player to compensate the force of the curve
 		int startPos = pos / SEGL;
 		float currentCurve = lines[startPos%N].curve;
-		/*if (currentCurve > 3.5) playerX -= 60;
-		else if (currentCurve > 2) playerX -= 45;
-		else if (currentCurve > 1) playerX -= 25;
-		else if (currentCurve > 0) playerX -= 15;
+		if (currentCurve > 2.9) playerX -= (int)(CURVE_FORCE_3 * deltaTime * (speed / 3) );
+		else if (currentCurve > 1.9) playerX -= (int)(CURVE_FORCE_2 * deltaTime * (speed / 3) );
+		else if (currentCurve > 0.9) playerX -= (int)(CURVE_FORCE_1 * deltaTime * (speed / 3) );
 		else if (currentCurve < 0) {
-		if (currentCurve > -1) playerX += 15;
-		else if (currentCurve > 2) playerX += 25;
-		else if (currentCurve > 3.5) playerX += 45;
-		else playerX += 60;
-		}*/
+			if (currentCurve > -1.1) playerX += (int)(CURVE_FORCE_1 * deltaTime * (speed / 3) );
+			else if (currentCurve > -2.1) playerX += (int)(CURVE_FORCE_2 * deltaTime * (speed / 3) );
+			else if (currentCurve > -3.1) playerX += (int)(CURVE_FORCE_3 * deltaTime * (speed / 3) );
+		}
 	}
 	else if (finished == PUNTUATION) {
 		swapLeter -= deltaTime;
 		if (swapLeter <= 0) {
 			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 			{
-				swapLeter = 0.2;
+				swapLeter = 0.2f;
 				dictionariPosition++;
 				if (dictionariPosition == dictionari.size())dictionariPosition = 0;
 			}
 
 			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
 			{
-				swapLeter = 0.2;
+				swapLeter = 0.2f;
 				dictionariPosition--;
 				if (dictionariPosition < 0)dictionariPosition = dictionari.size() - 1;
 			}
@@ -850,7 +850,8 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 	return UPDATE_CONTINUE;
 }
 
-bool ModuleSceneTrack::TrentToN(int n, int &res, float deltaTime, float &animationTime) {
+bool ModuleSceneTrack::TrentToN(int n, int &res, float deltaTime, float &animationTime) 
+{
 	animationTime += deltaTime;
 	bool ret = false;
 	if (animationTime > TIME_TO_SWAP) {
@@ -908,7 +909,6 @@ void ModuleSceneTrack::swapBioma(float deltaTime)
 			sky.r = bioms[currentBiomId]->sky.r;
 		else biomSwapBackgroundHelper = true;
 		
-
 		//Update G
 		if (grass1.g < bioms[currentBiomId]->grass1.g) grass1.g++;
 		else if (grass1.g > bioms[currentBiomId]->grass1.g) grass1.g--;

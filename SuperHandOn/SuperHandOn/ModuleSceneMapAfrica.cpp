@@ -18,7 +18,6 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 	background = { 17, 61, 640, 275 };
 	backgroundParalax = { 668,98,625,28 };
 	backgroundTrackName = { 266, 467,98,18 };
-
 	grass1 = Color(224, 240, 160, 255);
 	grass2 = Color(192, 192, 128, 255);
 	rumble1 = Color(128, 128, 128, 255);
@@ -28,14 +27,10 @@ ModuleSceneMapAfrica::ModuleSceneMapAfrica(bool active) : ModuleSceneTrack(activ
 	color_line1 = Color(255, 255, 255, 255);
 	color_line2 = Color(192, 192, 160, 255);
 	sky = Color(128, 224, 224, 255);
-	
-	//pos = 1200000;
-	pos = 0;
-	playerX = 0;
-
 }
 
-bool ModuleSceneMapAfrica::Start(){
+bool ModuleSceneMapAfrica::Start()
+{
 	ModuleSceneTrack::Start();
 
 	//Create bioms
@@ -115,7 +110,7 @@ bool ModuleSceneMapAfrica::Start(){
 	for (int i = 0; i < 8; i++) {
 		Score score_tmp;
 		getline(myBestScore, input);
-		score_tmp.score = stof(input);
+		score_tmp.score = stoi(input);
 		getline(myBestScore, input);
 		score_tmp.stage = stoi(input);
 		getline(myBestScore, input);
@@ -125,6 +120,7 @@ bool ModuleSceneMapAfrica::Start(){
 		bestScores.push_back(score_tmp);
 	}
 	myBestScore.close();
+	maxPuntuation = bestScores[0].score;
 
 	//Create the track
 	for (int i = 0; i < 10; i++) {

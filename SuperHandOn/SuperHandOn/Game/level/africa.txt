@@ -1368,7 +1368,7 @@ palmTree
 40
 -2
 0
-signRight
+signLeft
 10
 1
 2
