@@ -1,67 +1,47 @@
-# Magician Apprentice
+# Super Hang On (Drive)
+This is my tribute to Super Hang On, released for Sega Mega Drive in 5 of december 1988.
 
-Super Hang On is a game console which is remake of the classical game "Super Hang On" from megadrive. 
+## PROJECT INFORMATION
 
-Find the repository here: https://github.com/vandalo/SuperHangOn
+Full project at github: [https://github.com/vandalo/SuperHangOn](https://https://github.com/vandalo/SuperHangOn) 
 
-## Getting Started
+Project webpage: [https://https://vandalo.github.io/SuperHangOn/](https://https://vandalo.github.io/SuperHangOn/)  
 
-The project is compiled and includes all the assets and libs which are needed so all you have to do is click on the executable file. 
+Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar](https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar)  
 
-### Prerequisites
+*Author*: Ferran Coma
 
-It don't need any instalation.
+Contact: ferrancomarosell@gmail.com
 
-### Playing
+License: GNU GENERAL PUBLIC LICENSE
 
-Download the zip file which you can find on release guihub tab or in the web https://vandalo.github.io/SuperHangOn/
+## Gameplay video
 
-### Coding style
+<iframe width="560" height="315" src="https://www.youtube.com/watch?v=vjaiAo2JBPI" frameborder="0" allowfullscreen></iframe>
+You can watch it directly on [youtube](https://www.youtube.com/watch?v=vjaiAo2JBPI).
 
-Name of functions always in Cap letters and using Upercase during the name of it.
+Currently the game only features the race of africa, with all the assets and decoration and the bikes which run agains you. The game
+is ready to implement the other maps just creating the file with the road configuration.
 
-```
-void ThisIsMyFunction();
-```
+## Commands
 
-If / else/ loops
+The game supports up to two players. Each player can jump, punch, kick and perform a kick while in the air. Also, with the start button they are able to enter the game if they were defeated.
 
-All the brackts used on the code are always under the loop or condition declaration.
+* **SPEED UP:** (Up key)
+* **BREAK:** (Down key)
+* **TURN LEFT:** (Left key)
+* **TURN RIGHT:** (Right key)
+* **TURBO:** (Space)
 
-```
-If (condition) {
-    ...
-}
-else {
-    ...
-}
-```
+## How to finish the game:
 
-The identation used is with tabs of 4 white space.
+The game just have the track of Afirca from the arcade mode. When you arrive to the goal or your time ends, you'll be able to save
+your score if it's between the 8th best scores.
 
-```
-if(condition) {
-    for(condition) {
-        ...
-    }
-}
-```
-## Contributing
+## Acknowledgements
 
-You are free to improve this source, if it is the case, creat a branch of the master once and create a pull request with a good commit definition (Check commits already done to have an idea).
-
-## Authors
-
-* **Ferran Coma** - *Full game* - [Vandalo](https://github.com/Vandalo)
-
-## License
-
-This project is licensed under the MIT License
-
-## Acknowledgments
 
 * http://www.extentofthejam.com/pseudo/
 * https://www.youtube.com/watch?v=N60lBZDEwJ8
 * Super Hang On (MegaDrive)
-
 
