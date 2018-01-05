@@ -3,9 +3,9 @@ This is my tribute to Super Hang On, released for Sega Mega Drive in 5 of decemb
 
 ## PROJECT INFORMATION
 
-Full project at github: [https://github.com/vandalo/SuperHangOn] (https:github.com/vandalo/SuperHangOn) 
+Full project at github: [https://github.com/vandalo/SuperHangOn](https:github.com/vandalo/SuperHangOn) 
 
-Project webpage: [https://vandalo.github.io/SuperHangOn/] (https:vandalo.github.io/SuperHangOn/)  
+Project webpage: [https://vandalo.github.io/SuperHangOn/](https:vandalo.github.io/SuperHangOn/) 
 
 Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar](https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar)  
 
