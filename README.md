@@ -17,7 +17,7 @@ License: GNU GENERAL PUBLIC LICENSE
 
 ## Gameplay video
 
-<iframe width="560" height="315" src="https://youtu.be/vjaiAo2JBPI" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/vjaiAo2JBPI" frameborder="0" allowfullscreen=""></iframe>
 You can watch it directly on [youtube](https://www.youtube.com/watch?v=vjaiAo2JBPI).
 
 Currently the game only features the race of africa, with all the assets and decoration and the bikes which run agains you. The game
