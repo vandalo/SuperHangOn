@@ -314,10 +314,10 @@ bool ModuleSceneTrack::Start()
 	people = decoration.size() - 1;
 
 	//ON DEBUG MODE
-	App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
+	/*App->menusFont = App->font->LoadMedia("fonts/font18x30.png", "9876543210", 18, 30);
 	App->fxLoadTrack = App->audio->LoadFx("music/fxLoadTrack.wav");
 	App->fxSemaphorOne = App->audio->LoadFx("music/fxSempahorOne.wav");
-	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");
+	App->fxSemaphorFinish = App->audio->LoadFx("music/fxSempahorFinish.wav");*/
 
 
 	//Load decorations
@@ -422,7 +422,7 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 	for (int n = startPos + 300; n > startPos; n--) {
 		if (lines[n%N].id != -1) {
 			if ((startPos + 10) > n && n > (startPos + 5) && checkSign == lines[n%N].id && delayCheckPoint == 0) {
-				time += 30;
+				time += 25;
 				if (lapTime < stageTimeSaved[stage - 1]) stageTimeSaved[stage - 1] = lapTime;
 				delayCheckPoint += 5;
 				checkTime = 5;
@@ -762,14 +762,14 @@ update_status ModuleSceneTrack::Update(float deltaTime)
 		}
 
 		//Turn right and left
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		if (App->player->colision == NOT_FALLING && (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT))
 		{
 			float moveX = (TRUN_CONST * deltaTime * 100.0f) / (speed * 0.01f);
 			if (moveX > TRUN_CONST) moveX = TRUN_CONST;
 			playerX += (int)moveX;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		if (App->player->colision == NOT_FALLING && (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT))
 		{
 			float moveX = (TRUN_CONST * deltaTime * 100.0f) / (speed * 0.01f);
 			if(moveX > TRUN_CONST) moveX = TRUN_CONST;

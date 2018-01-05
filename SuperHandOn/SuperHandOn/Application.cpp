@@ -64,8 +64,9 @@ bool Application::Init()
 	}
 
 	// Start the first scene --
-	//fade->FadeToBlack(scene_intro, nullptr, 3.0f);
-	fade->FadeToBlack(scene_menu_africa, nullptr, 3.0f);
+	fade->FadeToBlack(scene_intro, nullptr, 3.0f);
+	//Enable this do debug
+	//fade->FadeToBlack(scene_menu_africa, nullptr, 3.0f);
 
 	return ret;
 }
@@ -91,7 +92,7 @@ update_status Application::Update()
 
 		deltaTime = 0;
 	}
-	LOG("Time passed = %f", (float)(clock() - now));
+	//LOG("Time passed = %f", (float)(clock() - now));
 	return ret;
 }
 
