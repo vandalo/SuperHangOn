@@ -5,7 +5,7 @@ This is my tribute to Super Hang On, released for Sega Mega Drive in 5 of decemb
 
 Full project at github: [https://github.com/vandalo/SuperHangOn](https://https://github.com/vandalo/SuperHangOn) 
 
-Project webpage: [https://https://vandalo.github.io/SuperHangOn/](https://https://vandalo.github.io/SuperHangOn/)  
+Project webpage: [https://vandalo.github.io/SuperHangOn/](https://https://vandalo.github.io/SuperHangOn/)  
 
 Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar](https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar)  
 
@@ -17,7 +17,7 @@ License: GNU GENERAL PUBLIC LICENSE
 
 ## Gameplay video
 
-<iframe width="560" height="315" src="https://www.youtube.com/watch?v=vjaiAo2JBPI" frameborder="0" allowfullscreen></iframe>
+<iframe width="560" height="315" src="https://youtu.be/vjaiAo2JBPI" frameborder="0" allowfullscreen></iframe>
 You can watch it directly on [youtube](https://www.youtube.com/watch?v=vjaiAo2JBPI).
 
 Currently the game only features the race of africa, with all the assets and decoration and the bikes which run agains you. The game
@@ -41,7 +41,7 @@ your score if it's between the 8th best scores.
 ## Acknowledgements
 
 
-* http://www.extentofthejam.com/pseudo/
-* https://www.youtube.com/watch?v=N60lBZDEwJ8
+* [http://www.extentofthejam.com/pseudo/]
+* [https://www.youtube.com/watch?v=N60lBZDEwJ8]
 * Super Hang On (MegaDrive)
 
