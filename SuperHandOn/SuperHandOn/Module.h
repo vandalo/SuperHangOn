@@ -49,7 +49,7 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status Update(float deltaTime)
+	virtual update_status Update(const float deltaTime)
 	{
 		return UPDATE_CONTINUE;
 	}

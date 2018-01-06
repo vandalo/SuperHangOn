@@ -77,7 +77,7 @@ bool ModuleSceneWorld::CleanUp()
 }
 
 // Update: draw background
-update_status ModuleSceneWorld::Update(float deltaTime)
+update_status ModuleSceneWorld::Update(const float deltaTime)
 {
 	timer_fast += deltaTime;
 	timer_slow += deltaTime;

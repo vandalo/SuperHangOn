@@ -50,7 +50,7 @@ bool ModuleSceneMusic::CleanUp()
 	return true;
 }
 
-update_status ModuleSceneMusic::Update(float deltaTime)
+update_status ModuleSceneMusic::Update(const float deltaTime)
 {
 	timer_fast += deltaTime;
 	timer_slow += deltaTime;

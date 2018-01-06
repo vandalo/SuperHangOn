@@ -70,7 +70,7 @@ public:
 	~ModuleSceneTrack();
 
 	bool Start();
-	update_status Update(float deltaTime);
+	update_status Update(const float deltaTime);
 	bool CleanUp();
 
 public:
@@ -81,7 +81,6 @@ public:
 
 	SDL_Rect sempahorYellow;
 	SDL_Rect sempahorBlue;
-	//SDL_Rect startSign;
 	SDL_Rect background;
 	SDL_Rect backgroundParalax;
 	SDL_Rect backgroundTop;
@@ -97,14 +96,11 @@ public:
 	SDL_Rect gameOver;
 	SDL_Rect extendedPlay;
 	SDL_Rect beginnerCourse;
-
-	//SDL_Rect deadTree;
-
 	SDL_Rect obejct;
 
-	SDL_Rect road;
+	/*SDL_Rect road;
 	SDL_Rect limit;
-	SDL_Rect midLine;
+	SDL_Rect midLine;*/
 
 	Color grass1;
 	Color grass2;

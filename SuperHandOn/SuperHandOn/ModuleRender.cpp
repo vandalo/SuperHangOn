@@ -52,7 +52,7 @@ update_status ModuleRender::PreUpdate(float deltaTime)
 }
 
 // Called every draw update
-update_status ModuleRender::Update(float deltaTime)
+update_status ModuleRender::Update(const float deltaTime)
 {
 	// debug camera
 	int speed = 1;

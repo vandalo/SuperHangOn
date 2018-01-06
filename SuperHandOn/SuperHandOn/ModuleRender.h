@@ -16,7 +16,7 @@ public:
 
 	bool Init();
 	update_status PreUpdate(float deltaTime);
-	update_status Update(float deltaTime);
+	update_status Update(const float deltaTime);
 	update_status PostUpdate(float deltaTime);
 	bool CleanUp();
 

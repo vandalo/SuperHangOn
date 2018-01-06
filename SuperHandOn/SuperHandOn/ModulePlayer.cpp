@@ -224,7 +224,7 @@ bool ModulePlayer::CleanUp()
 }
 
 // Update: draw background
-update_status ModulePlayer::Update(float deltaTime)
+update_status ModulePlayer::Update(const float deltaTime)
 {
 	if (colision == COLLISIONED || colision == FALLING) {
 		if(App->scene_menu_africa->speed > 200 && colision == COLLISIONED) {

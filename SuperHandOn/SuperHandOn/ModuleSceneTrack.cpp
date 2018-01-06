@@ -708,7 +708,7 @@ void ModuleSceneTrack::PrintGui(float deltaTime)
 
 
 // Update: draw background
-update_status ModuleSceneTrack::Update(float deltaTime)
+update_status ModuleSceneTrack::Update(const float deltaTime)
 {
 	if (time <= 0) {
 		run = false;

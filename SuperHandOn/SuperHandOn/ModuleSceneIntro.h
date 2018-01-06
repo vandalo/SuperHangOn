@@ -12,7 +12,7 @@ public:
 	~ModuleSceneIntro();
 
 	bool Start();
-	update_status Update(float deltaTime);
+	update_status Update(const float deltaTime);
 	bool CleanUp();
 
 public:
