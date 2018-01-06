@@ -7,7 +7,7 @@ Full project at github: [https://github.com/vandalo/SuperHangOn](https://github.
 
 Project webpage: [https://vandalo.github.io/SuperHangOn/](https://vandalo.github.io/SuperHangOn/) 
 
-Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar](https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar)  
+Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v1.0/Super.Hang.On.zip](https://github.com/vandalo/SuperHangOn/releases/download/v1.0/Super.Hang.On.zip)  
 
 *Author*: Ferran Coma
 
