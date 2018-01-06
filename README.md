@@ -25,7 +25,7 @@ is ready to implement the other maps just creating the file with the road config
 
 ## Commands
 
-The game supports up to two players. Each player can jump, punch, kick and perform a kick while in the air. Also, with the start button they are able to enter the game if they were defeated.
+On the game you manage a motorbike on the track where you have to face other motorbikes and the time. You will have a number of seconds to get the next check point, once you get it, this time increase giving you the chance of getting the next one.
 
 * **SPEED UP:** (Up key)
 * **BREAK:** (Down key)
