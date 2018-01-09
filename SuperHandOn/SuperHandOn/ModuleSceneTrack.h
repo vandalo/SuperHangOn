@@ -209,6 +209,9 @@ protected:
 	int puntuationPoistion;
 	int dictionariPosition;
 
+	bool debugMode;
+	bool debugRoad;
+
 	vector<float>stageTimeSaved;
 	vector<Score> bestScores;
 	vector<string> dictionari;

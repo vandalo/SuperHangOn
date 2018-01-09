@@ -36,7 +36,7 @@ bool ModuleSceneMusic::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	App->audio->PlayMusic("music/2OutrideaCrisis.ogg", 0.f);
-
+	musicSelected = 0;
 	return true;
 }
 

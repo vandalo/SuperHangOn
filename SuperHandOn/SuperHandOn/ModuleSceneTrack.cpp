@@ -119,7 +119,8 @@ ModuleSceneTrack::~ModuleSceneTrack()
 bool ModuleSceneTrack::Start()
 {
 	LOG("Loading space intro");
-
+	debugMode = false;
+	debugRoad = false;
 	stage = 1;
 	time = 50;
 	score = 0;
@@ -569,7 +570,6 @@ void ModuleSceneTrack::PrintTrack(float deltaTime)
 		}
 	}
 	else {
-		//if(finishAnimation->posZ == 0) finishAnimation->posZ = 50;
 		if (finishAnimation->posZ < goalPos + 150) {
 			finishAnimation->posZ += deltaTime * 75;
 			lines[(int)(finishAnimation->posZ) % N].DrawObject(finishAnimation->current_animation->GetCurrentFrame(), gui, 0);
@@ -620,6 +620,12 @@ void ModuleSceneTrack::PrintGui(float deltaTime)
 			App->renderer->Print(App->numericFontRed, to_string((int)speed).c_str(), (int)((SCREEN_WIDTH / 10) * 6.5) + backgroundSpeed.w, (int)((SCREEN_HEIGHT / 20) * 2 + 8), 0.f, false);
 		App->renderer->Print(App->menusFont, to_string((int)time).c_str(), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 20 * 3, 0.f);
 		App->renderer->Print(App->numericFontWhite, to_string((int)stage).c_str(), (int)((SCREEN_WIDTH / 10) * 2.4), (int)((SCREEN_HEIGHT / 20) * 3), 0.f, false);
+
+		//DebugMode
+		if (debugMode) {
+			App->renderer->Print(App->numericFontRed, "DEBUG", (SCREEN_WIDTH / 10), SCREEN_HEIGHT - (SCREEN_HEIGHT / 20), 0.f);
+			if(debugRoad) App->renderer->Print(App->numericFontRed, "NO TURN", (SCREEN_WIDTH / 10), SCREEN_HEIGHT - (SCREEN_HEIGHT / 20) * 2, 0.f);
+		}
 	}
 	if (finished == BONUS) {
 		App->renderer->Print(App->numericFontRed, "BONUS POINTS", (SCREEN_WIDTH / 2), (SCREEN_HEIGHT / 20) * 6, 0.f, true);
@@ -776,12 +782,6 @@ update_status ModuleSceneTrack::Update(const float deltaTime)
 			playerX -= (int)moveX;
 		}
 
-		if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT && App->player->colision == NOT_FALLING)
-		{
-			App->player->colision = COLLISIONED;
-			run = false;
-		}
-
 		if ((App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN || App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT) && speed > MIN_VEL_TURBO)
 		{
 			App->player->turbo = true;
@@ -800,15 +800,43 @@ update_status ModuleSceneTrack::Update(const float deltaTime)
 		score += (int)((speed/10) * deltaTime * 10);
 		
 		//Move player to compensate the force of the curve
-		int startPos = pos / SEGL;
-		float currentCurve = lines[startPos%N].curve;
-		if (currentCurve > 2.9) playerX -= (int)(CURVE_FORCE_3 * deltaTime * (speed / 3) );
-		else if (currentCurve > 1.9) playerX -= (int)(CURVE_FORCE_2 * deltaTime * (speed / 3) );
-		else if (currentCurve > 0.9) playerX -= (int)(CURVE_FORCE_1 * deltaTime * (speed / 3) );
-		else if (currentCurve < 0) {
-			if (currentCurve > -1.1) playerX += (int)(CURVE_FORCE_1 * deltaTime * (speed / 3) );
-			else if (currentCurve > -2.1) playerX += (int)(CURVE_FORCE_2 * deltaTime * (speed / 3) );
-			else if (currentCurve > -3.1) playerX += (int)(CURVE_FORCE_3 * deltaTime * (speed / 3) );
+		if (!debugRoad) {
+			int startPos = pos / SEGL;
+			float currentCurve = lines[startPos%N].curve;
+			if (currentCurve > 2.9) playerX -= (int)(CURVE_FORCE_3 * deltaTime * (speed / 3));
+			else if (currentCurve > 1.9) playerX -= (int)(CURVE_FORCE_2 * deltaTime * (speed / 3));
+			else if (currentCurve > 0.9) playerX -= (int)(CURVE_FORCE_1 * deltaTime * (speed / 3));
+			else if (currentCurve < 0) {
+				if (currentCurve > -1.1) playerX += (int)(CURVE_FORCE_1 * deltaTime * (speed / 3));
+				else if (currentCurve > -2.1) playerX += (int)(CURVE_FORCE_2 * deltaTime * (speed / 3));
+				else if (currentCurve > -3.1) playerX += (int)(CURVE_FORCE_3 * deltaTime * (speed / 3));
+			}
+		}
+
+		//SwapDebugMode
+		if (App->input->GetKey(SDL_SCANCODE_D) == KEY_DOWN) {
+			debugMode = !debugMode;
+			if (!debugMode) {
+				debugRoad = false;
+			}
+		}
+		if (debugMode && (App->input->GetKey(SDL_SCANCODE_T) == KEY_DOWN)) {
+			time += 10;
+		}
+		if (debugMode && (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)) {
+			debugRoad = !debugRoad;
+		}
+		if (debugMode && App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN && App->player->colision == NOT_FALLING)
+		{
+			App->player->colision = COLLISIONED;
+			run = false;
+		}
+		if (debugMode && App->input->GetKey(SDL_SCANCODE_Q) == KEY_DOWN) {
+			App->player->Disable();
+			timeBonus = 5;
+			saveScore();
+			App->audio->PauseMusic();
+			App->fade->FadeToBlack((Module*)App->scene_menu_one, this);
 		}
 	}
 	else if (finished == PUNTUATION) {
@@ -839,7 +867,6 @@ update_status ModuleSceneTrack::Update(const float deltaTime)
 		else if ((App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) && bestScores[puntuationPoistion].name.size() < 3) {
 			bestScores[puntuationPoistion].name.append(dictionari[dictionariPosition]);
 		}
-
 	}
 	//Print Track
 	PrintTrack(deltaTime);
