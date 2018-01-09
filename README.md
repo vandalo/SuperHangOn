@@ -7,7 +7,7 @@ Full project at github: [https://github.com/vandalo/SuperHangOn](https://github.
 
 Project webpage: [https://vandalo.github.io/SuperHangOn/](https://vandalo.github.io/SuperHangOn/) 
 
-Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar](https://github.com/vandalo/SuperHangOn/releases/download/v0.1-beta/Super.Hang.On.rar)  
+Latest release (1.0): [https://github.com/vandalo/SuperHangOn/releases/download/v1.0/Super.Hang.On.zip](https://github.com/vandalo/SuperHangOn/releases/download/v1.0/Super.Hang.On.zip)  
 
 *Author*: Ferran Coma
 
@@ -25,7 +25,7 @@ is ready to implement the other maps just creating the file with the road config
 
 ## Commands
 
-The game supports up to two players. Each player can jump, punch, kick and perform a kick while in the air. Also, with the start button they are able to enter the game if they were defeated.
+On the game you manage a motorbike on the track where you have to face other motorbikes and the time. You will have a number of seconds to get the next check point, once you get it, this time increase giving you the chance of getting the next one.
 
 * **SPEED UP:** (Up key)
 * **BREAK:** (Down key)
