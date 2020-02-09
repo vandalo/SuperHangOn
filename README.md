@@ -18,7 +18,7 @@ License: GNU GENERAL PUBLIC LICENSE
 ## Gameplay video
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/vjaiAo2JBPI" frameborder="0" allowfullscreen=""></iframe>
-You can watch it directly on [youtube](https://www.youtube.com/watch?v=vjaiAo2JBPI).
+You can watch it directly on [youtube](https://www.youtube.com/watch?v=vjaiAo2JBPI)
 
 Currently the game only features the race of africa, with all the assets and decoration and the bikes which run agains you. The game
 is ready to implement the other maps just creating the file with the road configuration.
@@ -38,10 +38,16 @@ On the game you manage a motorbike on the track where you have to face other mot
 The game just have the track of Afirca from the arcade mode. When you arrive to the goal or your time ends, you'll be able to save
 your score if it's between the 8th best scores.
 
+# Linux
+
+Tested on Ubuntu 19.10
+
+    make compile run
+
+
 ## Acknowledgements
 
-
-* [http://www.extentofthejam.com/pseudo/]
-* [https://www.youtube.com/watch?v=N60lBZDEwJ8]
+* http://www.extentofthejam.com/pseudo/
+* https://www.youtube.com/watch?v=N60lBZDEwJ8
 * Super Hang On (MegaDrive)
 
